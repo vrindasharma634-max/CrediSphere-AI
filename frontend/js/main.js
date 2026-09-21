@@ -35,7 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            const res = await fetch('http://localhost:5004/api/calculator/simulate', {
+            const apiEndpoint = (typeof API_BASE !== 'undefined' ? `${API_BASE}/calculator/simulate` : 'https://credisphere-ai.onrender.com/api/calculator/simulate').replace(/([^:]\/)\/+/g, '$1');
+            const res = await fetch(apiEndpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)

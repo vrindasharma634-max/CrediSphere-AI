@@ -1363,7 +1363,9 @@
 // Connected to Real SQLite Database of Registered Users + Prospective Templates
 // ==============================================================================
 
-const API_BASE = 'http://localhost:5004/api/screen-config';
+const API_BASE = (typeof window !== 'undefined' && window.BACKEND_API_URL)
+    ? `${window.BACKEND_API_URL.replace(/\/+$/, '')}/api/screen-config`
+    : 'https://credisphere-ai.onrender.com/api/screen-config';
 const LOCAL_STORAGE_KEY = 'credisphere_customer_configs';
 
 // Master 10 Portal Sequential Components

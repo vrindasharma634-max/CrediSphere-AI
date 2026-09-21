@@ -1183,15 +1183,15 @@
 
     <!-- ==================================================================== -->
     <!-- CLIENT JAVASCRIPT & STATUTORY LOGIC ENGINE                           -->
-    <!-- ==================================================================== -->
     <script>
-        // Connect to CrediSphere Core Banking Backend (Port 5004)
+        // Connect to CrediSphere Core Banking Backend
+        const PROD_LEGAL_API = (typeof window !== 'undefined' && window.BACKEND_API_URL)
+            ? `${window.BACKEND_API_URL.replace(/\/+$/, '')}/api/legal`
+            : 'https://credisphere-ai.onrender.com/api/legal';
         const API_HOSTS = [
-            `${window.location.protocol}//${window.location.hostname || 'localhost'}:5004/api/legal`,
-            'http://localhost:5004/api/legal',
-            'http://127.0.0.1:5004/api/legal'
+            PROD_LEGAL_API
         ];
-        let activeApiBase = API_HOSTS[0];
+        let activeApiBase = PROD_LEGAL_API;
 
         let registeredCasesList = [];
         let currentCaseData = null;

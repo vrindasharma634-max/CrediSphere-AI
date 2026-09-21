@@ -106,7 +106,7 @@ for js in js_files:
     with open(f"frontend/js/{js}", "w") as f:
         if js == "api.js":
             f.write("""
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = 'https://credisphere-ai.onrender.com/api';
 async function apiCall(endpoint, method = 'GET', data = null) {
     const token = localStorage.getItem('token');
     const headers = {

@@ -4,9 +4,9 @@
  * Evaluated live sequence-wise on detected database customer applications
  */
 
-const API_BASE = (window.location.port === '5004')
-    ? '/api/risk-policy'
-    : 'http://localhost:5004/api/risk-policy';
+const API_BASE = (typeof window !== 'undefined' && window.BACKEND_API_URL)
+    ? `${window.BACKEND_API_URL.replace(/\/+$/, '')}/api/risk-policy`
+    : 'https://credisphere-ai.onrender.com/api/risk-policy';
 
 class RiskPolicyController {
     constructor() {

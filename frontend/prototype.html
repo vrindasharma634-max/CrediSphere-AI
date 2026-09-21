@@ -1794,7 +1794,7 @@ footer.proto-foot{padding:26px;text-align:center;font-size:11.5px;color:var(--mu
           </div>
           <div style="display:flex;gap:8px;align-items:center;">
             <button class="btn-sm" onclick="window.location.href='pages/reports.html'" style="background:#eef2ff;color:#2563eb;border-color:#c7d2fe;font-weight:700;">📈 View Live Analytics Page</button>
-            <button class="btn-sm" onclick="window.location.href='http://localhost:5004/api/reports/export-csv'">📊 Export CSV</button>
+            <button class="btn-sm" onclick="window.location.href='https://credisphere-ai.onrender.com/api/reports/export-csv'">📊 Export CSV</button>
             <button class="btn-sm" onclick="window.print()">⬇ Export PDF</button>
             <button class="btn-sm" id="proto-run-diag-btn" onclick="runLiveReportsDiagnostic()" style="background:linear-gradient(135deg,var(--blue),var(--navy));color:#fff;border:none;">⚡ Run Live Diagnostic</button>
           </div>
@@ -2855,7 +2855,7 @@ async function runLiveReportsDiagnostic() {
   showCollToast("⚡ Initiating Live AutoML & SHAP Diagnostic across loan database...", "info");
 
   try {
-    const res = await fetch('http://localhost:5004/api/reports/run-diagnostic', {
+    const res = await fetch('https://credisphere-ai.onrender.com/api/reports/run-diagnostic', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
     });
@@ -2891,7 +2891,7 @@ async function runLiveReportsDiagnostic() {
 // Auto-sync live report metrics on frame switch to reports
 async function syncLiveReportsPrototype() {
   try {
-    const res = await fetch('http://localhost:5004/api/reports/');
+    const res = await fetch('https://credisphere-ai.onrender.com/api/reports/');
     const json = await res.json();
     if (json && json.data) {
       const d = json.data;
@@ -2930,7 +2930,7 @@ function updateProtoThreshold(val) {
     handle.style.left = `${pct}%`;
   }
   // Sync to backend
-  fetch('http://localhost:5004/api/risk-policy/update-config', {
+  fetch('https://credisphere-ai.onrender.com/api/risk-policy/update-config', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ minimum_crediscore: parseInt(val) })
@@ -2946,7 +2946,7 @@ function toggleProtoRule(ruleId, isChecked) {
     badge.style.color = isChecked ? 'var(--green)' : 'var(--muted)';
     badge.style.background = isChecked ? 'var(--green-light)' : 'var(--surface-2)';
   }
-  fetch('http://localhost:5004/api/risk-policy/toggle-rule', {
+  fetch('https://credisphere-ai.onrender.com/api/risk-policy/toggle-rule', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ rule_id: ruleId, enabled: isChecked })
@@ -2960,7 +2960,7 @@ async function runProtoBayesian() {
   const msg = document.getElementById('proto-bayesian-msg');
   if (msg) msg.textContent = '⚙️ Optimizing with Gaussian Process...';
   try {
-    const res = await fetch('http://localhost:5004/api/risk-policy/run-bayesian', {
+    const res = await fetch('https://credisphere-ai.onrender.com/api/risk-policy/run-bayesian', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ target_default_rate_pct: 2.2 })
@@ -2981,7 +2981,7 @@ async function runProtoBayesian() {
 }
 
 function saveProtoPolicyChanges() {
-  fetch('http://localhost:5004/api/risk-policy/save', {
+  fetch('https://credisphere-ai.onrender.com/api/risk-policy/save', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({})
@@ -3013,7 +3013,7 @@ function renderProtoPolicyCustomers(evals) {
 
 async function syncProtoPolicyData() {
   try {
-    const res = await fetch('http://localhost:5004/api/risk-policy/');
+    const res = await fetch('https://credisphere-ai.onrender.com/api/risk-policy/');
     const json = await res.json();
     if (json && json.data && json.data.customer_evaluations) {
       renderProtoPolicyCustomers(json.data.customer_evaluations);

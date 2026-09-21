@@ -4,12 +4,10 @@
  */
 
 function getApiBase() {
-    const host = window.location.hostname;
-    // Handle IPv6 loopback [::], ::, 0.0.0.0, empty, localhost, or 127.0.0.1
-    const cleanHost = (!host || host === '[::]' || host === '::' || host === '0.0.0.0')
-        ? 'localhost'
-        : host.replace(/[\[\]]/g, '');
-    return `http://${cleanHost}:5004/api`;
+    const backendUrl = (typeof window !== 'undefined' && window.BACKEND_API_URL)
+        ? window.BACKEND_API_URL.replace(/\/+$/, '')
+        : 'https://credisphere-ai.onrender.com'.replace(/\/+$/, '');
+    return `${backendUrl}/api`;
 }
 
 const API_BASE = getApiBase();
