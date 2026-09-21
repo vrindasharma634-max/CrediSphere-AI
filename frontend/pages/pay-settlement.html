@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrediSphere AI — Fast Token Settlement Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --navy: #0f172a;
+            --primary: #2563eb;
+            --green: #10b981;
+            --green-dark: #059669;
+            --red: #ef4444;
+            --border: #e2e8f0;
+            --card: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .pay-card {
+            background: var(--card);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 480px;
+            overflow: hidden;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-header {
+            background: #1e293b;
+            color: #fff;
+            padding: 28px 24px 22px;
+            text-align: center;
+            position: relative;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            background: rgba(37, 99, 235, 0.25);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #93c5fd;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+
+        .header-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .header-sub {
+            font-size: 0.82rem;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-top: 10px;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        .amount-display-box {
+            background: #f8fafc;
+            border: 1.5px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .amount-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .amount-val {
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: var(--navy);
+            margin: 6px 0 4px;
+            font-feature-settings: 'tnum';
+        }
+
+        .token-tag {
+            display: inline-block;
+            background: #ecfdf5;
+            color: #059669;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid #a7f3d0;
+        }
+
+        .loan-meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .meta-item {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 12px 14px;
+        }
+
+        .meta-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .meta-val {
+            font-size: 0.92rem;
+            font-weight: 800;
+            color: var(--navy);
+            margin-top: 2px;
+        }
+
+        .policy-banner {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.8rem;
+            color: #1e40af;
+            line-height: 1.45;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .upi-qr-box {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .qr-placeholder {
+            width: 140px;
+            height: 140px;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 52px;
+        }
+
+        .pay-action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            background: #10b981;
+            color: #fff;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+        }
+
+        .pay-action-btn:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .upi-apps-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 14px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .upi-app-badge {
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover { color: var(--navy); }
+
+        /* Success Overlay */
+        .success-overlay {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 40px 24px;
+            text-align: center;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-overlay.open { display: flex; }
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #ecfdf5;
+            color: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-bottom: 20px;
+            border: 4px solid #a7f3d0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="pay-card" style="position: relative;">
+        <!-- Header -->
+        <div class="card-header">
+            <div class="brand-badge">⚡ CrediSphere AI Recovery</div>
+            <h1 class="header-title">Structured Token Settlement</h1>
+            <p class="header-sub">Official Direct Payment Gateway · RBI Compliant</p>
+            <div class="verified-badge">
+                <span>🛡️</span> Verified Borrower Account
+            </div>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body">
+            <div class="amount-display-box">
+                <div class="amount-label">Payable Token Settlement</div>
+                <div class="amount-val" id="disp-amount">₹35,999</div>
+                <div class="token-tag">✓ Waives 50% Late Penalties Instantly</div>
+            </div>
+
+            <div class="loan-meta-grid">
+                <div class="meta-item">
+                    <div class="meta-title">Borrower Name</div>
+                    <div class="meta-val" id="disp-name">gudiya (Vrinda Sharma)</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-title">Loan Reference</div>
+                    <div class="meta-val" style="font-family:'DM Mono',monospace;" id="disp-loan">#LN-2024-0005</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-title">Registered Phone</div>
+                    <div class="meta-val" style="font-family:'DM Mono',monospace;" id="disp-phone">+91 90797-75213</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-title">SARFAESI Status</div>
+                    <div class="meta-val" style="color:var(--green);">On Hold (Settlement)</div>
+                </div>
+            </div>
+
+            <div class="policy-banner">
+                <span style="font-size:1.2rem;">🤖</span>
+                <div>
+                    <b>DQN Policy Lock:</b> Paying this token amount immediately suspends negative CIBIL bureau updates, recalls field recovery dispatch, and restructures remaining overdue across 6 convenient installments.
+                </div>
+            </div>
+
+            <!-- UPI QR Simulation -->
+            <div class="upi-qr-box">
+                <div class="qr-placeholder">📲</div>
+                <div style="font-size:0.8rem; font-weight:700; color:var(--navy);">Scan or Click to Pay via UPI</div>
+                <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">VPA: <code>credisphere.recovery@icici</code></div>
+                
+                <div class="upi-apps-row">
+                    <span class="upi-app-badge">GPay</span>
+                    <span class="upi-app-badge">PhonePe</span>
+                    <span class="upi-app-badge">Paytm</span>
+                    <span class="upi-app-badge">BHIM</span>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <button class="pay-action-btn" onclick="executeTokenPayment()">
+                <span>🔒 Pay <span id="btn-amount">₹35,999</span> &amp; Settle</span>
+            </button>
+
+            <a href="customer-dashboard.html" class="back-link">&larr; Return to Customer Dashboard</a>
+        </div>
+
+        <!-- Success Overlay -->
+        <div class="success-overlay" id="success-overlay">
+            <div class="success-icon">✓</div>
+            <h2 style="font-size:1.5rem; font-weight:800; color:#0f172a; margin-bottom:8px;">Settlement Confirmed!</h2>
+            <p style="font-size:0.88rem; color:#64748b; line-height:1.5; margin-bottom:24px;">
+                Your payment of <b id="succ-amt" style="color:#0f172a;">₹35,999</b> has been received. Penalties have been frozen, and SARFAESI escalation is suspended. Receipt sent to your registered WhatsApp.
+            </p>
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:12px 18px; width:100%; margin-bottom:24px; font-size:0.78rem; text-align:left;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                    <span style="color:#64748b;">Transaction Ref:</span>
+                    <b style="font-family:'DM Mono',monospace;" id="txn-ref">TXN-8849204</b>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                    <span style="color:#64748b;">Next Action:</span>
+                    <b style="color:#10b981;">SARFAESI Notice Dismissed</b>
+                </div>
+            </div>
+            <button class="pay-action-btn" onclick="window.location.href='customer-dashboard.html'" style="background:#0f172a;">
+                Go to My Dashboard &rarr;
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const name = params.get('name') || 'gudiya (Vrinda Sharma)';
+            const loan = params.get('loan_id') || 'LN-2024-0005';
+            const phone = params.get('phone') || '+91 90797-75213';
+            const rawAmount = params.get('amount') || '35999';
+            const amtFormatted = '₹' + Number(rawAmount.replace(/\D/g, '') || 35999).toLocaleString('en-IN');
+
+            document.getElementById('disp-name').textContent = name;
+            document.getElementById('disp-loan').textContent = loan.startsWith('#') ? loan : '#' + loan;
+            document.getElementById('disp-phone').textContent = phone;
+            document.getElementById('disp-amount').textContent = amtFormatted;
+            document.getElementById('btn-amount').textContent = amtFormatted;
+            document.getElementById('succ-amt').textContent = amtFormatted;
+            document.getElementById('txn-ref').textContent = 'TXN-' + Math.floor(1000000 + Math.random() * 9000000);
+        });
+
+        function executeTokenPayment() {
+            const btn = document.querySelector('.pay-action-btn');
+            btn.innerHTML = `<span>⏳ Processing with Bank...</span>`;
+            btn.disabled = true;
+
+            setTimeout(() => {
+                document.getElementById('success-overlay').classList.add('open');
+            }, 1200);
+        }
+    </script>
+</body>
+</html>

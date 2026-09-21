@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrediSphere AI - Create Account</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/auth.css?v=10">
+</head>
+<body>
+    <div id="app">
+        <!-- Frosted Top Navigation -->
+        <nav>
+            <h1>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="#3b82f6" stroke-width="2.5"/>
+                    <path d="M7 12L10.5 15.5L17 8.5" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                CrediSphere AI
+                <span class="brand-badge">CUSTOMER ONBOARDING</span>
+            </h1>
+            <div id="nav-links">
+                <a href="../index.html" class="nav-item">Home</a>
+                <a href="signup.html" class="nav-item active-link">Sign Up</a>
+                <a href="login.html" class="nav-item">Login</a>
+            </div>
+        </nav>
+
+        <main class="auth-page-wrapper">
+            <div class="auth-grid-overlay"></div>
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+
+            <div class="auth-main-container">
+                <!-- Left Showcase Panel -->
+                <div class="auth-showcase-panel">
+                    <div class="live-pill-badge">
+                        <span class="live-pulse-dot"></span>
+                        100% Digital Onboarding • Instant KYC Engine
+                    </div>
+
+                    <h1 class="showcase-heading">
+                        Unlock Credit Limits in Under <span class="gradient-highlight">60 Seconds</span>
+                    </h1>
+
+                    <p class="showcase-subtext">
+                        Experience hassle-free borrowing with automated bureau checks, zero physical paperwork, and instantaneous pre-sanction approvals powered by machine learning.
+                    </p>
+
+                    <div class="telemetry-cards-stack">
+                        <!-- Card 1: Instant e-KYC Engine -->
+                        <div class="telemetry-card">
+                            <div class="card-header-flex">
+                                <div class="card-title-group">
+                                    <div class="card-icon-bubble" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.25);">🪪</div>
+                                    <div>
+                                        <div class="card-label" style="color: #6ee7b7;">Instant e-KYC Verification</div>
+                                        <div style="font-size: 0.8rem; color: #cbd5e1;">Government ID & PAN Match</div>
+                                    </div>
+                                </div>
+                                <div class="status-badge-green">
+                                    Instant Match
+                                </div>
+                            </div>
+                            <div class="metric-row">
+                                <div class="metric-item">
+                                    <span class="metric-val" style="color: #38bdf8;">10s</span>
+                                    <span class="metric-name">NSDL PAN Verification</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-val" style="color: #34d399;">₹15,00,000</span>
+                                    <span class="metric-name">Max Instant Limit</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-val" style="color: #a78bfa;">Zero</span>
+                                    <span class="metric-name">Physical Branch Visits</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Soft Bureau Check -->
+                        <div class="telemetry-card">
+                            <div class="card-header-flex">
+                                <div class="card-title-group">
+                                    <div class="card-icon-bubble">📈</div>
+                                    <div>
+                                        <div class="card-label">Soft Credit Assessment</div>
+                                        <div style="font-size: 0.8rem; color: #cbd5e1;">No Impact On Existing CIBIL</div>
+                                    </div>
+                                </div>
+                                <div class="status-badge-green" style="background: rgba(59, 130, 246, 0.15); color: #93c5fd; border-color: rgba(59, 130, 246, 0.25);">
+                                    Safe Inquiries
+                                </div>
+                            </div>
+                            <div class="metric-row">
+                                <div class="metric-item">
+                                    <span class="metric-val" style="color: #60a5fa;">3 Bureaus</span>
+                                    <span class="metric-name">Experian, Equifax, CRIF</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-val" style="color: #10b981;">0%</span>
+                                    <span class="metric-name">Hidden Service Fees</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-val" style="color: #fbbf24;">RBI</span>
+                                    <span class="metric-name">Regulated NBFC Network</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Impact Stats Strip -->
+                    <div class="showcase-stats-strip">
+                        <div class="stat-block">
+                            <b>45,000+</b>
+                            <span>Borrowers Enrolled</span>
+                        </div>
+                        <div class="stat-block">
+                            <b>4.9 / 5</b>
+                            <span>App Satisfaction</span>
+                        </div>
+                        <div class="stat-block">
+                            <b>256-bit</b>
+                            <span>AES Encrypted</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Console Card: Sign-Up Form -->
+                <div class="auth-console-card">
+                    <div class="auth-header">
+                        <h2>Create Account</h2>
+                        <p>Complete your KYC profile to check loan offers</p>
+                    </div>
+
+                    <div class="segmented-control">
+                        <div class="segment-btn" onclick="window.location.href='admin-login.html'">Admin / Staff</div>
+                        <div class="segment-btn active">New Customer</div>
+                    </div>
+
+
+
+                    <form id="signup-form">
+                        <div class="form-row">
+                            <div class="form-group-mock">
+                                <label for="name">Full Name</label>
+                                <div class="input-with-icon-wrapper">
+                                    <span class="input-leading-icon">👤</span>
+                                    <input type="text" id="name" name="name" placeholder="e.g. Aarav Sharma" required autocomplete="name">
+                                </div>
+                            </div>
+                            <div class="form-group-mock">
+                                <label for="phone">Mobile Number</label>
+                                <div class="input-with-icon-wrapper">
+                                    <span class="input-leading-icon">📱</span>
+                                    <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" required autocomplete="tel">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group-mock">
+                            <label for="email">
+                                <span>Email Address</span>
+                                <span class="label-hint">For loan sanctum notices</span>
+                            </label>
+                            <div class="input-with-icon-wrapper">
+                                <span class="input-leading-icon">✉️</span>
+                                <input type="email" id="email" name="email" placeholder="name@example.com" required autocomplete="email">
+                            </div>
+                        </div>
+
+                        <div class="form-group-mock">
+                            <label for="pan">
+                                <span>PAN / Government ID</span>
+                                <span class="label-hint" id="pan-format-hint">10-Digit Alphanumeric</span>
+                            </label>
+                            <div class="input-with-icon-wrapper">
+                                <span class="input-leading-icon">🪪</span>
+                                <input type="text" id="pan" name="pan" placeholder="ABCDE1234F" style="text-transform: uppercase;" maxlength="10" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group-mock">
+                                <label for="password">Create Password</label>
+                                <div class="input-with-icon-wrapper">
+                                    <span class="input-leading-icon">🔒</span>
+                                    <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="new-password">
+                                    <button type="button" class="password-toggle-btn" id="toggle-pw-btn-1" title="Toggle password visibility">👁️</button>
+                                </div>
+                            </div>
+                            <div class="form-group-mock">
+                                <label for="confirm_password">Confirm Password</label>
+                                <div class="input-with-icon-wrapper">
+                                    <span class="input-leading-icon">🔒</span>
+                                    <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••" required autocomplete="new-password">
+                                    <button type="button" class="password-toggle-btn" id="toggle-pw-btn-2" title="Toggle password visibility">👁️</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Real-time Password Strength Meter -->
+                        <div class="password-strength-container" id="pw-strength-box" style="display: none;">
+                            <div class="strength-bars">
+                                <div class="strength-segment" id="str-bar-1"></div>
+                                <div class="strength-segment" id="str-bar-2"></div>
+                                <div class="strength-segment" id="str-bar-3"></div>
+                                <div class="strength-segment" id="str-bar-4"></div>
+                            </div>
+                            <div class="strength-label-text">
+                                <span>Security Level:</span>
+                                <b id="str-label">Weak</b>
+                            </div>
+                        </div>
+
+                        <div class="terms-row">
+                            <input type="checkbox" id="terms" required checked>
+                            <div class="terms-text">
+                                I agree to the <a href="#">Terms of Service</a> & consent to bureau credit inquiry and Aadhaar e-KYC.
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="role" name="role" value="CUSTOMER">
+
+                        <button type="submit" class="btn-mockup" id="signup-btn">
+                            <span>Create account & verify KYC</span>
+                            <span>➔</span>
+                        </button>
+                    </form>
+
+                    <div id="signup-error" class="error-message" style="display: none;"></div>
+
+                    <div class="auth-footer">
+                        Already have an account? <a href="login.html">Sign In Here</a>
+                    </div>
+
+                    <div class="ml-indicator">
+                        <span class="pulse-dot"></span>
+                        Protected by Isolation Forest Fraud Detection AI & 256-bit TLS
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="../js/api.js?v=2"></script>
+    <script src="../js/auth.js?v=10"></script>
+    <script src="../js/app.js?v=2"></script>
+</body>
+</html>

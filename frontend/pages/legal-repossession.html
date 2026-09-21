@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrediSphere AI — Legal &amp; Repossession Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #f4f6f8;
+            --sidebar-bg: #111827;
+            --sidebar-hover: #1f2937;
+            --text-dark: #111827;
+            --text-gray: #4b5563;
+            --text-light: #9ca3af;
+            --border: #e5e7eb;
+            --border-focus: #3b82f6;
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
+            --green: #10b981;
+            --green-light: #d1fae5;
+            --red: #ef4444;
+            --red-light: #fee2e2;
+            --orange: #f59e0b;
+            --orange-light: #fef3c7;
+            --purple: #7c5cff;
+            --purple-light: #f3f0ff;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .font-mono { font-family: 'DM Mono', monospace; }
+
+        /* Left Navigation Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            z-index: 20;
+        }
+        .sidebar-brand {
+            padding: 20px 25px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .brand-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #0ea394, #2563eb);
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            color: #fff;
+        }
+        .sidebar-menu {
+            padding: 20px 15px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .menu-category {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            margin: 20px 0 10px 10px;
+        }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            color: #d1d5db;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+            transition: 0.2s;
+        }
+        .sidebar-menu a:hover {
+            background-color: var(--sidebar-hover);
+            color: #fff;
+        }
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, #2563eb, #1d4ed8);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+            font-weight: 600;
+        }
+        .sidebar-footer {
+            padding: 18px 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .admin-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #0ea394, #2563eb);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #fff;
+        }
+        .admin-info h4 { margin: 0; font-size: 0.9rem; color: #fff; }
+        .admin-info p { margin: 0; font-size: 0.75rem; color: var(--text-light); }
+
+        /* Main Shell */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: var(--bg-light);
+        }
+
+        /* Top Header (White Navbar) */
+        .top-header {
+            height: 70px;
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            flex-shrink: 0;
+        }
+        .search-bar {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            padding: 9px 16px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            width: 380px;
+            outline: none;
+            font-family: inherit;
+            color: var(--text-dark);
+        }
+        .search-bar:focus {
+            border-color: var(--border-focus);
+            background: #fff;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .cbs-badge {
+            font-size: 0.76rem;
+            font-weight: 700;
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+            padding: 5px 12px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        .court-badge {
+            font-size: 0.76rem;
+            font-weight: 700;
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+            padding: 5px 12px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        .court-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 6px #10b981;
+            animation: cbs-pulse 2s infinite ease-in-out;
+        }
+        @keyframes cbs-pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1.15); box-shadow: 0 0 0 5px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* Unified Dossier Hero Card */
+        .legal-hero-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 22px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .hero-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .hero-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--primary);
+        }
+        .hero-title {
+            margin: 0;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.02em;
+        }
+        .hero-subtitle {
+            margin: 0;
+            font-size: 0.82rem;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+        .hero-actions-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .hero-btn.secondary {
+            background: #fff;
+            color: var(--text-dark);
+            border: 1.5px solid var(--border);
+        }
+        .hero-btn.secondary:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+        }
+        .hero-btn.primary {
+            background: #111827;
+            color: #fff;
+            border: 1.5px solid #111827;
+            box-shadow: 0 2px 6px rgba(17,24,39,0.15);
+        }
+        .hero-btn.primary:hover {
+            background: #1f2937;
+            border-color: #1f2937;
+        }
+        .hero-btn.doc {
+            background: #f0fdf4;
+            color: #15803d;
+            border: 1.5px solid #bbf7d0;
+        }
+        .hero-btn.doc:hover {
+            background: #dcfce7;
+            border-color: #86efac;
+        }
+
+        /* Dossier Selector & Quick Metric Strip */
+        .dossier-quick-bar {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+        .dossier-selector-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 320px;
+        }
+        .dossier-selector-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .hero-select {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1.5px solid #cbd5e1;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            background: #ffffff;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            max-width: 480px;
+        }
+        .hero-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+        }
+
+        .dossier-stats-strip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .dossier-stat-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.76rem;
+            white-space: nowrap;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+        .dossier-stat-pill .lbl {
+            color: #64748b;
+            font-weight: 600;
+        }
+        .dossier-stat-pill .val {
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .dossier-stat-pill.danger {
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+        .dossier-stat-pill.danger .lbl { color: #991b1b; }
+        .dossier-stat-pill.danger .val { color: #dc2626; font-size: 0.82rem; }
+
+        .dossier-stat-pill.warning {
+            background: #fffbeb;
+            border-color: #fde68a;
+        }
+        .dossier-stat-pill.warning .lbl { color: #92400e; }
+        .dossier-stat-pill.warning .val { color: #d97706; }
+
+        .statute-track-badge {
+            background: #ef4444;
+            color: #ffffff;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.72rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 1px 4px rgba(239, 68, 68, 0.3);
+            white-space: nowrap;
+        }
+
+        /* Dashboard Scroll Container */
+        .dashboard-scroll {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 22px 30px 40px 30px;
+        }
+
+        /* 3-Column Bank Loan Layout */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1.05fr 1.3fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 1280px) {
+            .grid-3 { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-head {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+        }
+        .card-head h3 {
+            margin: 0;
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-body {
+            padding: 18px 20px;
+            flex-grow: 1;
+        }
+
+        /* Factor & Data Rows */
+        .factor-row {
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.84rem;
+        }
+        .factor-row:last-child { border-bottom: none; }
+        .factor-row b { color: var(--text-gray); font-weight: 500; }
+        .factor-row span { font-weight: 700; color: var(--text-dark); }
+
+        /* Status badges */
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+        .chip-danger { background: var(--red-light); color: var(--red); }
+        .chip-warning { background: var(--orange-light); color: #b45309; }
+        .chip-success { background: var(--green-light); color: #065f46; }
+        .chip-info { background: var(--primary-light); color: var(--primary); }
+
+        .ai-chip {
+            background: var(--purple-light);
+            color: var(--purple);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        /* 3-Metrics Grid */
+        .bureau-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 14px 0;
+        }
+        .bureau-box {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+        .bureau-box span { font-size: 0.7rem; color: var(--text-gray); font-weight: 600; display: block; }
+        .bureau-box b { font-size: 0.95rem; font-family: 'DM Mono', monospace; margin-top: 3px; display: block; }
+
+        /* Attached Banking & Set-Off Jurisdiction Box */
+        .banking-jurisdiction-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 14px;
+        }
+        .jurisdiction-title {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Telematics & Collateral Box */
+        .collateral-spec-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 14px;
+        }
+
+        /* Action Hub Buttons (4 Cards) */
+        .coll-action-hub {
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        .action-hub-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-gray);
+            margin-bottom: 10px;
+        }
+        .coll-action-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .coll-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 8px;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: center;
+            font-family: inherit;
+        }
+        .coll-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+        .coll-action-btn .btn-icon { font-size: 1.3rem; margin-bottom: 4px; }
+        .coll-action-btn .btn-title { font-size: 0.78rem; font-weight: 700; line-height: 1.2; }
+        .coll-action-btn .btn-subtitle { font-size: 0.64rem; opacity: 0.85; margin-top: 3px; }
+
+        .coll-action-btn.primary {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(37,99,235,0.25);
+        }
+        .coll-action-btn.secondary {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(16,185,129,0.25);
+        }
+        .coll-action-btn.outline {
+            background: #fff;
+            border-color: var(--border);
+            color: var(--text-dark);
+        }
+        .coll-action-btn.outline:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .coll-action-btn.danger-tint {
+            border-color: rgba(239,68,68,0.4);
+            background: rgba(239,68,68,0.06);
+            color: var(--red);
+        }
+        .coll-action-btn.danger-tint:hover {
+            background: var(--red-light);
+        }
+
+        /* AI Diagnostics Panel */
+        .ai-engine-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--purple-light);
+            border: 1px solid rgba(124,92,255,0.3);
+            color: var(--purple);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .ai-engine-btn:hover { background: var(--purple); color: #fff; }
+        .ai-engine-btn .chevron-icon { transition: transform 0.2s; font-size: 10px; }
+        .ai-engine-btn.expanded .chevron-icon { transform: rotate(180deg); }
+
+        .coll-insights-panel {
+            margin-top: 16px;
+            padding: 16px;
+            background: #f8faff;
+            border: 1.5px solid #dbeafe;
+            border-radius: 12px;
+            display: block;
+        }
+        .coll-stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .coll-stat-box {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+        }
+        .coll-stat-box span { font-size: 0.65rem; color: var(--text-gray); font-weight: 600; display: block; }
+        .coll-stat-box b { font-size: 0.88rem; font-family: 'DM Mono', monospace; color: var(--text-dark); }
+
+        .q-meter-wrap { display: flex; flex-direction: column; gap: 7px; margin-top: 8px; }
+        .q-meter-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.72rem; gap: 8px; }
+        .q-meter-name { width: 155px; font-weight: 600; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .q-meter-bar-bg { flex: 1; height: 6px; background: #e5e7eb; border-radius: 10px; overflow: hidden; }
+        .q-meter-bar-fill { height: 100%; border-radius: 10px; transition: width 0.5s ease; }
+        .q-meter-val { width: 45px; text-align: right; font-family: 'DM Mono', monospace; font-weight: 700; }
+
+        /* Judicial Docket Feed Items */
+        .feed-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.82rem;
+        }
+        .feed-item:last-child { border-bottom: none; }
+        .feed-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+        .evidence-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.72rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-family: 'DM Mono', monospace;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        .evidence-link:hover { text-decoration: underline; }
+
+        /* Modals */
+        .coll-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(17, 24, 39, 0.72);
+            backdrop-filter: blur(4px);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .coll-modal-backdrop.open { display: flex !important; }
+        .coll-modal-box {
+            background: #fff;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 560px;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+            overflow: hidden;
+            margin: 16px;
+            animation: modalPop 0.2s ease-out;
+        }
+        @keyframes modalPop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .modal-header-viol {
+            background: linear-gradient(135deg, #991b1b, #b91c1c);
+            color: #fff;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .modal-header-ok {
+            background: linear-gradient(135deg, #065f46, #059669);
+            color: #fff;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Floating Toast Container */
+        #coll-toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .coll-toast {
+            pointer-events: auto;
+            background: var(--sidebar-bg);
+            color: #fff;
+            border-radius: 10px;
+            padding: 12px 18px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .coll-toast.success { border-left: 4px solid var(--green); }
+        .coll-toast.violation { border-left: 4px solid var(--red); }
+    </style>
+</head>
+<body>
+
+    <!-- Left Navigation Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">CS</div>
+            CrediSphere
+        </div>
+        
+        <div class="sidebar-menu">
+            <div class="menu-category">Overview</div>
+            <a href="admin-dashboard.html">📊 Dashboard</a>
+            <a href="credit-intelligence.html">🧠 Credit Intelligence</a>
+            <a href="admin-loans.html">📝 Loan Applications</a>
+            
+            <div class="menu-category">Recovery &amp; Legal</div>
+            <a href="collections-ai.html">📞 Collections AI</a>
+            <a href="legal-repossession.html" class="active">⚖️ Legal &amp; Repossession</a>
+            
+            <div class="menu-category">Management</div>
+            <a href="reports.html">📈 Reports</a>
+            <a href="risk-policy.html">⚙️ Risk Policy Config</a>
+            <a href="screen-configuration.html">🖥️ Screen Configuration</a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="admin-avatar">LC</div>
+            <div class="admin-info">
+                <h4>Adv. Singhania</h4>
+                <p>Chief Judicial Counsel</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Shell -->
+    <div class="main-content">
+        <!-- Top Header (White Navbar) -->
+        <div class="top-header">
+            <div class="header-left">
+                <input type="text" class="search-bar" id="search-input" placeholder="🔍 Search CNR number, loan account, asset VIN, borrower name..." oninput="filterDocketSearch(this.value)">
+            </div>
+            <div class="header-actions">
+                <div class="cbs-badge">
+                    <span class="court-dot"></span>
+                    <span>Core Banking (CBS): Real-Time Sync</span>
+                </div>
+                <div class="court-badge">
+                    <span>⚖️</span>
+                    <span>e-Courts Registry: ONLINE</span>
+                </div>
+                <div style="font-size: 1.15rem; cursor: pointer; color:#64748b;" title="Notifications">🔔</div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div class="admin-avatar" style="width:34px; height:34px;">LC</div>
+                    <div style="display:flex; flex-direction:column; font-size:0.75rem; line-height:1.2;">
+                        <span style="font-weight:700; color:var(--text-dark);">Adv. Singhania</span>
+                        <span style="color:var(--text-gray); font-size:0.7rem;">Chief Judicial Counsel</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Content Area -->
+        <div class="dashboard-scroll">
+
+            <!-- Unified Executive Legal Dossier Hero Card -->
+            <div class="legal-hero-card">
+                <div class="hero-top-row">
+                    <div class="hero-title-group">
+                        <div class="hero-eyebrow">
+                            <span>⚖️ Judicial Recovery &amp; Statutory Enforcement</span>
+                            <span style="color:#cbd5e1;">·</span>
+                            <span style="color:#059669; font-weight:700; background:#ecfdf5; padding:2px 8px; border-radius:10px; border:1px solid #a7f3d0;">
+                                Active Dossier: <b id="topstrip-borrower-name">Loading...</b>
+                            </span>
+                        </div>
+                        <h2 class="hero-title">Legal &amp; Repossession Command Center</h2>
+                        <p class="hero-subtitle">Bank judicial recovery management, hypothecated asset repossession &amp; statutory compliance engine</p>
+                    </div>
+                    <div class="hero-actions-group">
+                        <button class="hero-btn secondary" onclick="cycleNextRegisteredCustomer()" title="Cycle to next database customer">
+                            🔄 <span>Switch Customer</span>
+                        </button>
+                        <button class="hero-btn primary" onclick="openLegalNoticeModal()" title="Issue formal statutory legal notice">
+                            📜 <span>Generate Notice Docket</span>
+                        </button>
+                        <button class="hero-btn doc" onclick="openAgreementDocket()" title="View Sanction Letter, Agreement & Mortgage Deed">
+                            📑 <span>Loan Agreement &amp; Deeds</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Active Registered Borrower Selector & Metric Strip (Spacious & Clean) -->
+                <div class="dossier-quick-bar">
+                    <div class="dossier-selector-wrap">
+                        <span class="dossier-selector-label">📋 Registered Loan Docket:</span>
+                        <select id="select-loan-dossier" class="hero-select" onchange="onCaseDropdownChange(this.value)">
+                            <option value="">Loading registered bank customers from live database...</option>
+                        </select>
+                    </div>
+
+                    <!-- Clean, spacious, non-overlapping metric pills -->
+                    <div class="dossier-stats-strip">
+                        <div class="dossier-stat-pill">
+                            <span class="lbl">CNR Case ID</span>
+                            <span class="val font-mono" id="topstrip-cnr">---</span>
+                        </div>
+                        <div class="dossier-stat-pill">
+                            <span class="lbl">Loan Facility</span>
+                            <span class="val font-mono" id="topstrip-loan-id">#---</span>
+                        </div>
+                        <div class="dossier-stat-pill danger">
+                            <span class="lbl">Overdue Delinquency</span>
+                            <span class="val font-mono" id="topstrip-overdue">₹---</span>
+                        </div>
+                        <div class="dossier-stat-pill warning">
+                            <span class="lbl">Loan Status</span>
+                            <span class="val" id="topstrip-status">Doubtful NPA</span>
+                        </div>
+                        <div class="dossier-stat-pill" style="padding:2px 4px; border:none; background:none; box-shadow:none;">
+                            <span id="topstrip-statute-pill" class="statute-track-badge">⚖️ SARFAESI Sec 13(4) Warrant Ready →</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3-Column Bank Loan Layout -->
+            <div class="grid-3">
+                
+                <!-- CARD 1: LOAN ACCOUNT PROFILE & ATTACHED BANKING JURISDICTION -->
+                <div class="card">
+                    <div class="card-head">
+                        <h3>🏦 Delinquent Loan Profile</h3>
+                        <span class="chip chip-danger" id="card1-npa-chip">Doubtful NPA</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="factor-row"><b>Borrower Name</b><span id="txt-borrower-name">Loading...</span></div>
+                        <div class="factor-row"><b>Registered Phone</b><span style="font-family:'DM Mono',monospace; color:var(--primary);" id="txt-borrower-phone">---</span></div>
+                        <div class="factor-row"><b>CNR Court Case ID</b><span style="font-family:'DM Mono',monospace; color:var(--primary);" id="txt-cnr-num">---</span></div>
+                        <div class="factor-row"><b>Loan Facility Type</b><span id="txt-loan-type">---</span></div>
+                        <div class="factor-row"><b>Sanctioned Loan</b><span id="txt-sanctioned-amt">₹0</span></div>
+                        <div class="factor-row"><b>Principal Outstanding</b><span id="txt-principal-amt">₹0</span></div>
+                        <div class="factor-row"><b>Total Overdue Delinquency</b><span style="color:var(--red); font-size:1.05rem;" id="txt-total-overdue">₹0</span></div>
+                        <div class="factor-row"><b>DPD Bucket (Aging)</b><span style="color:var(--red);" id="txt-dpd-bucket">---</span></div>
+
+                        <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+                            <span class="chip chip-danger" id="txt-wilful-badge">Flagged: Wilful Default</span>
+                            <span class="chip chip-warning" id="txt-cibil-score">CIBIL: 542</span>
+                        </div>
+
+                        <!-- Attached Banking Account & Set-Off Jurisdiction -->
+                        <div class="banking-jurisdiction-box">
+                            <div class="jurisdiction-title">
+                                <span>Attached Banking Account</span>
+                                <span class="font-mono" id="txt-acct-type">Checking</span>
+                            </div>
+                            <div class="factor-row" style="padding:4px 0;">
+                                <b>Institution</b><span id="txt-bank-institution">---</span>
+                            </div>
+                            <div class="factor-row" style="padding:4px 0;">
+                                <b>Account No</b><span class="font-mono" id="txt-acct-number">---</span>
+                            </div>
+                            <div class="factor-row" style="padding:4px 0;">
+                                <b>Available Balance</b><span class="font-mono" style="color:#059669;" id="txt-acct-balance">₹0</span>
+                            </div>
+                            <div class="factor-row" style="padding:4px 0;">
+                                <b>Right of Set-Off</b>
+                                <span id="txt-setoff-status"><span class="chip chip-warning" style="font-size:0.65rem; padding:2px 6px;">Verifying</span></span>
+                            </div>
+                            <div class="factor-row" style="padding:4px 0; border-bottom:none;">
+                                <b>CPC Sec 60 Protection</b>
+                                <span id="txt-cpc-status" style="font-size:0.75rem; color:var(--text-gray);">Standard</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 2: COLLATERAL REGISTRY, VALUATION & ENFORCEMENT CONSOLE -->
+                <div class="card">
+                    <div class="card-head">
+                        <h3><span class="ai-chip">AI</span> Recovery Recommendation</h3>
+                        <button class="ai-engine-btn expanded" id="coll-toggle-insights-btn" onclick="toggleDiagnostics()">
+                            <span>🧠</span> Diagnostics <span class="chevron-icon">▾</span>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <p id="coll-rec-text" style="font-size:0.85rem; line-height:1.6; color:#374151; margin:0 0 14px 0;">
+                            Evaluating registered borrower legal recovery status...
+                        </p>
+
+                        <!-- Operational Legal Safeguards Grid -->
+                        <div class="bureau-grid">
+                            <div class="bureau-box"><span>Operating Window</span><b id="txt-operating-window">08:00–19:00</b></div>
+                            <div class="bureau-box"><span>Recovery Odds</span><b style="color:var(--green);" id="txt-recovery-odds">--%</b></div>
+                            <div class="bureau-box"><span>Compliance</span><b style="color:var(--green);" id="txt-compliance-indicator">RBI Window Open</b></div>
+                        </div>
+
+                        <!-- Collateral Specs & Telematics Box (Shown for Secured Loans) -->
+                        <div class="collateral-spec-box" id="collateral-spec-container">
+                            <div class="jurisdiction-title">
+                                <span>Hypothecated Collateral (CERSAI Verified)</span>
+                                <span class="chip chip-info" style="font-size:0.65rem; padding:2px 6px;" id="txt-asset-reg">---</span>
+                            </div>
+                            <div style="font-size:0.85rem; font-weight:700; color:var(--text-dark); margin-bottom:6px;" id="txt-asset-description">
+                                Asset specifications loading...
+                            </div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:8px;">
+                                <div class="bureau-box" style="padding:6px;"><span>Market Value</span><b id="txt-asset-market">₹0</b></div>
+                                <div class="bureau-box" style="padding:6px;"><span>Liquidation Value</span><b style="color:var(--green);" id="txt-asset-liq">₹0</b></div>
+                                <div class="bureau-box" style="padding:6px;"><span>Asset LTV</span><b style="color:var(--red);" id="txt-asset-ltv">0%</b></div>
+                            </div>
+                            <div class="factor-row" style="padding:3px 0;"><span style="color:var(--text-gray); font-size:0.75rem;">GPS Telematics Lock:</span><span class="font-mono" style="font-size:0.75rem;" id="txt-asset-coords">---</span></div>
+                            <div class="factor-row" style="padding:3px 0; border-bottom:none;"><span style="color:var(--text-gray); font-size:0.75rem;">Holding Yard:</span><span style="font-size:0.75rem;" id="txt-holding-yard">---</span></div>
+                        </div>
+
+                        <!-- Unsecured Debt Warning Box (Shown for Unsecured Loans) -->
+                        <div class="collateral-spec-box" id="unsecured-warning-container" style="display:none; background:#fef2f2; border-color:#fecaca;">
+                            <div style="font-size:0.85rem; font-weight:700; color:#b91c1c; display:flex; align-items:center; gap:6px;">
+                                <span>⚠️</span> Clean Unsecured Credit Facility
+                            </div>
+                            <p style="font-size:0.78rem; line-height:1.45; color:#991b1b; margin:6px 0 0 0;">
+                                No hypothecated collateral pledged. Extra-judicial repossession squad dispatch or physical asset seizure is strictly prohibited under Indian Penal Code and RBI Fair Practices Code. Recovery proceeds via Order 37 CPC summary suit or Lok Adalat.
+                            </p>
+                        </div>
+
+                        <!-- Statutory Legal Action Hub (4 Cards) -->
+                        <div class="coll-action-hub">
+                            <div class="action-hub-label">⚡ Live Statutory Recovery Interventions</div>
+                            <div class="coll-action-buttons">
+                                <!-- Action 1: Execute Set-Off (Primary Blue) -->
+                                <button class="coll-action-btn primary" onclick="handleLegalAction('EXECUTE_SET_OFF')" title="Banker's General Lien under Section 171 Indian Contract Act">
+                                    <span class="btn-icon">⚖️</span>
+                                    <span class="btn-title">Execute Set-Off</span>
+                                    <span class="btn-subtitle">Sec 171 Contract Act</span>
+                                </button>
+                                
+                                <!-- Action 2: Issue Notice (Secondary Green) -->
+                                <button class="coll-action-btn secondary" onclick="handleLegalAction('ISSUE_SARFAESI_NOTICE')" title="Issue formal SARFAESI Demand Notice">
+                                    <span class="btn-icon">📜</span>
+                                    <span class="btn-title">Issue Notice</span>
+                                    <span class="btn-subtitle">Sec 13(2) e-Notice</span>
+                                </button>
+                                
+                                <!-- Action 3: Settlement / OTS (Outline) -->
+                                <button class="coll-action-btn outline" onclick="handleLegalAction('PROPOSE_OTS')" title="Propose RBI Distressed Debt Compromise">
+                                    <span class="btn-icon">📑</span>
+                                    <span class="btn-title">Settlement</span>
+                                    <span class="btn-subtitle">Propose OTS</span>
+                                </button>
+                                
+                                <!-- Action 4: Legal & Repo (Red Tinted) -->
+                                <button class="coll-action-btn danger-tint" onclick="handleLegalAction('DISPATCH_REPO_SQUAD')" title="Enforce CMM Warrant & Physical Seizure">
+                                    <span class="btn-icon">🚨</span>
+                                    <span class="btn-title">Legal &amp; Repo</span>
+                                    <span class="btn-subtitle">CMM Warrant / Seizure</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- AI Policy Diagnostics Panel (Expandable) -->
+                        <div class="coll-insights-panel" id="coll-insights-panel">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <span style="font-size:0.75rem; font-weight:700; color:var(--text-dark);">🔬 ML/RL Judicial Policy Diagnostics</span>
+                                <span style="font-size:0.68rem; color:var(--green); font-weight:700;">● Active Policy</span>
+                            </div>
+
+                            <div class="coll-stats-row">
+                                <div class="coll-stat-box"><span>Confidence</span><b style="color:var(--green);" id="ml-conf">--%</b></div>
+                                <div class="coll-stat-box"><span>Exploit (ε)</span><b>0.05</b></div>
+                                <div class="coll-stat-box"><span>Expected Net</span><b style="color:var(--primary);" id="ml-net">₹0</b></div>
+                            </div>
+
+                            <div style="font-size:0.7rem; font-weight:700; color:var(--text-dark); margin-bottom:4px;">MDP Q(s, a) Judicial Action Distribution:</div>
+                            <div class="q-meter-wrap">
+                                <div class="q-meter-row">
+                                    <span class="q-meter-name">Direct Repossession</span>
+                                    <div class="q-meter-bar-bg"><div class="q-meter-bar-fill" id="meter-repo" style="width: 85%; background: var(--green);"></div></div>
+                                    <span class="q-meter-val" style="color:var(--green);">+0.92</span>
+                                </div>
+                                <div class="q-meter-row">
+                                    <span class="q-meter-name">SARFAESI Sec 13(4)</span>
+                                    <div class="q-meter-bar-bg"><div class="q-meter-bar-fill" id="meter-sarfaesi" style="width: 74%; background: var(--primary);"></div></div>
+                                    <span class="q-meter-val" style="color:var(--primary);">+0.78</span>
+                                </div>
+                                <div class="q-meter-row">
+                                    <span class="q-meter-name">Commercial Arbitration</span>
+                                    <div class="q-meter-bar-bg"><div class="q-meter-bar-fill" id="meter-arbitration" style="width: 38%; background: var(--orange);"></div></div>
+                                    <span class="q-meter-val" style="color:var(--orange);">+0.41</span>
+                                </div>
+                                <div class="q-meter-row">
+                                    <span class="q-meter-name">Lok Adalat Settlement</span>
+                                    <div class="q-meter-bar-bg"><div class="q-meter-bar-fill" id="meter-adalat" style="width: 62%; background: var(--purple);"></div></div>
+                                    <span class="q-meter-val" style="color:var(--purple);">+0.64</span>
+                                </div>
+                            </div>
+
+                            <div style="font-size:0.7rem; font-weight:700; color:var(--text-dark); margin-top:10px; margin-bottom:4px;">Random Forest Feature Weights:</div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+                                <div class="bureau-box" style="padding:6px;"><span>Asset Deprec.</span><b>34%</b></div>
+                                <div class="bureau-box" style="padding:6px;"><span>DPD Bucket</span><b>28%</b></div>
+                                <div class="bureau-box" style="padding:6px;"><span>Contactability</span><b>22%</b></div>
+                                <div class="bureau-box" style="padding:6px;"><span>Court Speed</span><b>16%</b></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 3: JUDICIAL DOCKET & COURT ORDER SHEET -->
+                <div class="card">
+                    <div class="card-head">
+                        <h3>⚖️ Judicial Docket &amp; Orders</h3>
+                        <span class="chip" style="background:#ecfdf5; color:#065f46;">● Live Feed</span>
+                    </div>
+                    <div class="card-body" id="judicial-feed-container">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 1: STATUTORY COMPLIANCE VIOLATION INTERCEPTED (RED) -->
+    <div class="coll-modal-backdrop" id="modal-violation">
+        <div class="coll-modal-box">
+            <div class="modal-header-viol">
+                <span style="font-size:24px;">🚫</span>
+                <div>
+                    <b style="font-size:1rem;">STATUTORY COMPLIANCE VIOLATION INTERCEPTED</b>
+                    <span style="display:block; font-size:0.75rem; opacity:0.9;">Indian Banking Law &amp; RBI Regulatory Guardrail</span>
+                </div>
+            </div>
+            <div style="padding:22px;">
+                <div style="background:#fef2f2; border:1px solid #fecaca; padding:10px 14px; border-radius:8px; font-size:0.78rem; font-weight:700; color:#b91c1c; margin-bottom:14px;" id="viol-statute">
+                    STATUTE: Reserve Bank of India Master Direction - Fair Practices Code
+                </div>
+                <div style="font-size:0.85rem; line-height:1.55; color:#374151; margin-bottom:16px;" id="viol-details">
+                    Action intercepted by CrediSphere Guardrail.
+                </div>
+                <div style="background:#f0f9ff; border-left:4px solid #0284c7; padding:10px 14px; border-radius:6px; margin-bottom:18px;">
+                    <span style="font-size:0.7rem; font-weight:700; color:#0369a1; text-transform:uppercase;">Statutory Remedy / Legal Alternative</span>
+                    <div style="font-size:0.82rem; color:#0c4a6e; margin-top:2px;" id="viol-remedy">
+                        Proceed via Civil Court Summary Suit or Lok Adalat Mediation.
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:flex-end;">
+                    <button onclick="closeModal('modal-violation')" style="padding:8px 18px; border-radius:8px; border:1px solid var(--border); background:var(--sidebar-bg); color:#fff; font-weight:700; font-size:0.82rem; cursor:pointer;">
+                        Dismiss &amp; Record in Judicial Audit Log
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: COMPLIANT ACTION CONFIRMATION (GREEN) -->
+    <div class="coll-modal-backdrop" id="modal-success">
+        <div class="coll-modal-box">
+            <div class="modal-header-ok">
+                <span style="font-size:24px;">✔</span>
+                <div>
+                    <b style="font-size:1rem;">JUDICIAL ACTION AUTHORIZED &amp; EXECUTED</b>
+                    <span style="display:block; font-size:0.75rem; opacity:0.9;" id="ok-ref">Compliance Confirmed</span>
+                </div>
+            </div>
+            <div style="padding:22px;">
+                <div style="background:#ecfdf5; border:1px solid #a7f3d0; padding:10px 14px; border-radius:8px; font-size:0.78rem; font-weight:700; color:#065f46; margin-bottom:14px;">
+                    STATUTORY CLEARANCE: SARFAESI ACT / INDIAN CONTRACT ACT COMPLIANT
+                </div>
+                <p style="font-size:0.85rem; line-height:1.55; color:#374151; margin-bottom:16px;" id="ok-message">
+                    Action executed and registered on CMM electronic docket.
+                </p>
+                <div style="display:flex; justify-content:flex-end;">
+                    <button onclick="closeModal('modal-success')" style="padding:8px 20px; border-radius:8px; border:none; background:var(--green); color:#fff; font-weight:700; font-size:0.82rem; cursor:pointer;">
+                        Done &amp; Update Docket
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: VIEW LOAN AGREEMENT & DEEDS DOCKET -->
+    <div class="coll-modal-backdrop" id="modal-agreement">
+        <div class="coll-modal-box" style="max-width:620px;">
+            <div style="padding:18px 22px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <b style="font-size:1rem; color:var(--text-dark);">📑 Loan Sanction &amp; Hypothecation Docket</b>
+                    <span style="display:block; font-size:0.75rem; color:var(--text-gray);" id="agreement-docket-sub">CERSAI Security Interest Registry</span>
+                </div>
+                <button onclick="closeModal('modal-agreement')" style="border:none; background:none; font-size:18px; cursor:pointer; color:var(--text-gray);">✕</button>
+            </div>
+            <div style="padding:22px; max-height:420px; overflow-y:auto;">
+                <div style="background:var(--bg-light); border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:14px;">
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-gray); text-transform:uppercase; margin-bottom:8px;">1. Primary Sanction Details</div>
+                    <div class="factor-row"><b>Loan Facility:</b><span id="docket-loan-type">---</span></div>
+                    <div class="factor-row"><b>Sanctioned Principal:</b><span class="font-mono" style="font-weight:700; color:var(--primary);" id="docket-sanctioned-amt">₹0</span></div>
+                    <div class="factor-row"><b>Sanction Date:</b><span id="docket-sanction-date">14-Mar-2023</span></div>
+                    <div class="factor-row"><b>Interest Rate:</b><span id="docket-interest-rate">9.85% p.a. Floating</span></div>
+                    <div class="factor-row"><b>Tenure:</b><span id="docket-tenure">60 Months</span></div>
+                </div>
+                <div style="background:var(--bg-light); border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:14px;">
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-gray); text-transform:uppercase; margin-bottom:8px;">2. Security Charge &amp; Hypothecation</div>
+                    <div class="factor-row"><b>Security ID (CERSAI):</b><span class="font-mono" id="docket-cersai-id">#200481921</span></div>
+                    <div class="factor-row"><b>Registered Charge:</b><span>First Pari-Passu Charge in favor of CrediSphere Bank Ltd</span></div>
+                    <div class="factor-row"><b>Vahan / Title Status:</b><span id="docket-vahan-status">Hypothecation Registered with RTO</span></div>
+                </div>
+                <div style="background:#f0f9ff; border:1px solid #bae6fd; border-radius:10px; padding:14px;">
+                    <div style="font-size:0.75rem; font-weight:700; color:#0369a1; text-transform:uppercase; margin-bottom:6px;">3. Section 171 Banker's Lien Clause</div>
+                    <div style="font-size:0.78rem; line-height:1.45; color:#0c4a6e;">
+                        Clause 18.2: The Bank shall possess an absolute general lien and right of set-off under Section 171 Indian Contract Act over all accounts, deposits, and securities maintained by borrower with CrediSphere Bank Ltd.
+                    </div>
+                </div>
+            </div>
+            <div style="padding:14px 22px; background:var(--bg-light); border-top:1px solid var(--border); display:flex; justify-content:flex-end;">
+                <button onclick="closeModal('modal-agreement')" style="padding:8px 18px; border-radius:8px; border:1px solid var(--border); background:#fff; font-size:0.82rem; font-weight:600; cursor:pointer;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="coll-toast-container"></div>
+
+
+    <!-- ==================================================================== -->
+    <!-- CLIENT JAVASCRIPT & STATUTORY LOGIC ENGINE                           -->
+    <!-- ==================================================================== -->
+    <script>
+        // Connect to CrediSphere Core Banking Backend (Port 5004)
+        const API_HOSTS = [
+            `${window.location.protocol}//${window.location.hostname || 'localhost'}:5004/api/legal`,
+            'http://localhost:5004/api/legal',
+            'http://127.0.0.1:5004/api/legal'
+        ];
+        let activeApiBase = API_HOSTS[0];
+
+        let registeredCasesList = [];
+        let currentCaseData = null;
+        let isSyncing = false;
+
+        // Fetch registered customers dynamically from the database
+        async function fetchLiveRegisteredCustomers() {
+            let loaded = false;
+            for (const host of API_HOSTS) {
+                try {
+                    const res = await fetch(`${host}/cases?t=${Date.now()}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data && data.cases && data.cases.length > 0) {
+                            registeredCasesList = data.cases;
+                            activeApiBase = host;
+                            loaded = true;
+                            break;
+                        }
+                    }
+                } catch (e) {
+                    // Try next endpoint
+                }
+            }
+
+            if (!loaded) {
+                // Standalone fallback using real registered customers from database
+                registeredCasesList = [
+                    { case_id: "LGL-2024-0012", user_id: 1, borrower_name: "Vrinda", phone: "+91 98765-43210", loan_type: "Personal Credit Line", account_no: "LN-2024-0012", overdue_amount: 37500.0, dpd: 110, is_secured: false },
+                    { case_id: "LGL-2024-0004", user_id: 2, borrower_name: "Preeti Sharma", phone: "+91 98290-12345", loan_type: "Home Loan", account_no: "LN-2024-0004", overdue_amount: 107997.0, dpd: 90, is_secured: true },
+                    { case_id: "LGL-2024-0006", user_id: 3, borrower_name: "gudiya", phone: "+91 90797-75213", loan_type: "Home Loan", account_no: "LN-2024-0006", overdue_amount: 36000.0, dpd: 135, is_secured: true },
+                    { case_id: "LGL-2024-0010", user_id: 6, borrower_name: "poonam sharma", phone: "+91 97833-63889", loan_type: "Home Loan", account_no: "LN-2024-0010", overdue_amount: 43985.2, dpd: 120, is_secured: true },
+                    { case_id: "LGL-2024-0008", user_id: 7, borrower_name: "Aarav Sharma", phone: "+91 98290-55443", loan_type: "Personal Loan", account_no: "LN-2024-0008", overdue_amount: 48735.0, dpd: 95, is_secured: false },
+                    { case_id: "LGL-2024-0009", user_id: 8, borrower_name: "Karan Patel", phone: "+91 90797-75213", loan_type: "Vehicle Loan", account_no: "LN-2024-0009", overdue_amount: 64926.44, dpd: 125, is_secured: true }
+                ];
+            }
+
+            renderCustomerDropdown(registeredCasesList);
+
+            // Determine active case based on query parameters, localStorage, or first customer
+            const urlParams = new URLSearchParams(window.location.search);
+            const paramCaseId = urlParams.get('case_id');
+            const paramUserId = urlParams.get('user_id');
+
+            let targetCaseId = registeredCasesList[0].case_id;
+            if (paramCaseId) {
+                const found = registeredCasesList.find(c => c.case_id === paramCaseId || c.account_no === paramCaseId);
+                if (found) targetCaseId = found.case_id;
+            } else if (paramUserId) {
+                const found = registeredCasesList.find(c => String(c.user_id) === String(paramUserId));
+                if (found) targetCaseId = found.case_id;
+            }
+
+            await loadCaseDetails(targetCaseId);
+        }
+
+        // Real-Time Core Banking Synchronization (Polls every 5s to pick up new customers and live loan updates)
+        async function syncLiveBankStatus() {
+            if (isSyncing || !activeApiBase) return;
+            isSyncing = true;
+            try {
+                const res = await fetch(`${activeApiBase}/cases?t=${Date.now()}`);
+                if (!res.ok) return;
+                const data = await res.json();
+                if (!data || !data.cases) return;
+
+                const newCases = data.cases;
+                const currentSelectedId = currentCaseData ? currentCaseData.case_id : null;
+
+                // Detect if any registered customers were added or if balances were updated
+                const listDiff = newCases.length !== registeredCasesList.length ||
+                    JSON.stringify(newCases.map(c => [c.case_id, c.overdue_amount])) !== 
+                    JSON.stringify(registeredCasesList.map(c => [c.case_id, c.overdue_amount]));
+
+                if (listDiff) {
+                    registeredCasesList = newCases;
+                    renderCustomerDropdown(registeredCasesList);
+                    if (currentSelectedId) {
+                        document.getElementById('select-loan-dossier').value = currentSelectedId;
+                    }
+                }
+
+                // If currently viewing a case, silently refresh balances and docket feed
+                if (currentSelectedId) {
+                    const detailRes = await fetch(`${activeApiBase}/case/${currentSelectedId}?t=${Date.now()}`);
+                    if (detailRes.ok) {
+                        const detailData = await detailRes.json();
+                        if (detailData && detailData.case) {
+                            const newCase = detailData.case;
+                            if (detailData.ml_diagnostics) newCase.ml_diagnostics = detailData.ml_diagnostics;
+                            currentCaseData = newCase;
+                            renderCaseUI(currentCaseData);
+                        }
+                    }
+                }
+            } catch (err) {
+                // Background sync gracefully handles any transient connection pause
+            } finally {
+                isSyncing = false;
+            }
+        }
+
+        function renderCustomerDropdown(cases) {
+            const selectEl = document.getElementById('select-loan-dossier');
+            selectEl.innerHTML = cases.map(c => `
+                <option value="${c.case_id}">
+                    ${c.borrower_name} — ${c.loan_type} #${c.account_no} | Overdue: ₹${Math.round(c.overdue_amount).toLocaleString('en-IN')} (${c.dpd} DPD)
+                </option>
+            `).join('');
+        }
+
+        async function loadCaseDetails(caseId) {
+            try {
+                const res = await fetch(`${activeApiBase}/case/${caseId}?t=${Date.now()}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    currentCaseData = data.case;
+                    if (data.ml_diagnostics) {
+                        currentCaseData.ml_diagnostics = data.ml_diagnostics;
+                    }
+                } else {
+                    currentCaseData = buildLocalCase(caseId);
+                }
+            } catch (e) {
+                currentCaseData = buildLocalCase(caseId);
+            }
+
+            renderCaseUI(currentCaseData);
+        }
+
+        function buildLocalCase(caseId) {
+            const summary = registeredCasesList.find(c => c.case_id === caseId) || registeredCasesList[0];
+            const uid = summary.user_id || 1;
+            const isSecured = summary.is_secured;
+            return {
+                case_id: summary.case_id,
+                user_id: uid,
+                cnr_number: `DL-SW02-00492${uid < 10 ? '0' + uid : uid}-2024`,
+                is_secured: isSecured,
+                borrower: {
+                    name: summary.borrower_name,
+                    phone: summary.phone,
+                    cibil: summary.dpd > 100 ? 542 : 618
+                },
+                loan: {
+                    account_no: summary.account_no,
+                    loan_type: summary.loan_type,
+                    sanctioned_amount: isSecured ? 1250000.0 : 500000.0,
+                    principal_outstanding: Math.round(summary.overdue_amount * 3.5),
+                    overdue_amount: summary.overdue_amount,
+                    dpd: summary.dpd,
+                    dpd_label: `${summary.dpd} Days (Severe Default)`
+                },
+                collateral: {
+                    description: isSecured ? (summary.loan_type.includes('Vehicle') ? "2023 Hyundai Creta SX(O) 1.4L Turbo DCT (Phantom Black)" : "Commercial / Residential Property Deed, Sector 18, Dwarka") : "Clean Personal Credit Line (Zero Collateral Pledged)",
+                    registration_no: isSecured ? `DL-04-CX-88${uid < 10 ? '0' + uid : uid}` : "N/A - Clean Facility",
+                    market_value: isSecured ? 1120000.0 : 0,
+                    liquidation_value: isSecured ? 940000.0 : 0,
+                    ltv: isSecured ? 114.2 : 0,
+                    coordinates: isSecured ? "28.5355° N, 77.2510° E" : "N/A",
+                    yard: isSecured ? "Sector 62 Central Auto Holding Yard, Noida" : "N/A",
+                    cersai_id: `#20048192${uid}`
+                },
+                banking: {
+                    bank_name: (uid in [1, 3, 8]) ? "CrediSphere Bank Ltd (Same Institution)" : "HDFC Bank Ltd",
+                    account_number: `0019280${uid}74100`,
+                    account_type: (uid in [1, 3, 8]) ? "Internal Current Account" : ((uid in [2, 7]) ? "Primary Salary Account" : "External Savings Account"),
+                    available_balance: 35000.0 + (uid * 40000.0),
+                    is_same_bank: (uid in [1, 3, 8]),
+                    is_salary_account: (uid in [2, 7])
+                },
+                statutory_clock: {
+                    title: isSecured ? "SARFAESI Section 13(2) Cure Counter" : "Civil Summary Suit Track",
+                    days_elapsed: (uid in [1, 3, 8]) ? 68 : 45,
+                    mandate_days: isSecured ? 60 : 30,
+                    status_pill: isSecured ? ((uid in [1, 3, 8]) ? "⚖️ SARFAESI Sec 13(4) Warrant Ready →" : "⏳ 15 Days Cure Remaining →") : "🏛️ Order 37 CPC Track →",
+                    status_text: isSecured ? "Doubtful NPA" : "Sub-Standard NPA"
+                },
+                ml_diagnostics: {
+                    recovery_odds_pct: isSecured ? 90.6 : 42.8,
+                    expected_net_recovery: isSecured ? 916000.0 : Math.round(summary.overdue_amount * 0.72)
+                },
+                timeline: [
+                    {
+                        tag: isSecured ? "CMM WARRANT" : "LOK ADALAT SUMMONS",
+                        color: isSecured ? "#EF4444" : "#8B5CF6",
+                        title: isSecured ? `CMM Saket Court Section 14 Repossession Warrant Issued [${summary.account_no}]` : `National Lok Adalat Mediation Summons Dispatched [${summary.account_no}]`,
+                        description: isSecured ? "Chief Metropolitan Magistrate authorized physical custody of hypothecated asset." : "DLSA Patiala House Court summons issued for pre-litigation conciliation.",
+                        timestamp: "Today, 08:35 AM",
+                        evidence_ref: `ORD-CMM-2024-${uid}.PDF`
+                    },
+                    {
+                        tag: "STATUTORY NOTICE",
+                        color: "#2563EB",
+                        title: isSecured ? "Statutory Demand Notice Served under Sec 13(2)" : "Statutory 15-Day Demand Notice (Sec 138 NI Act)",
+                        description: "Formal statutory demand notice delivered via Registered Speed Post.",
+                        timestamp: "04 Sep 2026",
+                        evidence_ref: `NOTICE-STATUTORY-${uid}.PDF`
+                    }
+                ]
+            };
+        }
+
+        function renderCaseUI(c) {
+            // Update Select dropdown
+            document.getElementById('select-loan-dossier').value = c.case_id;
+
+            // Update Top Warning Strip
+            document.getElementById('topstrip-borrower-name').textContent = c.borrower.name;
+            document.getElementById('topstrip-statute-pill').textContent = c.statutory_clock.status_pill;
+            document.getElementById('topstrip-cnr').textContent = c.cnr_number;
+            document.getElementById('topstrip-loan-id').textContent = `#${c.loan.account_no}`;
+            document.getElementById('topstrip-overdue').textContent = `₹${Math.round(c.loan.overdue_amount).toLocaleString('en-IN')}`;
+            document.getElementById('topstrip-status').textContent = c.statutory_clock.status_text || "Doubtful NPA";
+
+            // Card 1: Loan Profile
+            document.getElementById('txt-borrower-name').textContent = c.borrower.name;
+            document.getElementById('txt-borrower-phone').textContent = c.borrower.phone;
+            document.getElementById('txt-cnr-num').textContent = c.cnr_number;
+            document.getElementById('txt-loan-type').textContent = c.loan.loan_type;
+            document.getElementById('txt-sanctioned-amt').textContent = `₹${Math.round(c.loan.sanctioned_amount).toLocaleString('en-IN')}`;
+            document.getElementById('txt-principal-amt').textContent = `₹${Math.round(c.loan.principal_outstanding).toLocaleString('en-IN')}`;
+            document.getElementById('txt-total-overdue').textContent = `₹${Math.round(c.loan.overdue_amount).toLocaleString('en-IN')}`;
+            document.getElementById('txt-dpd-bucket').textContent = c.loan.dpd_label || `${c.loan.dpd} Days (Severe Default)`;
+            document.getElementById('txt-cibil-score').textContent = `CIBIL: ${c.borrower.cibil} (${c.borrower.cibil < 600 ? 'High Risk' : 'Moderate'})`;
+
+            // Attached Banking Profile & Right of Set-Off
+            document.getElementById('txt-acct-type').textContent = c.banking.account_type;
+            document.getElementById('txt-bank-institution').textContent = c.banking.bank_name;
+            document.getElementById('txt-acct-number').textContent = c.banking.account_number;
+            document.getElementById('txt-acct-balance').textContent = `₹${Math.round(c.banking.available_balance).toLocaleString('en-IN')}`;
+
+            if (c.banking.is_same_bank) {
+                document.getElementById('txt-setoff-status').innerHTML = '<span class="chip chip-success" style="font-size:0.65rem; padding:2px 6px;">ELIGIBLE: Sec 171 Banker\'s Lien</span>';
+            } else {
+                document.getElementById('txt-setoff-status').innerHTML = '<span class="chip chip-warning" style="font-size:0.65rem; padding:2px 6px;">RESTRICTED: Requires DRT Order</span>';
+            }
+
+            if (c.banking.is_salary_account) {
+                document.getElementById('txt-cpc-status').innerHTML = '<span class="chip chip-danger" style="font-size:0.65rem; padding:2px 6px;">IMMUNE: Subsistence Protected</span>';
+            } else {
+                document.getElementById('txt-cpc-status').innerHTML = '<span style="font-size:0.75rem; color:var(--text-gray);">Standard Non-Salary Deposit</span>';
+            }
+
+            // Card 2: AI Recommendation & Collateral
+            const mlOdds = c.ml_diagnostics ? c.ml_diagnostics.recovery_odds_pct : (c.is_secured ? 90.6 : 42.8);
+            const mlNet = c.ml_diagnostics ? c.ml_diagnostics.expected_net_recovery : (c.is_secured ? 916000 : 35000);
+
+            if (c.is_secured) {
+                document.getElementById('coll-rec-text').innerHTML = `
+                    Borrower <b>${c.borrower.name}</b> holds a secured <b>${c.loan.loan_type}</b>. Collateral registered under CERSAI ID <b>${c.collateral.cersai_id}</b>. Saket Court CMM has issued Section 14 physical custody warrant. AI policy recommends immediate squad deployment for asset seizure.
+                `;
+                document.getElementById('collateral-spec-container').style.display = 'block';
+                document.getElementById('unsecured-warning-container').style.display = 'none';
+
+                document.getElementById('txt-asset-reg').textContent = c.collateral.registration_no;
+                document.getElementById('txt-asset-description').textContent = c.collateral.description;
+                document.getElementById('txt-asset-market').textContent = `₹${(c.collateral.market_value/100000).toFixed(1)}L`;
+                document.getElementById('txt-asset-liq').textContent = `₹${(c.collateral.liquidation_value/100000).toFixed(1)}L`;
+                document.getElementById('txt-asset-ltv').textContent = `${c.collateral.ltv}%`;
+                document.getElementById('txt-asset-coords').textContent = c.collateral.coordinates;
+                document.getElementById('txt-holding-yard').textContent = c.collateral.yard;
+            } else {
+                document.getElementById('coll-rec-text').innerHTML = `
+                    Borrower <b>${c.borrower.name}</b> holds an <b>UNSECURED personal credit facility</b> with zero registered hypothecation. Under Indian Law &amp; RBI Fair Practices Code, physical asset seizure is strictly ILLEGAL. AI policy recommends Order 37 CPC Summary Suit or Lok Adalat conciliation.
+                `;
+                document.getElementById('collateral-spec-container').style.display = 'none';
+                document.getElementById('unsecured-warning-container').style.display = 'block';
+            }
+
+            document.getElementById('txt-recovery-odds').textContent = `${mlOdds}%`;
+            document.getElementById('ml-conf').textContent = `${mlOdds}%`;
+            document.getElementById('ml-net').textContent = `₹${(mlNet/100000).toFixed(2)}L`;
+
+            // Card 3: Judicial Docket History Feed
+            const historyContainer = document.getElementById('judicial-feed-container');
+            historyContainer.innerHTML = '';
+            (c.timeline || []).forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'feed-item';
+                row.innerHTML = `
+                    <div class="feed-dot" style="background:${item.color}20; color:${item.color};">⚖️</div>
+                    <div style="flex:1;">
+                        <div style="font-weight:700; color:var(--text-dark);">${item.title}</div>
+                        <div style="font-size:0.75rem; color:var(--text-gray); margin-top:2px;">${item.description}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                            <span style="font-size:0.7rem; color:var(--text-light); font-family:'DM Mono',monospace;">${item.timestamp}</span>
+                            ${item.evidence_ref ? `<a href="#" class="evidence-link" onclick="showToast('Verified evidence file: ${item.evidence_ref}', 'success'); return false;">📄 ${item.evidence_ref}</a>` : ''}
+                        </div>
+                    </div>
+                `;
+                historyContainer.appendChild(row);
+            });
+        }
+
+        function onCaseDropdownChange(caseId) {
+            loadCaseDetails(caseId);
+            showToast(`Switched active legal docket to Case #${caseId}`, 'success');
+        }
+
+        function cycleNextRegisteredCustomer() {
+            if (!registeredCasesList.length) return;
+            const currentIndex = registeredCasesList.findIndex(c => c.case_id === currentCaseData.case_id);
+            const nextIndex = (currentIndex + 1) % registeredCasesList.length;
+            const nextCase = registeredCasesList[nextIndex];
+            loadCaseDetails(nextCase.case_id);
+            showToast(`Loaded registered customer: ${nextCase.borrower_name}`, 'success');
+        }
+
+        // Live Statutory Action Triggering
+        async function handleLegalAction(actionType) {
+            try {
+                const res = await fetch(`${activeApiBase}/execute-action`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ case_id: currentCaseData.case_id, action_type: actionType })
+                });
+
+                const data = await res.json();
+
+                if (res.status === 403) {
+                    // Strict statutory compliance violation intercepted
+                    showViolationModal(data.legal_violation);
+                    return;
+                } else if (res.ok) {
+                    showSuccessModal(data);
+                    if (data.recovered_amount) {
+                        currentCaseData.loan.overdue_amount = data.new_overdue_balance;
+                        currentCaseData.banking.available_balance -= data.recovered_amount;
+                    }
+                    if (data.timeline_entry) {
+                        currentCaseData.timeline.unshift(data.timeline_entry);
+                    }
+                    renderCaseUI(currentCaseData);
+                    return;
+                }
+            } catch (err) {
+                // Client-side fallback rule execution
+                executeClientFallbackAction(actionType);
+            }
+        }
+
+        function executeClientFallbackAction(actionType) {
+            // Rule 1: Repossession on Unsecured Loan is Criminal Offense
+            if (actionType === 'DISPATCH_REPO_SQUAD' && !currentCaseData.is_secured) {
+                showViolationModal({
+                    title: "Extra-Judicial Asset Seizure Prohibited on Unsecured Debt",
+                    statute: "Indian Penal Code (Section 379/420/506) & RBI Guidelines on Recovery Agents",
+                    details: `Loan #${currentCaseData.loan.account_no} for ${currentCaseData.borrower.name} is an UNSECURED personal credit facility with zero registered hypothecation. Physical repossession or vehicle impoundment on unsecured credit is strictly illegal and constitutes criminal intimidation and extortion under Indian law.`,
+                    remedy: "File a Summary Suit under Order 37 CPC, institute commercial arbitration, or summon via Lok Adalat mediation."
+                });
+                return;
+            }
+
+            // Rule 2: Right of Set-Off vs External or Salary Accounts
+            if (actionType === 'EXECUTE_SET_OFF') {
+                if (!currentCaseData.banking.is_same_bank) {
+                    showViolationModal({
+                        title: "Banker's Lien Inapplicable to External Financial Institutions",
+                        statute: "Banking Regulation Act 1949 & Indian Contract Act 1872 (Section 171)",
+                        details: `Borrower deposit account is maintained at ${currentCaseData.banking.bank_name} (Third-Party External Bank). A lending bank's Right of Set-Off applies exclusively to deposits within CrediSphere. Directly seizing external bank funds without an attachment order from a Civil Court or DRT is ultra vires.`,
+                        remedy: "Obtain an Attachment Order from the Debt Recovery Tribunal (DRT) or Section 17 order from an Arbitral Tribunal."
+                    });
+                    return;
+                }
+
+                if (currentCaseData.banking.is_salary_account) {
+                    showViolationModal({
+                        title: "Blanket Freeze Prohibited on Salary & Livelihood Accounts",
+                        statute: "Code of Civil Procedure 1908 (Section 60(1)(g)) & Supreme Court Jurisprudence",
+                        details: `Account #${currentCaseData.banking.account_number} is designated as a Primary Salary & Sustenance Account. Section 60 of the CPC expressly protects basic livelihood funds from blanket freeze.`,
+                        remedy: "Apply partial garnishee set-off capped at maximum 33% of net monthly credit after written notice."
+                    });
+                    return;
+                }
+            }
+
+            // Compliant local execution
+            const refId = `JURN-${actionType.slice(0,4)}-${Math.floor(1000+Math.random()*9000)}`;
+            let msg = '';
+
+            if (actionType === 'EXECUTE_SET_OFF') {
+                const recovered = Math.min(currentCaseData.banking.available_balance, currentCaseData.loan.overdue_amount);
+                currentCaseData.loan.overdue_amount -= recovered;
+                currentCaseData.banking.available_balance -= recovered;
+                msg = `Successfully exercised Banker's Right of Set-Off under Section 171 Indian Contract Act for ₹${Math.round(recovered).toLocaleString('en-IN')}.`;
+                currentCaseData.timeline.unshift({
+                    tag: "SET-OFF EXECUTED",
+                    color: "#10B981",
+                    title: `Right of Set-Off Exercised [${refId}]`,
+                    description: `Recovered ₹${Math.round(recovered).toLocaleString('en-IN')} towards overdue delinquent debt.`,
+                    timestamp: "Just now",
+                    evidence_ref: `SET-OFF-RECEIPT-${refId}.PDF`
+                });
+            } else if (actionType === 'DISPATCH_REPO_SQUAD') {
+                msg = `Repossession authorization dispatched to court-empanelled bailiff squad under Section 14 SARFAESI.`;
+                currentCaseData.timeline.unshift({
+                    tag: "SQUAD DISPATCHED",
+                    color: "#EF4444",
+                    title: `Repossession Squad Dispatched [${refId}]`,
+                    description: `Court receiver and enforcement bailiff en route with GPS telematics lock.`,
+                    timestamp: "Just now",
+                    evidence_ref: `CMM-WARRANT-${refId}.PDF`
+                });
+            } else if (actionType === 'ISSUE_SARFAESI_NOTICE') {
+                msg = `SARFAESI Section 13(2) 60-day demand notice dispatched with electronic barcode.`;
+                currentCaseData.timeline.unshift({
+                    tag: "SARFAESI NOTICE",
+                    color: "#2563EB",
+                    title: `Section 13(2) e-Notice Served [${refId}]`,
+                    description: `Demand notice served via registered speed post and e-Summons gateway.`,
+                    timestamp: "Just now",
+                    evidence_ref: `SARFAESI-13-2-${refId}.PDF`
+                });
+            } else if (actionType === 'PROPOSE_OTS') {
+                const otsAmt = Math.round(currentCaseData.loan.overdue_amount * 0.72);
+                msg = `One-Time Settlement (OTS) formal compromise proposal generated for ₹${otsAmt.toLocaleString('en-IN')} (28% waiver).`;
+                currentCaseData.timeline.unshift({
+                    tag: "OTS PROPOSED",
+                    color: "#F59E0B",
+                    title: `One-Time Settlement (OTS) Issued [${refId}]`,
+                    description: `Offered 28% waiver with lump-sum settlement of ₹${otsAmt.toLocaleString('en-IN')}.`,
+                    timestamp: "Just now",
+                    evidence_ref: `OTS-OFFER-${refId}.PDF`
+                });
+            }
+
+            renderCaseUI(currentCaseData);
+            showSuccessModal({ reference_id: refId, message: msg });
+        }
+
+        function showViolationModal(viol) {
+            document.getElementById('viol-statute').textContent = `STATUTE: ${viol.statute}`;
+            document.getElementById('viol-details').innerHTML = `<strong>${viol.title}:</strong><br><br>${viol.details}`;
+            document.getElementById('viol-remedy').textContent = viol.remedy;
+            document.getElementById('modal-violation').classList.add('open');
+            showToast(`⚠️ STATUTORY VIOLATION INTERCEPTED: ${viol.title}`, 'violation');
+        }
+
+        function showSuccessModal(data) {
+            document.getElementById('ok-ref').textContent = `Audit Ref: ${data.reference_id || 'COMPLIANT'}`;
+            document.getElementById('ok-message').textContent = data.message || "Action executed compliantly.";
+            document.getElementById('modal-success').classList.add('open');
+            showToast(`✔ Judicial Action Authorized & Recorded`, 'success');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
+        }
+
+        function openAgreementDocket() {
+            if (!currentCaseData) return;
+            document.getElementById('docket-loan-type').textContent = currentCaseData.loan.loan_type;
+            document.getElementById('docket-sanctioned-amt').textContent = `₹${Math.round(currentCaseData.loan.sanctioned_amount).toLocaleString('en-IN')}`;
+            document.getElementById('docket-sanction-date').textContent = "14-Mar-2023";
+            document.getElementById('docket-interest-rate').textContent = currentCaseData.loan.loan_type.includes('Personal') ? "12.5% p.a. Fixed" : "8.75% p.a. Floating (MCLR Linked)";
+            document.getElementById('docket-tenure').textContent = `${currentCaseData.loan.loan_type.includes('Vehicle') ? '60' : (currentCaseData.loan.loan_type.includes('Home') ? '240' : '36')} Months`;
+            document.getElementById('agreement-docket-sub').textContent = `Registered Borrower: ${currentCaseData.borrower.name} · Loan #${currentCaseData.loan.account_no} · CNR: ${currentCaseData.cnr_number}`;
+            document.getElementById('docket-cersai-id').textContent = currentCaseData.collateral.cersai_id || "#200481921";
+            document.getElementById('docket-vahan-status').textContent = currentCaseData.is_secured ? `Registered Charge in favor of CrediSphere Bank Ltd [${currentCaseData.collateral.registration_no}]` : "Clean Unsecured Facility (No Collateral Charge)";
+            document.getElementById('modal-agreement').classList.add('open');
+        }
+
+        function openLegalNoticeModal() {
+            handleLegalAction('ISSUE_SARFAESI_NOTICE');
+        }
+
+        function toggleDiagnostics() {
+            const panel = document.getElementById('coll-insights-panel');
+            const btn = document.getElementById('coll-toggle-insights-btn');
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+                btn.classList.add('expanded');
+            } else {
+                panel.style.display = 'none';
+                btn.classList.remove('expanded');
+            }
+        }
+
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('coll-toast-container');
+            const toast = document.createElement('div');
+            toast.className = `coll-toast ${type === 'violation' ? 'violation' : 'success'}`;
+            toast.innerHTML = `<span>${type === 'violation' ? '🚫' : '✔'}</span><span>${msg}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.4s';
+                setTimeout(() => toast.remove(), 400);
+            }, 4200);
+        }
+
+        function filterDocketSearch(q) {
+            const query = q.toLowerCase().trim();
+            if (!query) return;
+            for (const c of registeredCasesList) {
+                if (c.borrower_name.toLowerCase().includes(query) ||
+                    (c.phone && c.phone.includes(query)) ||
+                    c.account_no.toLowerCase().includes(query) ||
+                    c.case_id.toLowerCase().includes(query)) {
+                    loadCaseDetails(c.case_id);
+                    break;
+                }
+            }
+        }
+
+        // Initialize on page load & activate real-time 5s Core Banking background sync
+        fetchLiveRegisteredCustomers();
+        setInterval(syncLiveBankStatus, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,3238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CrediSphere AI — Product Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0e1a3a;
+  --navy-2:#152a5c;
+  --navy-soft:rgba(255,255,255,.08);
+  --navy-border:rgba(255,255,255,.10);
+  --blue:#2f5fff;
+  --blue-2:#5b7fff;
+  --blue-light:#eef2ff;
+  --teal:#0ea394;
+  --teal-light:#e4f9f6;
+  --purple:#7c5cff;
+  --purple-light:#f2efff;
+  --green:#17a34a;
+  --green-light:#eefbf1;
+  --amber:#d97706;
+  --amber-light:#fff8ea;
+  --red:#e03131;
+  --red-light:#fef1f1;
+  --ink:#101a33;
+  --muted:#66708a;
+  --border:#e5e9f3;
+  --surface:#ffffff;
+  --surface-2:#f6f8fd;
+  --bg:#eef1f9;
+  --radius:16px;
+  --radius-sm:10px;
+  --radius-xs:7px;
+  --shadow-sm:0 1px 3px rgba(15,26,58,.06);
+  --shadow-md:0 6px 20px rgba(15,26,58,.08);
+  --shadow-lg:0 20px 48px rgba(15,26,58,.16);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:'DM Mono',monospace;}
+button{font-family:inherit;cursor:pointer;}
+input,select{font-family:inherit;}
+a{color:inherit;text-decoration:none;}
+
+/* ================= PROTOTYPE NAV (frame switcher) ================= */
+#protobar{
+  position:sticky;top:0;z-index:999;
+  background:var(--navy);
+  color:#fff;
+  display:flex;align-items:center;
+  gap:6px;
+  padding:0 18px;
+  height:52px;
+  overflow-x:auto;
+  box-shadow:0 4px 18px rgba(0,0,0,.18);
+}
+#protobar .brand{
+  display:flex;align-items:center;gap:8px;
+  font-weight:700;font-size:13px;
+  padding-right:16px;margin-right:8px;
+  border-right:1px solid var(--navy-border);
+  white-space:nowrap;flex-shrink:0;
+}
+#protobar .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px rgba(14,163,148,.25);}
+.pb-tab{
+  flex-shrink:0;
+  padding:7px 14px;
+  border-radius:20px;
+  font-size:12.5px;
+  font-weight:600;
+  color:rgba(255,255,255,.62);
+  background:transparent;
+  border:1px solid transparent;
+  white-space:nowrap;
+  transition:.15s;
+}
+.pb-tab:hover{color:#fff;background:var(--navy-soft);}
+.pb-tab.active{
+  color:var(--navy);
+  background:#fff;
+}
+
+/* ================= FRAMES ================= */
+.frame{display:none;min-height:calc(100vh - 52px);}
+.frame.active{display:block;}
+
+/* ================= AUTH SCREENS ================= */
+.auth-wrap{
+  min-height:calc(100vh - 52px);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+@media(max-width:920px){.auth-wrap{grid-template-columns:1fr;}}
+.auth-brand{
+  background:
+    radial-gradient(circle at 15% 15%, rgba(124,92,255,.35), transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(14,163,148,.30), transparent 45%),
+    linear-gradient(160deg,#0e1a3a 0%, #16265a 60%, #101c42 100%);
+  color:#fff;
+  padding:52px 56px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+@media(max-width:920px){.auth-brand{display:none;}}
+.auth-brand-top{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;position:relative;z-index:2;}
+.logo-mark{
+  width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;
+}
+.auth-brand-mid{position:relative;z-index:2;max-width:420px;}
+.auth-brand-mid .eyebrow{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);font-weight:700;margin-bottom:14px;}
+.auth-brand-mid h1{font-size:34px;line-height:1.22;font-weight:800;margin-bottom:14px;letter-spacing:-.01em;}
+.auth-brand-mid p{font-size:14.5px;line-height:1.65;color:rgba(255,255,255,.68);}
+.auth-gauge{
+  position:relative;z-index:2;
+  display:flex;align-items:center;gap:22px;
+  margin-top:34px;
+  padding:18px 20px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:16px;
+  backdrop-filter:blur(6px);
+}
+.auth-brand-bottom{display:flex;gap:28px;position:relative;z-index:2;}
+.auth-brand-bottom .stat b{display:block;font-size:22px;font-weight:800;}
+.auth-brand-bottom .stat span{font-size:11.5px;color:rgba(255,255,255,.55);}
+
+.auth-form-side{
+  display:flex;align-items:center;justify-content:center;
+  padding:40px 24px;
+}
+.auth-card{width:100%;max-width:390px;}
+.auth-card h2{font-size:24px;font-weight:800;margin-bottom:6px;}
+.auth-card .sub{font-size:13.5px;color:var(--muted);margin-bottom:28px;}
+.role-toggle{
+  display:flex;background:var(--surface-2);border:1px solid var(--border);
+  border-radius:12px;padding:4px;margin-bottom:22px;
+}
+.role-toggle button{
+  flex:1;border:none;background:transparent;padding:9px 0;
+  font-size:12.5px;font-weight:700;color:var(--muted);border-radius:9px;transition:.15s;
+}
+.role-toggle button.active{background:var(--navy);color:#fff;box-shadow:var(--shadow-sm);}
+.f-group{margin-bottom:16px;}
+.f-group label{display:block;font-size:12px;font-weight:700;color:var(--ink);margin-bottom:6px;}
+.f-input{
+  width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;
+  font-size:13.5px;background:var(--surface);transition:.15s;
+}
+.f-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,95,255,.12);}
+.f-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.f-check{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);margin-bottom:20px;}
+.f-check a{color:var(--blue);font-weight:600;}
+.f-between{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;font-size:12.5px;}
+.f-between a{color:var(--blue);font-weight:600;}
+.btn-primary{
+  width:100%;padding:12.5px;border:none;border-radius:11px;
+  background:linear-gradient(135deg,var(--blue),#4a6bff);
+  color:#fff;font-weight:700;font-size:14px;box-shadow:0 8px 20px rgba(47,95,255,.28);
+  transition:.15s;
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(47,95,255,.36);}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:22px 0;color:var(--muted);font-size:11.5px;}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.btn-otp{
+  width:100%;padding:11px;border:1.5px solid var(--border);border-radius:11px;background:#fff;
+  font-weight:700;font-size:13px;color:var(--ink);display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.auth-foot{text-align:center;margin-top:22px;font-size:12.5px;color:var(--muted);}
+.auth-foot a{color:var(--blue);font-weight:700;}
+
+/* ================= APP SHELL (admin) ================= */
+.app-shell{display:grid;grid-template-columns:236px 1fr;min-height:calc(100vh - 52px);}
+.sidebar{
+  background:var(--navy);color:#fff;
+  padding:22px 16px;display:flex;flex-direction:column;gap:4px;
+}
+.sb-brand{display:flex;align-items:center;gap:10px;padding:0 6px 22px;margin-bottom:10px;border-bottom:1px solid var(--navy-border);}
+.sb-brand .logo-mark{width:34px;height:34px;font-size:12px;}
+.sb-brand b{font-size:14.5px;}
+.sb-brand span{display:block;font-size:10.5px;color:rgba(255,255,255,.5);}
+.sb-section-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);padding:14px 10px 6px;}
+.sb-item{
+  display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;
+  font-size:13px;font-weight:600;color:rgba(255,255,255,.72);transition:.15s;
+}
+.sb-item .ic{width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.sb-item:hover{background:var(--navy-soft);color:#fff;}
+.sb-item.active{background:linear-gradient(90deg, rgba(47,95,255,.35), rgba(47,95,255,.08));color:#fff;box-shadow:inset 3px 0 0 var(--blue-2);}
+.sb-bottom{margin-top:auto;padding-top:14px;border-top:1px solid var(--navy-border);}
+.sb-user{display:flex;align-items:center;gap:10px;padding:8px 6px;}
+.sb-avatar{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--teal),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;}
+.sb-user b{font-size:12.5px;display:block;}
+.sb-user span{font-size:10.5px;color:rgba(255,255,255,.5);}
+
+.main{background:var(--bg);min-height:calc(100vh - 52px);}
+.topbar{
+  height:64px;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 26px;
+  position:sticky;top:52px;z-index:50;box-shadow:var(--shadow-sm);
+}
+.tb-search{
+  display:flex;align-items:center;gap:9px;background:var(--surface-2);border:1px solid var(--border);
+  border-radius:10px;padding:8px 14px;width:320px;font-size:12.5px;color:var(--muted);
+}
+.tb-right{display:flex;align-items:center;gap:14px;}
+.tb-pill{display:flex;align-items:center;gap:7px;background:var(--surface-2);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:600;}
+.tb-icon-btn{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:15px;position:relative;}
+.badge-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid #fff;}
+.tb-avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--purple),var(--blue));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;}
+
+.content{padding:26px 28px;max-width:1440px;margin:0 auto;}
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:22px;}
+.page-head h1{font-size:21px;font-weight:800;letter-spacing:-.01em;}
+.page-head p{font-size:13px;color:var(--muted);margin-top:3px;}
+.btn-sm{padding:9px 15px;border-radius:9px;border:1px solid var(--border);background:#fff;font-size:12.5px;font-weight:700;color:var(--ink);}
+.btn-sm.dark{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+/* KPI cards */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px;}
+@media(max-width:1100px){.kpi-row{grid-template-columns:repeat(2,1fr);}}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow-sm);}
+.kpi-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.kpi-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.kpi-trend{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;}
+.trend-up{background:var(--green-light);color:var(--green);}
+.trend-down{background:var(--red-light);color:var(--red);}
+.kpi-value{font-size:24px;font-weight:800;font-family:'DM Mono',monospace;margin-bottom:2px;}
+.kpi-label{font-size:12px;color:var(--muted);font-weight:600;}
+
+/* generic widget/card */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:17px 20px;border-bottom:1px solid var(--border);}
+.card-head h3{font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.card-body{padding:18px 20px;}
+.ai-chip{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;color:var(--purple);background:var(--purple-light);border-radius:20px;padding:3px 10px;}
+.ai-chip::before{content:'✦';}
+.link-sm{font-size:12px;font-weight:700;color:var(--blue);}
+
+.grid-2{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;}
+@media(max-width:1100px){.grid-2{grid-template-columns:1fr;}}
+
+/* risk distribution bars */
+.risk-bar-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.risk-bar-row .rlabel{width:76px;font-size:12px;font-weight:700;color:var(--muted);flex-shrink:0;}
+.risk-bar-track{flex:1;height:9px;background:var(--surface-2);border-radius:6px;overflow:hidden;}
+.risk-bar-fill{height:100%;border-radius:6px;}
+.risk-bar-row .rval{width:70px;text-align:right;font-family:'DM Mono',monospace;font-size:12px;font-weight:600;flex-shrink:0;}
+
+/* table */
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;padding:10px 20px;border-bottom:1px solid var(--border);background:var(--surface-2);}
+td{padding:13px 20px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+.app-name{font-weight:700;}
+.app-sub{font-size:11.5px;color:var(--muted);}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;}
+.chip-approved{background:var(--green-light);color:var(--green);}
+.chip-review{background:var(--amber-light);color:var(--amber);}
+.chip-rejected{background:var(--red-light);color:var(--red);}
+.chip-pending{background:var(--blue-light);color:var(--blue);}
+.mini-score{display:flex;align-items:center;gap:8px;}
+.mini-score-track{width:54px;height:6px;border-radius:4px;background:var(--surface-2);overflow:hidden;}
+.mini-score-fill{height:100%;border-radius:4px;}
+.mini-score b{font-family:'DM Mono',monospace;font-size:12.5px;}
+
+/* AI decision feed */
+.feed-item{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--border);}
+.feed-item:last-child{border-bottom:none;}
+.feed-dot{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.feed-text{font-size:12.5px;line-height:1.55;color:#374151;}
+.feed-time{font-size:10.5px;color:var(--muted);margin-top:3px;}
+
+.alert-item{display:flex;gap:11px;padding:12px 14px;border-radius:10px;margin-bottom:10px;border:1px solid;}
+.alert-item:last-child{margin-bottom:0;}
+.alert-high{background:var(--red-light);border-color:rgba(224,49,49,.18);}
+.alert-med{background:var(--amber-light);border-color:rgba(217,119,6,.18);}
+.alert-title{font-size:12.5px;font-weight:700;margin-bottom:2px;}
+.alert-sub{font-size:11.5px;color:var(--muted);}
+
+/* ============ CREDIT INTELLIGENCE / LOAN DECISION SCREEN ============ */
+.applicant-bar{
+  background:linear-gradient(90deg,var(--navy),#182b5c);
+  color:#fff;padding:16px 26px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+}
+.ap-left{display:flex;align-items:center;gap:16px;}
+.ap-avatar{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--purple));display:flex;align-items:center;justify-content:center;font-weight:700;}
+.ap-name{font-size:16px;font-weight:800;}
+.ap-meta{font-size:11.5px;color:rgba(255,255,255,.6);display:flex;gap:10px;margin-top:3px;flex-wrap:wrap;}
+.ap-tags{display:flex;gap:8px;flex-wrap:wrap;}
+.ap-tag{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:5px 12px;font-size:11.5px;font-weight:600;}
+
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;}
+.gauge-value{font-size:30px;font-weight:800;font-family:'DM Mono',monospace;}
+.gauge-band{font-size:11.5px;font-weight:700;margin-top:4px;padding:3px 12px;border-radius:20px;}
+
+.factor-row{margin-bottom:16px;}
+.factor-top{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px;}
+.factor-top b{font-weight:700;}
+.factor-top span{color:var(--muted);font-family:'DM Mono',monospace;font-size:11.5px;}
+.factor-track{height:8px;border-radius:5px;background:var(--surface-2);overflow:hidden;}
+.factor-fill{height:100%;border-radius:5px;}
+
+.decision-card{border-radius:var(--radius);border:1.5px solid rgba(23,163,74,.25);background:linear-gradient(180deg,var(--green-light),#fff);padding:20px;}
+.decision-card.reject{border-color:rgba(224,49,49,.25);background:linear-gradient(180deg,var(--red-light),#fff);}
+.decision-card.refer{border-color:rgba(217,119,6,.25);background:linear-gradient(180deg,var(--amber-light),#fff);}
+.decision-verdict{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.decision-verdict .vicon{width:36px;height:36px;border-radius:10px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;}
+.decision-verdict h4{font-size:16px;font-weight:800;color:var(--green);}
+.decision-card.reject .decision-verdict .vicon{background:var(--red);}
+.decision-card.reject .decision-verdict h4{color:var(--red);}
+.decision-card.refer .decision-verdict .vicon{background:var(--amber);}
+.decision-card.refer .decision-verdict h4{color:var(--amber);}
+.confidence-text{font-size:11.5px;color:var(--muted);margin-bottom:14px;}
+.reason-list{list-style:none;margin-bottom:16px;}
+.reason-list li{font-size:12.5px;line-height:1.6;color:#374151;padding-left:18px;position:relative;margin-bottom:7px;}
+.reason-list li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700;}
+.terms-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.term-box{background:#fff;border:1px solid var(--border);border-radius:9px;padding:10px 12px;}
+.term-box span{font-size:10.5px;color:var(--muted);display:block;margin-bottom:3px;}
+.term-box b{font-size:14px;font-family:'DM Mono',monospace;}
+.decision-actions{display:flex;gap:8px;}
+.btn-approve{flex:1;background:var(--green);color:#fff;border:none;padding:11px;border-radius:9px;font-weight:700;font-size:12.5px;}
+.btn-reject{flex:1;background:#fff;color:var(--red);border:1.5px solid var(--red);padding:11px;border-radius:9px;font-weight:700;font-size:12.5px;}
+.btn-refer{flex:1;background:#fff;color:var(--amber);border:1.5px solid var(--amber);padding:11px;border-radius:9px;font-weight:700;font-size:12.5px;}
+
+.bureau-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.bureau-box{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;text-align:center;}
+.bureau-box b{display:block;font-size:16px;font-family:'DM Mono',monospace;margin-top:2px;}
+.bureau-box span{font-size:10.5px;color:var(--muted);font-weight:600;}
+
+/* ============ USER / CUSTOMER PORTAL ============ */
+.user-nav{
+  background:#fff;border-bottom:1px solid var(--border);height:66px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;position:sticky;top:52px;z-index:50;
+}
+.un-left{display:flex;align-items:center;gap:34px;}
+.un-brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:15px;}
+.un-links{display:flex;gap:26px;}
+.un-links a{font-size:13px;font-weight:600;color:var(--muted);padding:6px 0;border-bottom:2px solid transparent;}
+.un-links a.active{color:var(--ink);border-color:var(--blue);}
+.un-right{display:flex;align-items:center;gap:14px;}
+
+.user-hero{
+  background:linear-gradient(120deg,var(--navy) 0%, #1c2f66 60%, #131f47 100%);
+  color:#fff;padding:34px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;
+}
+.uh-left h2{font-size:22px;font-weight:800;margin-bottom:6px;}
+.uh-left p{font-size:13px;color:rgba(255,255,255,.65);max-width:420px;line-height:1.6;}
+.uh-score{
+  display:flex;align-items:center;gap:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);
+  border-radius:16px;padding:16px 22px;
+}
+.uh-score-ring{position:relative;width:74px;height:74px;flex-shrink:0;}
+.uh-score-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.uh-score-num b{font-size:18px;font-family:'DM Mono',monospace;}
+.uh-score-num span{font-size:8px;color:rgba(255,255,255,.6);}
+.uh-score-label b{font-size:13px;display:block;}
+.uh-score-label span{font-size:11px;color:rgba(255,255,255,.6);}
+
+.user-content{padding:28px 32px;max-width:1280px;margin:0 auto;}
+.section-title{font-size:16px;font-weight:800;margin:6px 0 14px;display:flex;align-items:center;justify-content:space-between;}
+
+.loan-status-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:var(--shadow-sm);margin-bottom:26px;}
+.lsc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;flex-wrap:wrap;gap:14px;}
+.lsc-amt{font-size:26px;font-weight:800;font-family:'DM Mono',monospace;}
+.lsc-progress{height:10px;background:var(--surface-2);border-radius:6px;overflow:hidden;margin:10px 0 8px;}
+.lsc-progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:6px;}
+.lsc-meta{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);}
+
+.offer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
+@media(max-width:900px){.offer-grid{grid-template-columns:1fr;}}
+.offer-card{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:20px;position:relative;overflow:hidden;transition:.15s;}
+.offer-card:hover{border-color:var(--blue);box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.offer-tag{position:absolute;top:0;right:0;background:var(--purple);color:#fff;font-size:10px;font-weight:700;padding:4px 12px;border-radius:0 0 0 10px;}
+.offer-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:14px;}
+.offer-card h4{font-size:14.5px;font-weight:700;margin-bottom:4px;}
+.offer-card .oamt{font-size:20px;font-weight:800;font-family:'DM Mono',monospace;margin:8px 0 4px;}
+.offer-card .orate{font-size:11.5px;color:var(--muted);margin-bottom:14px;}
+.offer-apply{width:100%;padding:9px;border-radius:9px;border:1.5px solid var(--navy);background:#fff;font-weight:700;font-size:12px;color:var(--navy);}
+.offer-apply:hover{background:var(--navy);color:#fff;}
+
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+@media(max-width:900px){.quick-grid{grid-template-columns:repeat(2,1fr);}}
+.quick-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px;}
+.quick-card .qicon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.quick-card b{font-size:13px;}
+.quick-card span{font-size:11.5px;color:var(--muted);}
+
+/* ============ COLLECTIONS AI (admin) ============ */
+
+/* ============ COLLECTIONS AI ENGINE & LIVE TELEPHONY STYLES ============ */
+#collections-ai-view {
+  animation: fadeInColl 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: block;
+}
+@keyframes fadeInColl {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Status Chips & Metrics */
+.coll-chip-wrap { display: flex; gap: 8px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+.coll-subchip { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--border); color: var(--muted); }
+.coll-subchip.danger { background: var(--red-light); color: var(--red); border-color: rgba(224,49,49,0.2); }
+.coll-subchip.warning { background: var(--amber-light); color: var(--amber); border-color: rgba(217,119,6,0.2); }
+
+/* AI Engine Insights Toggle & Panel */
+.ai-engine-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg, rgba(124,92,255,0.1), rgba(47,95,255,0.1));
+  border: 1px solid rgba(124,92,255,0.3); color: var(--purple);
+  font-size: 11.5px; font-weight: 700; padding: 6px 14px; border-radius: 20px;
+  cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ai-engine-btn:hover { background: var(--purple); color: #fff; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(124,92,255,0.25); }
+.ai-engine-btn .chevron-icon { transition: transform 0.2s ease; font-size: 10px; }
+.ai-engine-btn.expanded .chevron-icon { transform: rotate(180deg); }
+
+.coll-insights-panel {
+  display: block; margin-top: 16px; padding: 16px;
+  background: linear-gradient(180deg, #f8faff, #ffffff);
+  border: 1.5px solid rgba(47,95,255,0.22); border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(47,95,255,0.06);
+  animation: fadeInColl 0.25s ease;
+}
+.coll-insights-title {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; font-weight: 800; color: var(--navy); margin-bottom: 10px;
+  padding-bottom: 8px; border-bottom: 1px dashed var(--border);
+}
+.coll-model-pipeline {
+  display: flex; align-items: center; gap: 8px; font-size: 11px;
+  background: rgba(47,95,255,0.06); padding: 6px 10px; border-radius: 8px;
+  color: var(--blue); font-weight: 700; margin-bottom: 12px;
+}
+.coll-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+.coll-stat-box { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; text-align: center; }
+.coll-stat-box span { font-size: 10px; color: var(--muted); font-weight: 600; display: block; margin-bottom: 2px; }
+.coll-stat-box b { font-size: 13px; font-family: 'DM Mono', monospace; color: var(--navy); }
+
+/* Q-Value distribution meters */
+.q-meter-wrap { margin-top: 8px; display: flex; flex-direction: column; gap: 7px; }
+.q-meter-row { display: flex; align-items: center; justify-content: space-between; font-size: 11px; gap: 10px; }
+.q-meter-name { width: 155px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.q-meter-bar-bg { flex: 1; height: 7px; background: #e5e9f3; border-radius: 10px; overflow: hidden; position: relative; }
+.q-meter-bar-fill { height: 100%; border-radius: 10px; transition: width 0.5s ease; }
+.q-meter-val { width: 45px; text-align: right; font-family: 'DM Mono', monospace; font-weight: 700; font-size: 11px; }
+
+/* Action Hub Under Recovery Recommendation */
+.coll-action-hub {
+  margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border);
+}
+.action-hub-label {
+  font-size: 11px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.05em; color: var(--muted); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 6px;
+}
+.coll-action-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.coll-action-btn {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 12px 10px; border-radius: 10px; border: 1px solid transparent;
+  cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); text-align: center;
+}
+.coll-action-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(15,26,58,0.14); }
+.coll-action-btn .btn-icon { font-size: 20px; margin-bottom: 4px; }
+.coll-action-btn .btn-title { font-size: 12.5px; font-weight: 700; }
+.coll-action-btn .btn-subtitle { font-size: 10px; opacity: 0.85; margin-top: 2px; }
+
+.coll-action-btn.primary {
+  background: linear-gradient(135deg, var(--navy), var(--blue)); color: #fff;
+  box-shadow: 0 3px 10px rgba(47,95,255,0.28);
+}
+.coll-action-btn.secondary {
+  background: linear-gradient(135deg, #10b981, #059669); color: #fff;
+  box-shadow: 0 3px 10px rgba(16,185,129,0.28);
+}
+.coll-action-btn.outline {
+  background: #fff; border-color: var(--border); color: var(--navy);
+}
+.coll-action-btn.outline:hover { background: var(--surface-2); border-color: var(--blue); }
+
+/* Live Pill */
+.live-pill {
+  display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px;
+  font-weight: 700; color: var(--green); background: var(--green-light);
+  padding: 2px 8px; border-radius: 12px;
+}
+
+/* Modals & Backdrop */
+.coll-modal-backdrop {
+  position: fixed; inset: 0; background: rgba(14,26,58,0.72);
+  backdrop-filter: blur(5px); z-index: 9000;
+  display: none; align-items: center; justify-content: center;
+  animation: fadeInColl 0.2s ease;
+}
+.coll-modal-backdrop.open { display: flex !important; }
+.coll-modal-box {
+  background: #fff; border-radius: 16px; width: 100%; max-width: 540px;
+  box-shadow: 0 28px 72px rgba(0,0,0,0.32); border: 1px solid rgba(255,255,255,0.5);
+  overflow: hidden; animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  margin: 16px; position: relative;
+}
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* VoIP Call Modal Specifics */
+.call-modal-header {
+  background: linear-gradient(135deg, #091124, #122244); color: #fff;
+  padding: 26px 24px 22px; text-align: center; position: relative;
+}
+.call-avatar-ring {
+  width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 12px;
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; font-weight: 800; color: #fff; position: relative;
+}
+.call-avatar-ring.ringing::after {
+  content: ''; position: absolute; inset: -8px; border-radius: 50%;
+  border: 2px solid rgba(14,163,148,0.6); animation: ringPulse 1.2s infinite;
+}
+@keyframes ringPulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.35); opacity: 0; } }
+
+.call-borrower-name { font-size: 18px; font-weight: 800; margin-bottom: 3px; }
+.call-borrower-num { font-size: 12px; color: rgba(255,255,255,0.75); font-family: 'DM Mono', monospace; }
+.call-status-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;
+  margin-top: 10px; background: rgba(255,255,255,0.12); color: #fff;
+}
+.call-status-pill.connected { background: rgba(23,163,74,0.28); color: #4ade80; border: 1px solid rgba(74,222,128,0.35); }
+
+.call-body { padding: 18px 22px; max-height: 240px; overflow-y: auto; background: var(--surface-2); }
+.transcript-bubble {
+  margin-bottom: 12px; display: flex; flex-direction: column; animation: fadeInColl 0.3s ease;
+}
+.transcript-bubble.agent { align-items: flex-end; }
+.transcript-bubble.borrower { align-items: flex-start; }
+.bubble-tag { font-size: 10.5px; font-weight: 700; color: var(--muted); margin-bottom: 3px; }
+.bubble-content {
+  max-width: 82%; padding: 10px 14px; border-radius: 12px; font-size: 12.5px; line-height: 1.48;
+}
+.transcript-bubble.agent .bubble-content { background: var(--navy); color: #fff; border-bottom-right-radius: 2px; }
+.transcript-bubble.borrower .bubble-content { background: #fff; border: 1px solid var(--border); color: var(--ink); border-bottom-left-radius: 2px; }
+
+/* Call Actions Bar */
+.call-controls-bar {
+  display: flex; align-items: center; justify-content: space-around;
+  padding: 16px 20px; background: #fff; border-top: 1px solid var(--border);
+}
+.ctrl-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  background: none; border: none; font-size: 11px; font-weight: 700; color: var(--ink);
+  cursor: pointer; transition: transform 0.15s;
+}
+.ctrl-btn:hover { transform: scale(1.06); }
+.ctrl-icon-circle {
+  width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; background: var(--surface-2); border: 1px solid var(--border);
+}
+.ctrl-btn.active .ctrl-icon-circle { background: var(--amber-light); border-color: var(--amber); color: var(--amber); }
+.ctrl-btn.danger .ctrl-icon-circle { background: #ef4444; color: #fff; border: none; box-shadow: 0 4px 14px rgba(239,68,68,0.35); }
+
+/* PTP Mini Drawer in Call Modal */
+.ptp-drawer {
+  display: none; padding: 14px 18px; background: #fff8ea; border-top: 1.5px dashed rgba(217,119,6,0.3);
+}
+.ptp-drawer.open { display: block; }
+.ptp-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+.ptp-input { width: 100%; padding: 7px 10px; border-radius: 8px; border: 1px solid #d97706; font-size: 12px; }
+
+/* SMS / Message Modal Specifics */
+.msg-modal-head {
+  padding: 18px 22px; border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.msg-modal-body { padding: 20px 22px; }
+.channel-switch { display: flex; gap: 8px; margin-bottom: 14px; }
+.channel-btn {
+  flex: 1; padding: 9px; border-radius: 8px; border: 1.5px solid var(--border);
+  background: #fff; font-size: 12px; font-weight: 700; cursor: pointer; text-align: center;
+  transition: all 0.15s ease;
+}
+.channel-btn.active { border-color: var(--green); background: var(--green-light); color: var(--green); }
+.template-select-wrap { margin-bottom: 14px; }
+.template-select-wrap label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: 6px; }
+.template-select-wrap select {
+  width: 100%; padding: 9px 10px; border-radius: 8px; border: 1px solid var(--border); font-size: 12px; font-family: inherit; margin-bottom: 8px;
+}
+.template-textarea {
+  width: 100%; height: 95px; border-radius: 10px; border: 1px solid var(--border);
+  padding: 10px 12px; font-family: inherit; font-size: 12px; line-height: 1.48; resize: none;
+}
+.msg-preview-card {
+  background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 12px; margin-top: 12px;
+  font-size: 11.5px; color: #166534; display: flex; gap: 8px; align-items: flex-start;
+}
+
+/* Slide-out AI Assistant Drawer */
+.ai-drawer-backdrop {
+  position: fixed; inset: 0; background: rgba(14,26,58,0.55);
+  backdrop-filter: blur(3px); z-index: 9500;
+  display: none; justify-content: flex-end; animation: fadeInColl 0.2s ease;
+}
+.ai-drawer-backdrop.open { display: flex !important; }
+.ai-drawer-box {
+  width: 100%; max-width: 480px; height: 100%; background: #fff;
+  box-shadow: -12px 0 40px rgba(0,0,0,0.22); display: flex; flex-direction: column;
+  animation: slideInRight 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+.ai-drawer-head {
+  padding: 20px 22px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(90deg, #0e1a3a, #162a5c); color: #fff;
+}
+.ai-drawer-body { flex: 1; overflow-y: auto; padding: 18px 20px; }
+.ai-prompt-chips { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.ai-chip-prompt {
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 9px 13px; font-size: 12px; font-weight: 600; text-align: left; cursor: pointer;
+  transition: all 0.15s ease; color: var(--ink);
+}
+.ai-chip-prompt:hover { background: var(--blue-light); border-color: var(--blue); color: var(--blue); transform: translateX(3px); }
+.ai-chat-thread { display: flex; flex-direction: column; gap: 14px; }
+.ai-msg { display: flex; flex-direction: column; animation: fadeInColl 0.25s ease; }
+.ai-msg.user { align-items: flex-end; }
+.ai-msg.user .msg-bubble { background: var(--blue); color: #fff; border-radius: 12px 12px 2px 12px; font-size: 12.5px; padding: 10px 14px; }
+.ai-msg.bot { align-items: flex-start; }
+.ai-msg.bot .msg-bubble { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px 12px 12px 2px; font-size: 12px; padding: 12px 15px; line-height: 1.58; color: #1e293b; }
+.ai-msg.bot .msg-bubble b { color: var(--navy); }
+.ai-drawer-foot {
+  padding: 14px 18px; border-top: 1px solid var(--border); display: flex; gap: 8px; background: #fff;
+}
+.ai-drawer-input {
+  flex: 1; border: 1px solid var(--border); border-radius: 10px; padding: 9px 14px; font-size: 12.5px; font-family: inherit;
+}
+.ai-drawer-send {
+  background: var(--blue); color: #fff; border: none; border-radius: 10px; padding: 0 18px; font-weight: 700; cursor: pointer;
+}
+
+/* Toast Notifications */
+#coll-toast-container {
+  position: fixed; bottom: 24px; right: 24px; z-index: 99999;
+  display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+}
+.coll-toast {
+  pointer-events: auto; background: var(--navy); color: #fff;
+  border-radius: 10px; padding: 12px 18px; font-size: 12.5px; font-weight: 600;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.18);
+  display: flex; align-items: center; gap: 10px; animation: toastSlide 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes toastSlide {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.coll-toast.success { border-left: 4px solid #10b981; }
+
+.coll-topstrip{background:linear-gradient(90deg,var(--red-light),#fff);border-bottom:1px solid rgba(224,49,49,.15);padding:12px 26px;display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:600;color:var(--red);}
+.coll-topstrip .pdot{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse 1.4s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+footer.proto-foot{padding:26px;text-align:center;font-size:11.5px;color:var(--muted);}
+
+/* ============ LOAN APPLICATION FORM ============ */
+.stepper{display:flex;align-items:center;margin-bottom:28px;max-width:720px;}
+.step{display:flex;align-items:center;gap:10px;flex:1;}
+.step-num{width:30px;height:30px;border-radius:50%;background:var(--surface-2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:var(--muted);flex-shrink:0;}
+.step.done .step-num{background:var(--green);border-color:var(--green);color:#fff;}
+.step.current .step-num{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 0 4px rgba(47,95,255,.15);}
+.step-label{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap;}
+.step.done .step-label,.step.current .step-label{color:var(--ink);}
+.step-line{flex:1;height:2px;background:var(--border);margin:0 4px;}
+.step.done + .step-line{background:var(--green);}
+
+.form-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);max-width:760px;overflow:hidden;}
+.form-card .card-body{padding:26px 28px;}
+.form-section-title{font-size:15px;font-weight:800;margin-bottom:18px;}
+.upload-zone{
+  border:2px dashed var(--border);border-radius:12px;padding:28px;text-align:center;background:var(--surface-2);margin-bottom:8px;
+}
+.upload-zone .uz-icon{font-size:26px;margin-bottom:8px;}
+.upload-zone b{font-size:13px;display:block;margin-bottom:3px;}
+.upload-zone span{font-size:11.5px;color:var(--muted);}
+.ai-live-panel{
+  background:linear-gradient(180deg,var(--purple-light),#fff);border:1.5px solid rgba(124,92,255,.22);border-radius:14px;padding:16px 18px;margin-top:20px;
+}
+.ai-live-panel .plive{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--purple);margin-bottom:8px;}
+.plive .pdot2{width:7px;height:7px;border-radius:50%;background:var(--purple);animation:pulse 1.3s infinite;}
+.form-actions{display:flex;justify-content:space-between;padding:18px 28px;background:var(--surface-2);border-top:1px solid var(--border);}
+.btn-outline{padding:11px 20px;border-radius:10px;border:1.5px solid var(--border);background:#fff;font-weight:700;font-size:12.5px;}
+.btn-next{padding:11px 24px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-weight:700;font-size:12.5px;}
+
+/* ============ RISK POLICY CONFIG ============ */
+.policy-tabs{display:flex;gap:6px;margin-bottom:20px;border-bottom:1px solid var(--border);}
+.ptab{padding:10px 16px;font-size:12.5px;font-weight:700;color:var(--muted);border-bottom:2px solid transparent;}
+.ptab.active{color:var(--blue);border-color:var(--blue);}
+.rule-row{
+  display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border:1px solid var(--border);border-radius:12px;margin-bottom:10px;background:#fff;
+}
+.rule-left{display:flex;align-items:center;gap:13px;}
+.rule-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.rule-title{font-size:13px;font-weight:700;}
+.rule-sub{font-size:11.5px;color:var(--muted);margin-top:2px;}
+.rule-right{display:flex;align-items:center;gap:14px;}
+.rule-val{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;}
+.toggle{position:relative;display:inline-flex;align-items:center;width:40px;height:22px;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0;position:absolute;}
+.toggle-track{position:absolute;inset:0;border-radius:16px;background:var(--border);cursor:pointer;transition:.2s;}
+.toggle input:checked ~ .toggle-track{background:var(--green);}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;pointer-events:none;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25);}
+.toggle input:checked ~ .toggle-track .toggle-thumb{transform:translateX(18px);}
+.threshold-bar{position:relative;height:10px;background:linear-gradient(90deg,var(--red) 0%,var(--amber) 45%,var(--green) 100%);border-radius:6px;margin:16px 0 8px;}
+.threshold-handle{position:absolute;top:-5px;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--navy);box-shadow:var(--shadow-sm);}
+
+/* ============ REPORTS & ANALYTICS ============ */
+.chart-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:20px;}
+.bar-chart{display:flex;align-items:flex-end;gap:14px;height:180px;padding-top:10px;}
+.bar-chart .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:8px;}
+.bar-chart .bar{width:100%;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--blue-2),var(--blue));position:relative;}
+.bar-chart .bar-lbl{font-size:10.5px;color:var(--muted);font-weight:600;}
+.bar-chart .bar-val{position:absolute;top:-20px;left:0;right:0;text-align:center;font-size:11px;font-weight:700;font-family:'DM Mono',monospace;}
+.donut-legend{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
+.dl-row{display:flex;align-items:center;gap:9px;font-size:12.5px;}
+.dl-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.dl-row b{margin-left:auto;font-family:'DM Mono',monospace;}
+.line-chart-svg{width:100%;height:170px;}
+
+/* AutoML + SHAP Live Analysis Styles */
+.automl-tag{display:inline-flex;align-items:center;gap:6px;background:var(--green-light);color:var(--green);padding:5px 12px;border-radius:20px;font-weight:800;font-size:11.5px;letter-spacing:.02em;border:1px solid rgba(23,163,74,.2);}
+.pulse-dot{width:8px;height:8px;background:var(--green);border-radius:50%;display:inline-block;animation:pulseDotAnim 1.8s infinite;}
+@keyframes pulseDotAnim{0%{transform:scale(.95);box-shadow:0 0 0 0 rgba(23,163,74,.7);}70%{transform:scale(1.05);box-shadow:0 0 0 7px rgba(23,163,74,0);}100%{transform:scale(.95);box-shadow:0 0 0 0 rgba(23,163,74,0);}}
+.ml-hero-banner{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:18px;box-shadow:var(--shadow-sm);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.ensemble-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;}
+@media(max-width:1100px){.ensemble-grid{grid-template-columns:repeat(2,1fr);}}
+.ensemble-model-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;justify-content:space-between;}
+.em-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.em-name{font-size:12.5px;font-weight:700;color:var(--navy);line-height:1.3;}
+.em-type{font-size:10px;color:var(--muted);margin-top:2px;}
+.em-badge{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap;background:var(--green-light);color:var(--green);}
+.em-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;background:var(--surface-2);padding:8px;border-radius:8px;margin-bottom:8px;}
+.em-stat{display:flex;flex-direction:column;}
+.em-lbl{font-size:10px;color:var(--muted);}
+.em-val{font-size:12px;font-weight:700;font-family:'DM Mono',monospace;}
+.em-highlight{color:var(--blue);}
+.em-progress-bar{height:4px;background:var(--surface-2);border-radius:2px;overflow:hidden;}
+.em-progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:2px;}
+.shap-list{display:flex;flex-direction:column;gap:10px;}
+.shap-row{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;}
+.shap-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.shap-name-group{display:flex;align-items:center;gap:7px;}
+.shap-name-group b{font-size:12.5px;color:var(--navy);}
+.shap-cat{font-size:10px;background:#fff;border:1px solid var(--border);padding:1px 6px;border-radius:10px;color:var(--muted);}
+.shap-badge{font-size:10.5px;font-weight:700;font-family:'DM Mono',monospace;padding:2px 7px;border-radius:10px;}
+.shap-tag-pos{background:var(--green-light);color:var(--green);}
+.shap-tag-neg{background:var(--red-light);color:var(--red);}
+.shap-track{height:7px;background:#e2e8f0;border-radius:4px;overflow:hidden;margin-bottom:5px;}
+.shap-fill{height:100%;border-radius:4px;transition:width .4s ease;}
+.shap-insight{font-size:11px;color:var(--muted);line-height:1.35;}
+.drift-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.drift-stat-box{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center;}
+.drift-stat-box .val{font-size:18px;font-weight:800;font-family:'DM Mono',monospace;color:var(--navy);}
+.drift-stat-box .lbl{font-size:10.5px;color:var(--muted);margin-top:2px;}
+.psi-list{display:flex;flex-direction:column;gap:7px;}
+.psi-item{display:flex;align-items:center;gap:8px;font-size:11.5px;}
+.psi-name{width:130px;font-weight:600;color:var(--navy);flex-shrink:0;}
+.psi-meter{flex:1;height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden;}
+.psi-meter-bar{height:100%;background:var(--teal);border-radius:3px;}
+.psi-val{font-family:'DM Mono',monospace;font-size:10.5px;color:var(--muted);width:55px;text-align:right;flex-shrink:0;}
+.stress-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+@media(max-width:900px){.stress-grid{grid-template-columns:1fr;}}
+.stress-card{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+.stress-card .val{font-size:17px;font-weight:800;font-family:'DM Mono',monospace;color:var(--navy);margin-bottom:2px;}
+.stress-card .lbl{font-size:11px;color:var(--muted);font-weight:600;}
+
+/* ============ KYC DOCUMENT UPLOAD ============ */
+.doc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+@media(max-width:800px){.doc-grid{grid-template-columns:1fr;}}
+.doc-card{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:18px;display:flex;gap:14px;align-items:flex-start;}
+.doc-card.done{border-color:rgba(23,163,74,.35);background:var(--green-light);}
+.doc-icon{width:42px;height:42px;border-radius:11px;background:var(--blue-light);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+.doc-card.done .doc-icon{background:var(--green);color:#fff;}
+.doc-info b{font-size:13.5px;display:block;margin-bottom:2px;}
+.doc-info span{font-size:11.5px;color:var(--muted);}
+.doc-status{margin-top:8px;}
+
+/* ============ SCREEN CONFIGURATION (admin controls customer view) ============ */
+.sc-layout{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start;}
+@media(max-width:1150px){.sc-layout{grid-template-columns:1fr;}}
+.sc-screen-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.sc-screen-tab{
+  padding:9px 16px;border-radius:20px;border:1.5px solid var(--border);background:#fff;
+  font-size:12.5px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:7px;transition:.15s;
+}
+.sc-screen-tab.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+.sc-screen-tab .cnt{font-size:10px;background:rgba(255,255,255,.15);padding:1px 6px;border-radius:20px;}
+.sc-screen-tab:not(.active) .cnt{background:var(--surface-2);color:var(--muted);}
+
+.sc-widget-card{
+  background:#fff;border:1.5px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden;transition:.15s;
+}
+.sc-widget-card.off{border-color:var(--border);background:var(--surface-2);}
+.sc-widget-head{display:flex;align-items:center;gap:13px;padding:15px 16px;}
+.sc-widget-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.sc-widget-card.off .sc-widget-icon{background:var(--border) !important;color:var(--muted) !important;filter:grayscale(1);}
+.sc-widget-info{flex:1;min-width:0;}
+.sc-widget-info b{font-size:13.5px;display:block;}
+.sc-widget-card.off .sc-widget-info b{color:var(--muted);}
+.sc-widget-info span{font-size:11.5px;color:var(--muted);}
+.sc-widget-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;}
+.sc-widget-badge.on{background:var(--green-light);color:var(--green);}
+.sc-widget-badge.off{background:var(--surface-2);color:var(--muted);border:1px solid var(--border);}
+.sc-widget-expand{
+  border-top:1px solid var(--border);padding:14px 16px;background:var(--surface-2);display:none;
+}
+.sc-widget-card.expanded .sc-widget-expand{display:block;}
+.sc-role-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;font-size:12px;font-weight:600;color:#374151;border-bottom:1px dashed var(--border);}
+.sc-role-row:last-child{border-bottom:none;}
+.sc-chevron{font-size:11px;color:var(--muted);transition:.15s;flex-shrink:0;}
+.sc-widget-card.expanded .sc-chevron{transform:rotate(180deg);}
+
+/* toggle switch (reusing .toggle from policy config, but a labelled version) */
+.sc-toggle-wrap{display:flex;align-items:center;gap:9px;flex-shrink:0;}
+
+/* live preview phone/panel */
+.sc-preview-wrap{position:sticky;top:80px;}
+.sc-preview-frame{
+  background:#0e1a3a;border-radius:20px;padding:10px;box-shadow:var(--shadow-lg);
+}
+.sc-preview-screen{
+  background:var(--bg);border-radius:13px;overflow:hidden;height:560px;overflow-y:auto;
+}
+.sc-preview-nav{background:#fff;padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:2;}
+.sc-preview-nav b{font-size:11.5px;}
+.sc-preview-body{padding:14px;}
+.sc-pv-block{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;transition:.2s;}
+.sc-pv-block.hidden-block{display:none;}
+.sc-pv-block.dimmed{opacity:.3;position:relative;}
+.sc-pv-block.dimmed::after{content:'Hidden from customer';position:absolute;inset:0;background:rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:var(--red);}
+.sc-pv-hero{background:linear-gradient(120deg,var(--navy),#1c2f66);color:#fff;border-radius:12px;padding:16px;margin-bottom:12px;}
+.sc-pv-hero b{font-size:13px;display:block;margin-bottom:4px;}
+.sc-pv-hero span{font-size:10.5px;color:rgba(255,255,255,.6);}
+.sc-pv-title{font-size:11.5px;font-weight:700;margin-bottom:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+.sc-live-tag{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;color:var(--green);background:var(--green-light);border-radius:20px;padding:3px 10px;}
+.sc-live-tag .pdot3{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.3s infinite;}
+
+.sc-summary-strip{display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap;}
+.sc-summary-chip{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px 16px;font-size:12.5px;font-weight:600;}
+.sc-summary-chip b{font-family:'DM Mono',monospace;font-size:14px;}
+</style>
+</head>
+<body>
+
+<!-- ================= FRAME SWITCHER ================= -->
+<div id="protobar">
+  <div class="brand"><span class="dot"></span> CrediSphere AI — Prototype</div>
+  <button class="pb-tab" data-frame="login" onclick="showFrame('login',this)">Login</button>
+  <button class="pb-tab" data-frame="signup" onclick="showFrame('signup',this)">Sign Up</button>
+  <button class="pb-tab" data-frame="admin" onclick="showFrame('admin',this)">Admin Dashboard</button>
+  <button class="pb-tab" data-frame="credit" onclick="showFrame('credit',this)">Credit Intelligence &amp; Loan Decision</button>
+  <button class="pb-tab active nav-link" data-frame="collections" data-target="collections-ai" onclick="showFrame('collections',this)">Collections AI</button>
+  <button class="pb-tab" data-frame="legal" onclick="window.location.href='pages/legal-repossession.html'">⚖️ Legal &amp; Repossession</button>
+  <button class="pb-tab" data-frame="user" onclick="showFrame('user',this)">Customer Portal</button>
+  <button class="pb-tab" data-frame="apply" onclick="showFrame('apply',this)">Loan Application Form</button>
+  <button class="pb-tab" data-frame="policy" onclick="showFrame('policy',this)">Risk Policy Config</button>
+  <button class="pb-tab" data-frame="reports" onclick="showFrame('reports',this)">Reports &amp; Analytics</button>
+  <button class="pb-tab" data-frame="kyc" onclick="showFrame('kyc',this)">KYC Document Upload</button>
+  <button class="pb-tab" data-frame="screenconfig" onclick="showFrame('screenconfig',this)">Screen Configuration</button>
+</div>
+
+<!-- ================= LOGIN ================= -->
+<div class="frame" id="frame-login">
+  <div class="auth-wrap">
+    <div class="auth-brand">
+      <div class="auth-brand-top"><div class="logo-mark">CS</div> CrediSphere AI</div>
+      <div class="auth-brand-mid">
+        <div class="eyebrow">Credit Intelligence Platform</div>
+        <h1>Real-time AI credit scoring and loan decisions, in seconds.</h1>
+        <p>One platform for underwriting, risk intelligence, disbursal and collections — powered by explainable AI models trained on bureau, banking and behavioural data.</p>
+        <div class="auth-gauge">
+          <svg width="64" height="64" viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="27" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="7"/>
+            <circle cx="32" cy="32" r="27" fill="none" stroke="url(#g1)" stroke-width="7" stroke-linecap="round" stroke-dasharray="169.6" stroke-dashoffset="34" transform="rotate(-90 32 32)"/>
+            <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0ea394"/><stop offset="100%" stop-color="#2f5fff"/></linearGradient></defs>
+          </svg>
+          <div>
+            <b style="font-size:13px;">Avg. decision time</b><br>
+            <span style="font-size:20px;font-weight:800;font-family:'DM Mono',monospace;">11.4 sec</span>
+            <div style="font-size:11px;color:rgba(255,255,255,.55);">vs 3–5 days manual underwriting</div>
+          </div>
+        </div>
+      </div>
+      <div class="auth-brand-bottom">
+        <div class="stat"><b>4.2M+</b><span>Credit profiles scored</span></div>
+        <div class="stat"><b>98.6%</b><span>Model uptime</span></div>
+        <div class="stat"><b>₹1,240Cr</b><span>Loans automated</span></div>
+      </div>
+    </div>
+
+    <div class="auth-form-side">
+      <div class="auth-card">
+        <h2>Welcome back</h2>
+        <p class="sub">Log in to your CrediSphere AI workspace</p>
+
+        <div class="role-toggle">
+          <button class="active">Admin / Staff</button>
+          <button>Customer</button>
+        </div>
+
+        <div class="f-group">
+          <label>Work email or employee ID</label>
+          <input class="f-input" type="text" placeholder="you@credisphere.ai">
+        </div>
+        <div class="f-group">
+          <label>Password</label>
+          <input class="f-input" type="password" placeholder="••••••••••">
+        </div>
+        <div class="f-between">
+          <label style="display:flex;align-items:center;gap:7px;color:var(--muted);"><input type="checkbox"> Keep me signed in</label>
+          <a href="#">Forgot password?</a>
+        </div>
+        <button class="btn-primary">Sign in to dashboard</button>
+
+        <div class="auth-divider">OR</div>
+        <button class="btn-otp">🔒 Sign in with SSO / OTP</button>
+
+        <p class="auth-foot">Don't have an account? <a onclick="showFrameById('signup')">Create one</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= SIGNUP ================= -->
+<div class="frame" id="frame-signup">
+  <div class="auth-wrap">
+    <div class="auth-brand">
+      <div class="auth-brand-top"><div class="logo-mark">CS</div> CrediSphere AI</div>
+      <div class="auth-brand-mid">
+        <div class="eyebrow">Get started</div>
+        <h1>Set up your workspace and start automating credit decisions today.</h1>
+        <p>Onboard as a lender admin to configure risk policies, or as a customer to check your AI credit score and apply for pre-approved loans.</p>
+      </div>
+      <div class="auth-brand-bottom">
+        <div class="stat"><b>15 min</b><span>Avg. onboarding time</span></div>
+        <div class="stat"><b>Bank-grade</b><span>Data encryption</span></div>
+      </div>
+    </div>
+
+    <div class="auth-form-side">
+      <div class="auth-card">
+        <h2>Create your account</h2>
+        <p class="sub">Join CrediSphere AI in a few quick steps</p>
+
+        <div class="role-toggle">
+          <button>Admin / Staff</button>
+          <button class="active">Customer</button>
+        </div>
+
+        <div class="f-row2">
+          <div class="f-group"><label>Full name</label><input class="f-input" placeholder="Rohan Mehta"></div>
+          <div class="f-group"><label>Mobile number</label><input class="f-input" placeholder="+91 98765 43210"></div>
+        </div>
+        <div class="f-group"><label>Email address</label><input class="f-input" placeholder="rohan@email.com"></div>
+        <div class="f-group"><label>PAN / Government ID</label><input class="f-input" placeholder="ABCDE1234F"></div>
+        <div class="f-row2">
+          <div class="f-group"><label>Create password</label><input class="f-input" type="password" placeholder="••••••••••"></div>
+          <div class="f-group"><label>Confirm password</label><input class="f-input" type="password" placeholder="••••••••••"></div>
+        </div>
+        <div class="f-check"><input type="checkbox"> I agree to the <a href="#">Terms of Service</a> &amp; consent to bureau credit check</div>
+        <button class="btn-primary">Create account &amp; verify KYC</button>
+        <p class="auth-foot">Already have an account? <a onclick="showFrameById('login')">Log in</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ADMIN DASHBOARD ================= -->
+<div class="frame" id="frame-admin">
+  <div class="app-shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="logo-mark">CS</div><div><b>CrediSphere</b><span>Lender Console</span></div></div>
+      <div class="sb-section-label">Overview</div>
+      <div class="sb-item active" onclick="showFrameById('admin')"><span class="ic">📊</span> Dashboard</div>
+      <div class="sb-item" onclick="showFrameById('credit')"><span class="ic">🧠</span> Credit Intelligence</div>
+      <div class="sb-item"><span class="ic">📄</span> Loan Applications</div>
+      <div class="sb-section-label">Recovery</div>
+      <div class="sb-item sidebar-menu-item" data-view="collections-ai" onclick="showFrameById('collections')"><span class="ic">📞</span> Collections AI</div>
+      <div class="sb-item" onclick="window.location.href='pages/legal-repossession.html'" style="cursor:pointer;"><span class="ic">⚖️</span> Legal &amp; Repossession</div>
+      <div class="sb-section-label">Management</div>
+      <div class="sb-item"><span class="ic">📈</span> Reports</div>
+      <div class="sb-item"><span class="ic">⚙️</span> Risk Policy Config</div>
+      <div class="sb-item" onclick="showFrameById('screenconfig')"><span class="ic">🖥️</span> Screen Configuration</div>
+      <div class="sb-bottom">
+        <div class="sb-user">
+          <div class="sb-avatar">AK</div>
+          <div><b>Anita Kapoor</b><span>Credit Ops Admin</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search">🔍 Search applicant, loan ID, CIF...</div>
+        <div class="tb-right">
+          <div class="tb-pill">🏦 Mumbai Central Branch</div>
+          <div class="tb-icon-btn">🔔<span class="badge-dot"></span></div>
+          <div class="tb-avatar">AK</div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="page-head">
+          <div>
+            <h1>Good evening, Anita 👋</h1>
+            <p>Here's what CrediSphere AI has processed today — Thursday, 16 July 2026</p>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn-sm">⬇ Export report</button>
+            <button class="btn-sm dark">+ New loan application</button>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-top"><div class="kpi-icon" style="background:var(--blue-light);color:var(--blue);">💰</div><span class="kpi-trend trend-up">▲ 12.4%</span></div>
+            <div class="kpi-value">₹18.4Cr</div>
+            <div class="kpi-label">Disbursed this month</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-top"><div class="kpi-icon" style="background:var(--purple-light);color:var(--purple);">🧠</div><span class="kpi-trend trend-up">▲ 8 new</span></div>
+            <div class="kpi-value">146</div>
+            <div class="kpi-label">Applications awaiting AI review</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-top"><div class="kpi-icon" style="background:var(--green-light);color:var(--green);">✅</div><span class="kpi-trend trend-up">▲ 3.1%</span></div>
+            <div class="kpi-value">92.3%</div>
+            <div class="kpi-label">AI auto-decision accuracy</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-top"><div class="kpi-icon" style="background:var(--red-light);color:var(--red);">⚠️</div><span class="kpi-trend trend-down">▼ 0.4%</span></div>
+            <div class="kpi-value">2.86%</div>
+            <div class="kpi-label">Portfolio NPA / risk exposure</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card" style="margin-bottom:18px;">
+            <div class="card-head">
+              <h3><span class="ai-chip">AI</span> &nbsp;Recent applications &amp; auto-decisions</h3>
+              <a class="link-sm" href="#">View all →</a>
+            </div>
+            <table>
+              <tr><th>Applicant</th><th>Loan type</th><th>Amount</th><th>AI Credit Score</th><th>Decision</th><th></th></tr>
+              <tr>
+                <td><div class="app-name">Rohan Mehta</div><div class="app-sub">CIF 800067542458 · Mumbai</div></td>
+                <td>Home Loan</td>
+                <td class="mono">₹50,00,000</td>
+                <td><div class="mini-score"><div class="mini-score-track"><div class="mini-score-fill" style="width:78%;background:var(--green);"></div></div><b>782</b></div></td>
+                <td><span class="chip chip-approved">✓ Approved</span></td>
+                <td><a class="link-sm" onclick="showFrameById('credit')">Review →</a></td>
+              </tr>
+              <tr>
+                <td><div class="app-name">Farid Sheikh</div><div class="app-sub">CIF 700231765 · Pune</div></td>
+                <td>Personal Loan</td>
+                <td class="mono">₹4,50,000</td>
+                <td><div class="mini-score"><div class="mini-score-track"><div class="mini-score-fill" style="width:38%;background:var(--red);"></div></div><b>512</b></div></td>
+                <td><span class="chip chip-rejected">✕ Rejected</span></td>
+                <td><a class="link-sm" onclick="showFrameById('credit')">Review →</a></td>
+              </tr>
+              <tr>
+                <td><div class="app-name">Sana Iyer</div><div class="app-sub">CIF 900112834 · Bengaluru</div></td>
+                <td>Business Loan</td>
+                <td class="mono">₹12,00,000</td>
+                <td><div class="mini-score"><div class="mini-score-track"><div class="mini-score-fill" style="width:61%;background:var(--amber);"></div></div><b>648</b></div></td>
+                <td><span class="chip chip-review">⏳ Refer to underwriter</span></td>
+                <td><a class="link-sm" onclick="showFrameById('credit')">Review →</a></td>
+              </tr>
+              <tr>
+                <td><div class="app-name">Devendra Rao</div><div class="app-sub">CIF 600098213 · Hyderabad</div></td>
+                <td>Auto Loan</td>
+                <td class="mono">₹8,20,000</td>
+                <td><div class="mini-score"><div class="mini-score-track"><div class="mini-score-fill" style="width:70%;background:var(--green);"></div></div><b>705</b></div></td>
+                <td><span class="chip chip-pending">🤖 Processing...</span></td>
+                <td><a class="link-sm" onclick="showFrameById('credit')">Review →</a></td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="card" style="margin-bottom:18px;">
+            <div class="card-head"><h3>📊 Portfolio risk distribution</h3></div>
+            <div class="card-body">
+              <div class="risk-bar-row"><span class="rlabel">Low risk</span><div class="risk-bar-track"><div class="risk-bar-fill" style="width:58%;background:var(--green);"></div></div><span class="rval">58% · 3,120</span></div>
+              <div class="risk-bar-row"><span class="rlabel">Medium</span><div class="risk-bar-track"><div class="risk-bar-fill" style="width:29%;background:var(--amber);"></div></div><span class="rval">29% · 1,556</span></div>
+              <div class="risk-bar-row"><span class="rlabel">High risk</span><div class="risk-bar-track"><div class="risk-bar-fill" style="width:13%;background:var(--red);"></div></div><span class="rval">13% · 698</span></div>
+              <div style="height:1px;background:var(--border);margin:14px 0;"></div>
+              <div class="card-head" style="padding:0 0 12px;border:none;"><h3 style="font-size:13px;">🚨 Live alerts</h3></div>
+              <div class="alert-item alert-high"><span>🔴</span><div><div class="alert-title">Bucket 90+ DPD spike — Home Loans</div><div class="alert-sub">18 accounts crossed 90 DPD this week</div></div></div>
+              <div class="alert-item alert-med"><span>🟠</span><div><div class="alert-title">Model drift detected</div><div class="alert-sub">Income-verification model accuracy dipped 2.1%</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3><span class="ai-chip">AI</span> &nbsp;Live automated decision feed</h3><a class="link-sm" href="#">Configure alerts</a></div>
+          <div class="card-body" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+            <div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--green-light);">✅</div><div><div class="feed-text"><b>Auto-approved</b> — Priya Nair, Personal Loan ₹2,00,000. Confidence 94%.</div><div class="feed-time">2 min ago</div></div></div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--red-light);">✕</div><div><div class="feed-text"><b>Auto-rejected</b> — Vikram Singh, high DTI ratio (68%) flagged.</div><div class="feed-time">9 min ago</div></div></div>
+            </div>
+            <div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--amber-light);">⏳</div><div><div class="feed-text"><b>Referred to underwriter</b> — Sana Iyer, borderline bureau score.</div><div class="feed-time">14 min ago</div></div></div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--blue-light);">📄</div><div><div class="feed-text"><b>Documents requested</b> — Devendra Rao, income proof pending.</div><div class="feed-time">27 min ago</div></div></div>
+            </div>
+            <div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--purple-light);">🧠</div><div><div class="feed-text"><b>Model retrained</b> — Credit scoring model v4.2 deployed to production.</div><div class="feed-time">1 hr ago</div></div></div>
+              <div class="feed-item"><div class="feed-dot" style="background:var(--green-light);">✅</div><div><div class="feed-text"><b>Auto-approved</b> — Karan Bhatt, Auto Loan ₹6,50,000. Confidence 89%.</div><div class="feed-time">1 hr ago</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="proto-foot">CrediSphere AI · Admin Console · MCA Project Prototype</footer>
+    </div>
+  </div>
+</div>
+
+<!-- ================= CREDIT INTELLIGENCE / LOAN DECISION ================= -->
+<div class="frame" id="frame-credit">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="logo-mark">CS</div><div><b>CrediSphere</b><span>Lender Console</span></div></div>
+      <div class="sb-section-label">Overview</div>
+      <div class="sb-item" onclick="showFrameById('admin')"><span class="ic">📊</span> Dashboard</div>
+      <div class="sb-item active"><span class="ic">🧠</span> Credit Intelligence</div>
+      <div class="sb-item"><span class="ic">📄</span> Loan Applications</div>
+      <div class="sb-section-label">Recovery</div>
+      <div class="sb-item sidebar-menu-item" data-view="collections-ai" onclick="showFrameById('collections')"><span class="ic">📞</span> Collections AI</div>
+      <div class="sb-item" onclick="window.location.href='pages/legal-repossession.html'" style="cursor:pointer;"><span class="ic">⚖️</span> Legal &amp; Repossession</div>
+      <div class="sb-section-label">Management</div>
+      <div class="sb-item"><span class="ic">📈</span> Reports</div>
+      <div class="sb-item"><span class="ic">⚙️</span> Risk Policy Config</div>
+      <div class="sb-item" onclick="showFrameById('screenconfig')"><span class="ic">🖥️</span> Screen Configuration</div>
+      <div class="sb-bottom">
+        <div class="sb-user"><div class="sb-avatar">AK</div><div><b>Anita Kapoor</b><span>Credit Ops Admin</span></div></div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <div class="applicant-bar">
+        <div class="ap-left">
+          <div class="ap-avatar">RM</div>
+          <div>
+            <div class="ap-name">Rohan Mehta</div>
+            <div class="ap-meta"><span>📱 800067542458</span><span>🏠 Home Loan</span><span>📍 Mumbai</span><span>📅 Applied 09-Apr-2026</span></div>
+          </div>
+        </div>
+        <div class="ap-tags"><span class="ap-tag">Loan ₹50,00,000</span><span class="ap-tag">Tenure 20 yrs</span><span class="ap-tag">Salaried</span></div>
+      </div>
+
+      <div class="content">
+        <div class="page-head">
+          <div><h1>AI Credit Intelligence &amp; Loan Decision</h1><p>Automated underwriting analysis generated in 11.4 seconds</p></div>
+          <button class="btn-sm">📄 Full credit report</button>
+        </div>
+
+        <div class="grid-2" style="grid-template-columns:1fr 1fr 1fr;gap:18px;">
+          <div class="card">
+            <div class="card-head"><h3><span class="ai-chip">AI</span> &nbsp;CrediScore</h3></div>
+            <div class="card-body" style="display:flex;flex-direction:column;align-items:center;">
+              <div class="gauge-wrap">
+                <svg width="150" height="150" viewBox="0 0 150 150">
+                  <circle cx="75" cy="75" r="62" fill="none" stroke="#eef1f9" stroke-width="14"/>
+                  <circle cx="75" cy="75" r="62" fill="none" stroke="url(#gA)" stroke-width="14" stroke-linecap="round"
+                    stroke-dasharray="389.6" stroke-dashoffset="82" transform="rotate(-90 75 75)"/>
+                  <defs><linearGradient id="gA" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0ea394"/><stop offset="100%" stop-color="#17a34a"/></linearGradient></defs>
+                </svg>
+                <div style="margin-top:-96px;">
+                  <div class="gauge-value">782</div>
+                  <div style="font-size:10.5px;color:var(--muted);">out of 900</div>
+                </div>
+                <div style="margin-top:52px;">
+                  <span class="gauge-band" style="background:var(--green-light);color:var(--green);">Excellent — Low Risk</span>
+                </div>
+              </div>
+              <div class="bureau-grid" style="margin-top:20px;width:100%;">
+                <div class="bureau-box"><span>CIBIL</span><b>792</b></div>
+                <div class="bureau-box"><span>Utilization</span><b>24%</b></div>
+                <div class="bureau-box"><span>Active loans</span><b>2</b></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h3>⚖️ AI risk factor breakdown</h3></div>
+            <div class="card-body">
+              <div class="factor-row"><div class="factor-top"><b>Repayment history</b><span>96 / 100</span></div><div class="factor-track"><div class="factor-fill" style="width:96%;background:var(--green);"></div></div></div>
+              <div class="factor-row"><div class="factor-top"><b>Income stability</b><span>84 / 100</span></div><div class="factor-track"><div class="factor-fill" style="width:84%;background:var(--green);"></div></div></div>
+              <div class="factor-row"><div class="factor-top"><b>Debt-to-income ratio</b><span>29%</span></div><div class="factor-track"><div class="factor-fill" style="width:29%;background:var(--teal);"></div></div></div>
+              <div class="factor-row"><div class="factor-top"><b>Employment tenure</b><span>7.2 yrs</span></div><div class="factor-track"><div class="factor-fill" style="width:72%;background:var(--blue);"></div></div></div>
+              <div class="factor-row" style="margin-bottom:0;"><div class="factor-top"><b>Banking behaviour</b><span>88 / 100</span></div><div class="factor-track"><div class="factor-fill" style="width:88%;background:var(--purple);"></div></div></div>
+            </div>
+          </div>
+
+          <div class="decision-card">
+            <div class="decision-verdict"><div class="vicon">✓</div><h4>AI Recommends: Approve</h4></div>
+            <div class="confidence-text">Model confidence: <b>94.2%</b> · Model v4.2 · Explainable AI (SHAP) verified</div>
+            <ul class="reason-list">
+              <li>Strong repayment history with zero delinquencies in 36 months</li>
+              <li>Stable income, consistent salary credits for 7+ years</li>
+              <li>Low existing debt-to-income ratio (29%)</li>
+              <li>Property valuation supports requested loan-to-value</li>
+            </ul>
+            <div class="terms-grid">
+              <div class="term-box"><span>Suggested amount</span><b>₹50,00,000</b></div>
+              <div class="term-box"><span>Interest rate</span><b>9.25%</b></div>
+              <div class="term-box"><span>Tenure</span><b>20 years</b></div>
+              <div class="term-box"><span>EMI</span><b>₹45,680</b></div>
+            </div>
+            <div class="decision-actions">
+              <button class="btn-approve">Approve loan</button>
+              <button class="btn-refer">Refer</button>
+              <button class="btn-reject">Reject</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="proto-foot">CrediSphere AI · Credit Intelligence Module · MCA Project Prototype</footer>
+    </div>
+  </div>
+</div>
+
+<!-- ================= COLLECTIONS AI ================= -->
+<!-- ================= COLLECTIONS AI ================= -->
+<div class="frame active" id="frame-collections" data-view="collections-ai">
+  <div id="collections-ai-view">
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="sb-brand"><div class="logo-mark">CS</div><div><b>CrediSphere</b><span>Lender Console</span></div></div>
+        <div class="sb-section-label">Overview</div>
+        <div class="sb-item" onclick="showFrameById('admin')"><span class="ic">📊</span> Dashboard</div>
+        <div class="sb-item" onclick="showFrameById('credit')"><span class="ic">🧠</span> Credit Intelligence</div>
+        <div class="sb-item" onclick="showFrameById('apply')"><span class="ic">📄</span> Loan Applications</div>
+        <div class="sb-section-label">Recovery</div>
+        <div class="sb-item active sidebar-menu-item" data-view="collections-ai" onclick="showFrameById('collections')"><span class="ic">📞</span> Collections AI</div>
+        <div class="sb-item" onclick="window.location.href='pages/legal-repossession.html'" style="cursor:pointer;"><span class="ic">⚖️</span> Legal &amp; Repossession</div>
+        <div class="sb-section-label">Management</div>
+          <div class="sb-item" onclick="showFrameById('reports')"><span class="ic">📈</span> Reports</div>
+        <div class="sb-item" onclick="showFrameById('policy')"><span class="ic">⚙️</span> Risk Policy Config</div>
+        <div class="sb-item" onclick="showFrameById('screenconfig')"><span class="ic">🖥️</span> Screen Configuration</div>
+        <div class="sb-bottom">
+          <div class="sb-user"><div class="sb-avatar">AK</div><div><b>Anita Kapoor</b><span>Credit Ops Admin</span></div></div>
+        </div>
+      </aside>
+
+      <div class="main">
+        <div class="coll-topstrip">
+          <span class="pdot"></span> High-risk account — gudiya (Vrinda Sharma) flagged for accelerated recovery action
+          <span style="margin-left:auto;font-size:11.5px;color:var(--muted);font-weight:500;">
+            Loan: <b style="font-family:'DM Mono',monospace;color:var(--navy);">#LN-2024-0005</b> &nbsp;·&nbsp; Overdue: <b style="color:var(--red);">₹1,07,997</b>
+          </span>
+        </div>
+        <div class="content">
+          <div class="page-head">
+            <div>
+              <h1>Collections Intelligence &amp; Telephony Hub</h1>
+              <p>AI-recommended recovery strategy for overdue accounts · Powered by Random Forest + DQN Agent</p>
+            </div>
+            <div style="display:flex;gap:10px;">
+              <button class="btn-sm" onclick="window.location.href='pages/collections-ai.html'" style="display:flex;align-items:center;gap:6px;background:#10b981;color:#fff;border:none;">
+                📞 <span>Open Live Collections Screen</span>
+              </button>
+              <button class="btn-sm" onclick="collectionsML.randomizeState()" style="display:flex;align-items:center;gap:6px;">
+                🔄 <span>Live Re-simulate</span>
+              </button>
+              <button class="btn-sm dark" id="btn-ask-ai-coll" onclick="openCollAIDrawer()">🤖 Ask AI assistant</button>
+            </div>
+          </div>
+
+          <div class="grid-2" style="grid-template-columns:1fr 1.35fr 1fr;gap:18px;">
+            <!-- CARD 1: OVERDUE DETAILS -->
+            <div class="card" id="coll-overdue-card">
+              <div class="card-head" style="display:flex;justify-content:space-between;align-items:center;">
+                <h3>📋 Overdue details</h3>
+                <span class="subchip" style="font-size:10.5px;background:var(--surface-2);border:1px solid var(--border);padding:2px 8px;border-radius:6px;font-weight:700;">DPD 90+</span>
+              </div>
+              <div class="card-body">
+                <div class="factor-row"><div class="factor-top"><b>Borrower Name</b><span id="txt-borrower-name">gudiya (Vrinda Sharma)</span></div></div>
+                <div class="factor-row"><div class="factor-top"><b>Contact Number</b><span style="font-family:'DM Mono',monospace;" id="txt-borrower-phone">+91 90797-75213</span></div></div>
+                <div class="factor-row"><div class="factor-top"><b>EMI amount</b><span id="txt-emi-amt">₹35,999</span></div></div>
+                <div class="factor-row"><div class="factor-top"><b>EMIs bounced</b><span id="txt-emis-bounced">3 consecutive</span></div></div>
+                <div class="factor-row"><div class="factor-top"><b>Total overdue</b><span style="color:var(--red);font-weight:700;font-size:14px;" id="txt-total-overdue">₹1,07,997</span></div></div>
+                <div class="factor-row"><div class="factor-top"><b>DPD bucket</b><span style="color:var(--red);font-weight:700;" id="txt-dpd-bucket">90 (3)</span></div></div>
+                
+                <div class="coll-chip-wrap">
+                  <span class="chip chip-rejected" id="coll-risk-badge">🔴 High risk (RF Risk 78.6%)</span>
+                  <span class="coll-subchip warning" id="coll-promises-chip">Broken Promises: 2</span>
+                </div>
+
+                <div style="margin-top:16px;padding-top:12px;border-top:1px dashed var(--border);display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-size:11px;color:var(--muted);">RF Default Probability:</span>
+                  <b style="font-size:12.5px;font-family:'DM Mono',monospace;color:var(--red);" id="coll-rf-prob">78.6%</b>
+                </div>
+              </div>
+            </div>
+
+            <!-- CARD 2: RECOVERY RECOMMENDATION -->
+            <div class="card" id="coll-rec-card">
+              <div class="card-head" style="display:flex;align-items:center;justify-content:space-between;">
+                <h3><span class="ai-chip">AI</span> &nbsp;Recovery recommendation</h3>
+                <button class="ai-engine-btn expanded" id="coll-toggle-insights-btn" onclick="toggleMLEngineInsights()">
+                  <span>🧠</span> AI Engine Insights <span class="chevron-icon">▾</span>
+                </button>
+              </div>
+              <div class="card-body">
+                <p id="coll-rec-text" style="font-size:13px;line-height:1.65;color:#374151;margin-bottom:14px;">
+                  Customer has broken 2 prior promises. AI recommends a structured settlement offer with partial upfront payment, contacted during the <b>5–7 PM</b> window (highest response rate).
+                </p>
+
+                <div class="bureau-grid" style="margin-bottom:14px;">
+                  <div class="bureau-box"><span>Best call time</span><b style="font-size:13px;" id="coll-best-time">5–7 PM</b></div>
+                  <div class="bureau-box"><span>Recovery odds</span><b style="font-size:13px;color:var(--amber);" id="coll-rec-odds">61.4%</b></div>
+                  <div class="bureau-box"><span>Sentiment</span><b style="font-size:13px;color:var(--red);" id="coll-sentiment">Negative</b></div>
+                </div>
+
+                <!-- LIVE ACTION HUBS (CALLS, SMS & SETTLEMENT) -->
+                <div class="coll-action-hub">
+                  <div class="action-hub-label">⚡ Live Telephony &amp; Recovery Interventions</div>
+                  <div class="coll-action-buttons">
+                    <button class="coll-action-btn primary" onclick="openLiveCallModal()">
+                      <span class="btn-icon">📞</span>
+                      <span class="btn-title">Simulate Call</span>
+                      <span class="btn-subtitle">Live VoIP Telephony</span>
+                    </button>
+                    <button class="coll-action-btn secondary" onclick="openSMSModal()">
+                      <span class="btn-icon">💬</span>
+                      <span class="btn-title">Send Payment Link</span>
+                      <span class="btn-subtitle">SMS / WhatsApp</span>
+                    </button>
+                    <button class="coll-action-btn outline" onclick="openSettlementModal()">
+                      <span class="btn-icon">📑</span>
+                      <span class="btn-title">Structure Settlement</span>
+                      <span class="btn-subtitle">₹40,000 Upfront Token</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- EXPANDABLE AI ENGINE INSIGHTS BADGE & DIAGNOSTICS PANEL -->
+                <div class="coll-insights-panel" id="coll-insights-panel">
+                  <div class="coll-insights-title">
+                    <span>🔬 ML/RL Diagnostic Insights</span>
+                    <span style="font-size:10px;color:var(--green);font-weight:700;">● Active Policy</span>
+                  </div>
+                  <div class="coll-model-pipeline">
+                    <span>⚙️</span>
+                    <span>Model Pipeline: Random Forest (Risk Scoring) + DQN Agent (Dynamic Policy Optimization)</span>
+                  </div>
+                  <div class="coll-stats-row">
+                    <div class="coll-stat-box">
+                      <span>Confidence</span>
+                      <b style="color:var(--green);" id="diag-conf">87.4%</b>
+                    </div>
+                    <div class="coll-stat-box">
+                      <span>Exploit (ε)</span>
+                      <b id="diag-epsilon">0.05</b>
+                    </div>
+                    <div class="coll-stat-box">
+                      <span>Optimal Q</span>
+                      <b style="color:var(--blue);" id="diag-qval">+0.812</b>
+                    </div>
+                  </div>
+
+                  <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:6px;">DQN Action-Value Q(s, a) Distribution:</div>
+                  <div class="q-meter-wrap" id="q-distribution-meters">
+                    <!-- Populated by CollectionsMLEngine -->
+                  </div>
+
+                  <div style="font-size:11px;font-weight:700;color:var(--navy);margin-top:12px;margin-bottom:6px;">Random Forest Feature Weights:</div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:10.5px;" id="rf-feature-weights">
+                    <!-- Populated by CollectionsMLEngine -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CARD 3: FOLLOW-UP HISTORY -->
+            <div class="card" id="coll-history-card">
+              <div class="card-head" style="display:flex;align-items:center;justify-content:space-between;">
+                <h3>🕒 Follow-up history</h3>
+                <span class="live-pill"><span class="pdot3"></span> Live Feed</span>
+              </div>
+              <div class="card-body">
+                <div id="coll-feed-container">
+                  <div class="feed-item"><div class="feed-dot" style="background:var(--green-light);">💬</div><div><div class="feed-text"><b>Kept promise</b> — ₹12,89,800 received via UPI</div><div class="feed-time">09 Nov 2025</div></div></div>
+                  <div class="feed-item"><div class="feed-dot" style="background:var(--amber-light);">📞</div><div><div class="feed-text"><b>PTP</b> — ₹12,800 promised, next action 09-Dec</div><div class="feed-time">05 Nov 2025</div></div></div>
+                  <div class="feed-item"><div class="feed-dot" style="background:var(--blue-light);">📩</div><div><div class="feed-text"><b>Long term promise</b> — repayment plan discussed</div><div class="feed-time">13 Oct 2025</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="proto-foot">CrediSphere AI · Collections Intelligence Module · MCA Project Prototype</footer>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= CUSTOMER PORTAL ================= -->
+<div class="frame" id="frame-user">
+  <div class="user-nav">
+    <div class="un-left">
+      <div class="un-brand"><div class="logo-mark" style="background:linear-gradient(135deg,var(--navy),var(--blue));">CS</div> CrediSphere</div>
+      <div class="un-links">
+        <a class="active">Dashboard</a>
+        <a>Apply for Loan</a>
+        <a>My Loans</a>
+        <a>Documents</a>
+        <a>Profile</a>
+      </div>
+    </div>
+    <div class="un-right">
+      <div class="tb-icon-btn">🔔<span class="badge-dot"></span></div>
+      <div class="tb-avatar" style="background:linear-gradient(135deg,var(--teal),var(--blue));">RM</div>
+    </div>
+  </div>
+
+  <div class="user-hero">
+    <div class="uh-left">
+      <h2>Welcome back, Rohan 👋</h2>
+      <p>Your credit profile was refreshed today. You have 2 AI pre-approved loan offers waiting.</p>
+    </div>
+    <div class="uh-score">
+      <div class="uh-score-ring">
+        <svg width="74" height="74" viewBox="0 0 74 74">
+          <circle cx="37" cy="37" r="31" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="8"/>
+          <circle cx="37" cy="37" r="31" fill="none" stroke="#0ea394" stroke-width="8" stroke-linecap="round" stroke-dasharray="194.8" stroke-dashoffset="42" transform="rotate(-90 37 37)"/>
+        </svg>
+        <div class="uh-score-num"><b>742</b><span>/ 900</span></div>
+      </div>
+      <div class="uh-score-label"><b>Your CrediScore</b><span>Good — improved +18 pts</span></div>
+    </div>
+  </div>
+
+  <div class="user-content">
+    <div class="loan-status-card">
+      <div class="lsc-top">
+        <div>
+          <div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;">Active loan · Home Loan</div>
+          <div class="lsc-amt">₹42,50,000 <span style="font-size:13px;font-weight:600;color:var(--muted);">outstanding</span></div>
+        </div>
+        <button class="btn-sm dark">Pay EMI — ₹45,680</button>
+      </div>
+      <div class="lsc-progress"><div class="lsc-progress-fill" style="width:34%;"></div></div>
+      <div class="lsc-meta"><span>34% repaid · 82 of 240 EMIs</span><span>Next due: 05 Aug 2026</span></div>
+    </div>
+
+    <div class="section-title">AI pre-approved offers for you <a class="link-sm" href="#">See all →</a></div>
+    <div class="offer-grid">
+      <div class="offer-card">
+        <div class="offer-tag">Best match</div>
+        <div class="offer-icon" style="background:var(--blue-light);color:var(--blue);">💳</div>
+        <h4>Top-up Personal Loan</h4>
+        <div class="oamt">₹3,00,000</div>
+        <div class="orate">10.5% p.a. · 36 months · No collateral</div>
+        <button class="offer-apply">Apply now</button>
+      </div>
+      <div class="offer-card">
+        <div class="offer-icon" style="background:var(--teal-light);color:var(--teal);">🚗</div>
+        <h4>Auto Refinance</h4>
+        <div class="oamt">₹6,50,000</div>
+        <div class="orate">8.9% p.a. · 60 months</div>
+        <button class="offer-apply">Apply now</button>
+      </div>
+      <div class="offer-card">
+        <div class="offer-icon" style="background:var(--purple-light);color:var(--purple);">🏢</div>
+        <h4>Business Credit Line</h4>
+        <div class="oamt">₹10,00,000</div>
+        <div class="orate">11.2% p.a. · Flexible drawdown</div>
+        <button class="offer-apply">Apply now</button>
+      </div>
+    </div>
+
+    <div class="section-title">Quick actions</div>
+    <div class="quick-grid">
+      <div class="quick-card"><div class="qicon" style="background:var(--blue-light);color:var(--blue);">📝</div><b>Apply for new loan</b><span>Get an AI decision in under a minute</span></div>
+      <div class="quick-card"><div class="qicon" style="background:var(--green-light);color:var(--green);">📁</div><b>Upload documents</b><span>KYC, income proof &amp; more</span></div>
+      <div class="quick-card"><div class="qicon" style="background:var(--amber-light);color:var(--amber);">📊</div><b>Download statement</b><span>Full repayment history</span></div>
+      <div class="quick-card"><div class="qicon" style="background:var(--purple-light);color:var(--purple);">💬</div><b>Talk to AI assistant</b><span>Loan &amp; EMI queries, 24/7</span></div>
+    </div>
+  </div>
+  <footer class="proto-foot">CrediSphere AI · Customer Portal · MCA Project Prototype</footer>
+</div>
+
+<!-- ================= LOAN APPLICATION FORM ================= -->
+<div class="frame" id="frame-apply">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="logo-mark">CS</div><div><b>CrediSphere</b><span>Lender Console</span></div></div>
+      <div class="sb-section-label">Overview</div>
+      <div class="sb-item" onclick="showFrameById('admin')"><span class="ic">📊</span> Dashboard</div>
+      <div class="sb-item" onclick="showFrameById('credit')"><span class="ic">🧠</span> Credit Intelligence</div>
+      <div class="sb-item active"><span class="ic">📄</span> Loan Applications</div>
+      <div class="sb-section-label">Recovery</div>
+      <div class="sb-item sidebar-menu-item" data-view="collections-ai" onclick="showFrameById('collections')"><span class="ic">📞</span> Collections AI</div>
+      <div class="sb-item" onclick="window.location.href='pages/legal-repossession.html'" style="cursor:pointer;"><span class="ic">⚖️</span> Legal &amp; Repossession</div>
+      <div class="sb-section-label">Management</div>
+      <div class="sb-item" onclick="showFrameById('reports')"><span class="ic">📈</span> Reports</div>
+      <div class="sb-item" onclick="showFrameById('policy')"><span class="ic">⚙️</span> Risk Policy Config</div>
+      <div class="sb-item" onclick="showFrameById('screenconfig')"><span class="ic">🖥️</span> Screen Configuration</div>
+      <div class="sb-bottom"><div class="sb-user"><div class="sb-avatar">AK</div><div><b>Anita Kapoor</b><span>Credit Ops Admin</span></div></div></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search">🔍 Search applicant, loan ID, CIF...</div>
+        <div class="tb-right"><div class="tb-pill">🏦 Mumbai Central Branch</div><div class="tb-icon-btn">🔔<span class="badge-dot"></span></div><div class="tb-avatar">AK</div></div>
+      </div>
+      <div class="content">
+        <div class="page-head"><div><h1>New Loan Application</h1><p>Capture applicant details — AI scoring runs automatically after submission</p></div></div>
+
+        <div class="stepper">
+          <div class="step done"><div class="step-num">✓</div><div class="step-label">Applicant Info</div></div>
+          <div class="step-line"></div>
+          <div class="step current"><div class="step-num">2</div><div class="step-label">Financial Details</div></div>
+          <div class="step-line"></div>
+          <div class="step"><div class="step-num">3</div><div class="step-label">Documents</div></div>
+          <div class="step-line"></div>
+          <div class="step"><div class="step-num">4</div><div class="step-label">AI Review</div></div>
+        </div>
+
+        <div class="form-card">
+          <div class="card-body">
+            <div class="form-section-title">Financial &amp; loan details</div>
+            <div class="f-row2">
+              <div class="f-group"><label>Loan type</label>
+                <select class="f-input"><option>Home Loan</option><option>Personal Loan</option><option>Business Loan</option><option>Auto Loan</option></select>
+              </div>
+              <div class="f-group"><label>Requested amount (₹)</label><input class="f-input" placeholder="50,00,000"></div>
+            </div>
+            <div class="f-row2">
+              <div class="f-group"><label>Tenure (years)</label><input class="f-input" placeholder="20"></div>
+              <div class="f-group"><label>Monthly net income (₹)</label><input class="f-input" placeholder="1,85,000"></div>
+            </div>
+            <div class="f-row2">
+              <div class="f-group"><label>Employment type</label>
+                <select class="f-input"><option>Salaried</option><option>Self-employed</option><option>Business owner</option></select>
+              </div>
+              <div class="f-group"><label>Existing monthly EMI obligations (₹)</label><input class="f-input" placeholder="22,000"></div>
+            </div>
+            <div class="f-group"><label>Purpose of loan</label><input class="f-input" placeholder="e.g. Purchase of residential property in Mumbai"></div>
+
+            <div class="ai-live-panel">
+              <div class="plive"><span class="pdot2"></span> AI pre-check — live as you type</div>
+              <div class="risk-bar-row" style="margin-bottom:0;">
+                <span class="rlabel" style="width:120px;">Estimated DTI</span>
+                <div class="risk-bar-track"><div class="risk-bar-fill" style="width:29%;background:var(--teal);"></div></div>
+                <span class="rval">29% · Healthy</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-outline">← Back</button>
+            <button class="btn-next">Continue to documents →</button>
+          </div>
+        </div>
+      </div>
+      <footer class="proto-foot">CrediSphere AI · New Application Flow · MCA Project Prototype</footer>
+    </div>
+  </div>
+</div>
+
+<!-- ================= RISK POLICY CONFIG ================= -->
+<div class="frame" id="frame-policy">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="logo-mark">CS</div><div><b>CrediSphere</b><span>Lender Console</span></div></div>
+      <div class="sb-section-label">Overview</div>
+      <div class="sb-item" onclick="showFrameById('admin')"><span class="ic">📊</span> Dashboard</div>
+      <div class="sb-item" onclick="showFrameById('credit')"><span class="ic">🧠</span> Credit Intelligence</div>
+      <div class="sb-item" onclick="showFrameById('apply')"><span class="ic">📄</span> Loan Applications</div>
+      <div class="sb-section-label">Recovery</div>
+      <div class="sb-item sidebar-menu-item" data-view="collections-ai" onclick="showFrameById('collections')"><span class="ic">📞</span> Collections AI</div>
+      <div class="sb-item" onclick="window.location.href='pages/legal-repossession.html'" style="cursor:pointer;"><span class="ic">⚖️</span> Legal &amp; Repossession</div>
+      <div class="sb-section-label">Management</div>
+      <div class="sb-item" onclick="showFrameById('reports')"><span class="ic">📈</span> Reports</div>
+      <div class="sb-item active"><span class="ic">⚙️</span> Risk Policy Config</div>
+      <div class="sb-item" onclick="showFrameById('screenconfig')"><span class="ic">🖥️</span> Screen Configuration</div>
+      <div class="sb-bottom"><div class="sb-user"><div class="sb-avatar">AK</div><div><b>Anita Kapoor</b><span>Credit Ops Admin</span></div></div></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search">🔍 Search rule, policy, model...</div>
+        <div class="tb-right"><div class="tb-pill">🏦 Mumbai Central Branch</div><div class="tb-icon-btn">🔔<span class="badge-dot"></span></div><div class="tb-avatar">AK</div></div>
+      </div>
+      <div class="content">
+        <div class="page-head">
+          <div>
+            <h1>Risk Policy Configuration</h1>
+            <p>Control how the AI engine scores, approves, and escalates loan applications</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button class="btn-sm" onclick="window.location.href='pages/risk-policy.html'" style="background:#eef2ff;color:#2563eb;border-color:#c7d2fe;font-weight:700;">⚙️ Open Full Policy Console</button>
+            <button class="btn-save-changes btn-sm dark" id="proto-save-policy-btn" onclick="saveProtoPolicyChanges()">Save changes</button>
+          </div>
+        </div>
+
+        <!-- Model Badge Hero Banner -->
+        <div class="ml-hero-banner">
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <div class="automl-tag"><span class="pulse-dot"></span> Rule Engine + Bayesian Optimization</div>
+            <div style="font-size:12.5px;color:var(--muted);"><b>Active Policy:</b> Sequential knockouts, capacity limits &amp; Gaussian Process threshold tuning</div>
+          </div>
+          <div id="proto-policy-status" style="font-size:12px;color:var(--muted);">Last Evaluated: Just now · Active Branch: Mumbai Central Branch</div>
+        </div>
+
+        <div class="policy-tabs">
+          <div class="ptab active" onclick="showProtoPolicyTab('rules', this)">Auto-decision rules</div>
+          <div class="ptab" onclick="showProtoPolicyTab('thresholds', this)">Score thresholds</div>
+          <div class="ptab" onclick="showProtoPolicyTab('models', this)">Model settings</div>
+          <div class="ptab" onclick="showProtoPolicyTab('escalation', this)">Escalation matrix</div>
+        </div>
+
+        <div id="proto-pane-rules">
+          <div class="card" style="margin-bottom:18px;">
+            <div class="card-head"><h3>Auto-approval thresholds</h3></div>
+            <div class="card-body">
+              <div style="max-width:640px;">
+                <div class="factor-top">
+                  <b>Minimum CrediScore for auto-approve</b>
+                  <span id="proto-crediscore-badge" style="font-family:'DM Mono',monospace;font-weight:800;color:var(--blue);background:var(--blue-light);padding:4px 10px;border-radius:6px;">720</span>
+                </div>
+                <div class="slider-wrapper" style="position:relative;margin:16px 0 10px;">
+                  <div class="threshold-bar"><div class="threshold-handle" id="proto-threshold-handle" style="left:70%;"></div></div>
+                  <input type="range" class="crediscore-range" id="proto-crediscore-input" min="300" max="900" step="5" value="720" oninput="updateProtoThreshold(this.value)" style="position:absolute;top:-6px;left:0;width:100%;height:22px;opacity:0;cursor:pointer;">
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);"><span>300 (High risk)</span><span>900 (Low risk)</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:18px;">
+            <div class="card-head"><h3>Decision rules</h3></div>
+            <div class="card-body">
+              <div class="rule-row">
+                <div class="rule-left"><div class="rule-icon" style="background:var(--green-light);color:var(--green);">✓</div>
+                  <div><div class="rule-title"><span style="font-size:10px;background:var(--surface-2);color:var(--muted);padding:2px 6px;border-radius:4px;margin-right:6px;border:1px solid var(--border);">Seq 2</span>Auto-approve if CrediScore ≥ threshold &amp; DTI &lt; 40%</div><div class="rule-sub">Applies to Personal &amp; Auto loans up to ₹10,00,000</div></div>
+                </div>
+                <div class="rule-right"><span class="rule-val" id="proto-badge-RP-002" style="font-size:11px;font-weight:700;color:var(--green);background:var(--green-light);padding:3px 8px;border-radius:6px;">Active</span>
+                  <label class="toggle"><input type="checkbox" checked onchange="toggleProtoRule('RP-002', this.checked)"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+                </div>
+              </div>
+              <div class="rule-row">
+                <div class="rule-left"><div class="rule-icon" style="background:var(--red-light);color:var(--red);">✕</div>
+                  <div><div class="rule-title"><span style="font-size:10px;background:var(--surface-2);color:var(--muted);padding:2px 6px;border-radius:4px;margin-right:6px;border:1px solid var(--border);">Seq 1</span>Auto-reject if bureau default flag in last 12 months</div><div class="rule-sub">Applies to all loan types (Hard Exclusion Knockout)</div></div>
+                </div>
+                <div class="rule-right"><span class="rule-val" id="proto-badge-RP-001" style="font-size:11px;font-weight:700;color:var(--green);background:var(--green-light);padding:3px 8px;border-radius:6px;">Active</span>
+                  <label class="toggle"><input type="checkbox" checked onchange="toggleProtoRule('RP-001', this.checked)"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+                </div>
+              </div>
+              <div class="rule-row">
+                <div class="rule-left"><div class="rule-icon" style="background:var(--amber-light);color:var(--amber);">⏳</div>
+                  <div><div class="rule-title"><span style="font-size:10px;background:var(--surface-2);color:var(--muted);padding:2px 6px;border-radius:4px;margin-right:6px;border:1px solid var(--border);">Seq 3</span>Refer to underwriter if score within ±30 of threshold</div><div class="rule-sub">Human-in-the-loop review for borderline cases</div></div>
+                </div>
+                <div class="rule-right"><span class="rule-val" id="proto-badge-RP-003" style="font-size:11px;font-weight:700;color:var(--green);background:var(--green-light);padding:3px 8px;border-radius:6px;">Active</span>
+                  <label class="toggle"><input type="checkbox" checked onchange="toggleProtoRule('RP-003', this.checked)"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+                </div>
+              </div>
+              <div class="rule-row">
+                <div class="rule-left"><div class="rule-icon" style="background:var(--blue-light);color:var(--blue);">📄</div>
+                  <div><div class="rule-title"><span style="font-size:10px;background:var(--surface-2);color:var(--muted);padding:2px 6px;border-radius:4px;margin-right:6px;border:1px solid var(--border);">Seq 4</span>Request additional income proof if self-employed &amp; loan &gt; ₹20,00,000</div><div class="rule-sub">Adds document step before AI decision</div></div>
+                </div>
+                <div class="rule-right"><span class="rule-val" id="proto-badge-RP-004" style="font-size:11px;font-weight:700;color:var(--muted);background:var(--surface-2);padding:3px 8px;border-radius:6px;">Draft</span>
+                  <label class="toggle"><input type="checkbox" onchange="toggleProtoRule('RP-004', this.checked)"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Customer Audit Impact Table -->
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>👥 Registered Customers Policy Impact (Sequence-Wise)</h3>
+                <p style="font-size:11.5px;color:var(--muted);margin-top:2px;">Evaluated against registered borrowers in the database</p>
+              </div>
+            </div>
+            <div class="card-body" style="padding:0;overflow-x:auto;">
+              <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                <thead>
+                  <tr style="background:var(--surface-2);text-align:left;">
+                    <th style="padding:10px 14px;color:var(--muted);">Customer Account</th>
+                    <th style="padding:10px 14px;color:var(--muted);">Facility &amp; Amount</th>
+                    <th style="padding:10px 14px;color:var(--muted);">CrediScore</th>
+                    <th style="padding:10px 14px;color:var(--muted);">DTI</th>
+                    <th style="padding:10px 14px;color:var(--muted);text-align:center;">Seq 1: Knockout</th>
+                    <th style="padding:10px 14px;color:var(--muted);text-align:center;">Seq 2: Cutoff</th>
+                    <th style="padding:10px 14px;color:var(--muted);">Final Bank Action</th>
+                  </tr>
+                </thead>
+                <tbody id="proto-policy-customers-tbody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Score Thresholds Pane -->
+        <div id="proto-pane-thresholds" style="display:none;">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;">
+            <div class="card" style="padding:14px;border-left:4px solid #17a34a;"><b>Super-Prime</b><span style="display:block;font-size:12px;color:var(--muted);margin:4px 0;">780 - 900</span><span style="font-size:11px;font-weight:700;color:#17a34a;">Instant STP</span></div>
+            <div class="card" style="padding:14px;border-left:4px solid #2563eb;"><b>Prime</b><span style="display:block;font-size:12px;color:var(--muted);margin:4px 0;">720 - 779</span><span style="font-size:11px;font-weight:700;color:#2563eb;">Auto-Approval</span></div>
+            <div class="card" style="padding:14px;border-left:4px solid #d97706;"><b>Near-Prime</b><span style="display:block;font-size:12px;color:var(--muted);margin:4px 0;">650 - 719</span><span style="font-size:11px;font-weight:700;color:#d97706;">L1 Referral</span></div>
+            <div class="card" style="padding:14px;border-left:4px solid #e03131;"><b>Sub-Prime</b><span style="display:block;font-size:12px;color:var(--muted);margin:4px 0;">300 - 649</span><span style="font-size:11px;font-weight:700;color:#e03131;">Committee / Decline</span></div>
+          </div>
+        </div>
+
+        <!-- Model Settings Pane -->
+        <div id="proto-pane-models" style="display:none;">
+          <div class="card" style="padding:20px;margin-bottom:18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;">🧠 Bayesian Optimization Tuner (BO-GP)</h3>
+              <span class="automl-tag" style="font-size:11px;">Matérn 5/2</span>
+            </div>
+            <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Optimizes CrediScore cutoffs using Expected Improvement (EI) against target default rate.</p>
+            <div style="display:flex;gap:12px;align-items:center;">
+              <button class="btn-sm primary" onclick="runProtoBayesian()" style="background:var(--navy);color:#fff;">⚡ Run Bayesian Optimization</button>
+              <span id="proto-bayesian-msg" style="font-size:12px;color:var(--green);font-weight:700;"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Escalation Matrix Pane -->
+        <div id="proto-pane-escalation" style="display:none;">
+          <div class="card" style="padding:16px;">
+            <table style="width:100%;border-collapse:collapse;font-size:12px;">
+              <thead><tr style="background:var(--surface-2);"><th style="padding:8px 10px;">Tier</th><th style="padding:8px 10px;">Authority</th><th style="padding:8px 10px;">Limit</th><th style="padding:8px 10px;">SLA</th></tr></thead>
+              <tbody>
+                <tr><td style="padding:8px 10px;"><b>L1 Automated AI</b></td><td style="padding:8px 10px;">AI Underwriter</td><td style="padding:8px 10px;">₹10,00,000</td><td style="padding:8px 10px;color:var(--green);font-weight:700;">Instant</td></tr>
+                <tr><td style="padding:8px 10px;"><b>L2 Credit Officer</b></td><td style="padding:8px 10px;">Branch Officer</td><td style="padding:8px 10px;">₹25,00,000</td><td style="padding:8px 10px;color:var(--purple);font-weight:700;">4 Hours</td></tr>
+                <tr><td style="padding:8px 10px;"><b>L3 Risk Head</b></td><td style="padding:8px 10px;">Regional Head</td><td style="padding:8px 10px;">₹50,00,000</td><td style="padding:8px 10px;color:var(--amber);font-weight:700;">12 Hours</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <footer class="proto-foot">CrediSphere AI · Risk Policy Configuration · MCA Project Prototype</footer>
+    </div>
+  </div>
+</div>
+
+<!-- ================= REPORTS & ANALYTICS ================= -->
+<div class="frame" id="frame-reports">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="logo-mark">CS</div><div><b>CrediSphere</b><span>Lender Console</span></div></div>
+      <div class="sb-section-label">Overview</div>
+      <div class="sb-item" onclick="showFrameById('admin')"><span class="ic">📊</span> Dashboard</div>
+      <div class="sb-item" onclick="showFrameById('credit')"><span class="ic">🧠</span> Credit Intelligence</div>
+      <div class="sb-item" onclick="showFrameById('apply')"><span class="ic">📄</span> Loan Applications</div>
+      <div class="sb-section-label">Recovery</div>
+      <div class="sb-item sidebar-menu-item" data-view="collections-ai" onclick="showFrameById('collections')"><span class="ic">📞</span> Collections AI</div>
+      <div class="sb-item" onclick="window.location.href='pages/legal-repossession.html'" style="cursor:pointer;"><span class="ic">⚖️</span> Legal &amp; Repossession</div>
+      <div class="sb-section-label">Management</div>
+      <div class="sb-item active"><span class="ic">📈</span> Reports</div>
+      <div class="sb-item" onclick="showFrameById('policy')"><span class="ic">⚙️</span> Risk Policy Config</div>
+      <div class="sb-item" onclick="showFrameById('screenconfig')"><span class="ic">🖥️</span> Screen Configuration</div>
+      <div class="sb-bottom"><div class="sb-user"><div class="sb-avatar">AK</div><div><b>Anita Kapoor</b><span>Credit Ops Admin</span></div></div></div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search">🔍 Search report...</div>
+        <div class="tb-right"><div class="tb-pill">📅 Last 30 days</div><div class="tb-icon-btn">🔔<span class="badge-dot"></span></div><div class="tb-avatar">AK</div></div>
+      </div>
+      <div class="content">
+        <div class="page-head">
+          <div>
+            <h1>Reports &amp; Analytics</h1>
+            <p>Portfolio performance, AI model accuracy and collections recovery trends</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button class="btn-sm" onclick="window.location.href='pages/reports.html'" style="background:#eef2ff;color:#2563eb;border-color:#c7d2fe;font-weight:700;">📈 View Live Analytics Page</button>
+            <button class="btn-sm" onclick="window.location.href='http://localhost:5004/api/reports/export-csv'">📊 Export CSV</button>
+            <button class="btn-sm" onclick="window.print()">⬇ Export PDF</button>
+            <button class="btn-sm" id="proto-run-diag-btn" onclick="runLiveReportsDiagnostic()" style="background:linear-gradient(135deg,var(--blue),var(--navy));color:#fff;border:none;">⚡ Run Live Diagnostic</button>
+          </div>
+        </div>
+
+        <!-- Live ML Intelligence Hero Banner -->
+        <div class="ml-hero-banner">
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <div class="automl-tag"><span class="pulse-dot"></span> AutoML + SHAP</div>
+            <div style="font-size:12.5px;color:var(--muted);"><b>Registered Customers Cohort:</b> Evaluated on active borrower sign-ups &amp; live loan applications</div>
+          </div>
+          <div id="proto-reports-status" style="font-size:12px;color:var(--muted);">Last Evaluated: Just now · Live Detection Active</div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-value" id="proto-kpi-cust">6</div><div class="kpi-label">Registered Customers</div></div>
+          <div class="kpi-card"><div class="kpi-value" id="proto-kpi-apps">12</div><div class="kpi-label">Total Loan Applications</div></div>
+          <div class="kpi-card"><div class="kpi-value" id="proto-kpi-disbursed">₹44.5L</div><div class="kpi-label">Total Sanctioned / Disbursed</div></div>
+          <div class="kpi-card"><div class="kpi-value" id="proto-kpi-accuracy">93.8%</div><div class="kpi-label">AutoML Decision Accuracy</div></div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:18px;">
+          <div class="chart-card">
+            <div class="card-head" style="padding:0 0 16px;border:none;"><h3>Loan disbursement by timeline (₹Lakhs)</h3></div>
+            <div class="bar-chart" id="proto-bar-chart">
+              <div class="bar-col"><div class="bar" style="height:88%;background:linear-gradient(180deg,#3b82f6,#1d4ed8);"><span class="bar-val">16.0</span></div><span class="bar-lbl">30 Aug</span></div>
+              <div class="bar-col"><div class="bar" style="height:35%;"><span class="bar-val">5.0</span></div><span class="bar-lbl">02 Sep</span></div>
+              <div class="bar-col"><div class="bar" style="height:54%;"><span class="bar-val">8.5</span></div><span class="bar-lbl">10 Sep</span></div>
+              <div class="bar-col"><div class="bar" style="height:35%;"><span class="bar-val">5.0</span></div><span class="bar-lbl">11 Sep</span></div>
+              <div class="bar-col"><div class="bar" style="height:62%;background:linear-gradient(180deg,var(--teal),var(--blue));"><span class="bar-val">10.0</span></div><span class="bar-lbl" style="color:var(--blue);font-weight:800;">13 Sep</span></div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="card-head" style="padding:0 0 16px;border:none;"><h3>Applications by loan type</h3></div>
+            <svg width="100%" height="150" viewBox="0 0 150 150" style="max-width:150px;display:block;margin:0 auto;">
+              <circle cx="75" cy="75" r="55" fill="none" stroke="#eef1f9" stroke-width="20"/>
+              <circle cx="75" cy="75" r="55" fill="none" stroke="#2f5fff" stroke-width="20" stroke-dasharray="345.6" stroke-dashoffset="145" transform="rotate(-90 75 75)"/>
+              <circle cx="75" cy="75" r="55" fill="none" stroke="#0ea394" stroke-width="20" stroke-dasharray="345.6" stroke-dashoffset="232" transform="rotate(-90 75 75)"/>
+              <circle cx="75" cy="75" r="55" fill="none" stroke="#d97706" stroke-width="20" stroke-dasharray="345.6" stroke-dashoffset="261" transform="rotate(-90 75 75)"/>
+              <circle cx="75" cy="75" r="55" fill="none" stroke="#7c5cff" stroke-width="20" stroke-dasharray="345.6" stroke-dashoffset="290" transform="rotate(-90 75 75)"/>
+            </svg>
+            <div class="donut-legend">
+              <div class="dl-row"><span class="dl-dot" style="background:#2f5fff;"></span> Home Loan <b>58% (7)</b></div>
+              <div class="dl-row"><span class="dl-dot" style="background:#0ea394;"></span> Personal Loan <b>25% (3)</b></div>
+              <div class="dl-row"><span class="dl-dot" style="background:#d97706;"></span> Vehicle Loan <b>8% (1)</b></div>
+              <div class="dl-row"><span class="dl-dot" style="background:#7c5cff;"></span> Personal Credit Line <b>8% (1)</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-card" style="margin-bottom:18px;">
+          <div class="card-head" style="padding:0 0 16px;border:none;">
+            <div>
+              <h3>AutoML model accuracy validation trend</h3>
+              <p style="font-size:11.5px;color:var(--muted);margin-top:2px;">Validation tracking across registered borrower underwriting batches</p>
+            </div>
+            <span style="font-size:11px;font-weight:700;color:var(--green);background:var(--green-light);padding:3px 9px;border-radius:12px;">Current Accuracy: 93.8%</span>
+          </div>
+          <svg class="line-chart-svg" viewBox="0 0 600 170" preserveAspectRatio="none">
+            <polyline points="0,80 150,68 300,50 450,42 600,30" fill="none" stroke="#17a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="0,80 150,68 300,50 450,42 600,30 600,170 0,170" fill="rgba(23,163,74,.08)" stroke="none"/>
+          </svg>
+        </div>
+
+        <!-- AutoML Constituent Models -->
+        <div style="font-size:14px;font-weight:800;color:var(--navy);margin:24px 0 12px;">🧠 AutoML Ensemble Constituent Weights &amp; Calibration</div>
+        <div class="ensemble-grid" id="proto-ensemble-grid">
+          <div class="ensemble-model-card">
+            <div class="em-top">
+              <div><div class="em-name">XGBoost Classifier</div><div class="em-type">Gradient Boost Trees</div></div>
+              <span class="em-badge">● Optimal</span>
+            </div>
+            <div class="em-metrics">
+              <div class="em-stat"><span class="em-lbl">Weight</span><b class="em-val">40%</b></div>
+              <div class="em-stat"><span class="em-lbl">Accuracy</span><b class="em-val em-highlight">94.2%</b></div>
+              <div class="em-stat"><span class="em-lbl">ROC-AUC</span><b class="em-val">0.961</b></div>
+              <div class="em-stat"><span class="em-lbl">Latency</span><b class="em-val">11.4ms</b></div>
+            </div>
+            <div class="em-progress-bar"><div class="em-progress-fill" style="width:94.2%;"></div></div>
+          </div>
+
+          <div class="ensemble-model-card">
+            <div class="em-top">
+              <div><div class="em-name">LightGBM Booster</div><div class="em-type">Leaf-wise GBDT</div></div>
+              <span class="em-badge">● Optimal</span>
+            </div>
+            <div class="em-metrics">
+              <div class="em-stat"><span class="em-lbl">Weight</span><b class="em-val">35%</b></div>
+              <div class="em-stat"><span class="em-lbl">Accuracy</span><b class="em-val em-highlight">93.8%</b></div>
+              <div class="em-stat"><span class="em-lbl">ROC-AUC</span><b class="em-val">0.954</b></div>
+              <div class="em-stat"><span class="em-lbl">Latency</span><b class="em-val">8.7ms</b></div>
+            </div>
+            <div class="em-progress-bar"><div class="em-progress-fill" style="width:93.8%;"></div></div>
+          </div>
+
+          <div class="ensemble-model-card">
+            <div class="em-top">
+              <div><div class="em-name">CatBoost Engine</div><div class="em-type">Ordered Categorical Trees</div></div>
+              <span class="em-badge">● Optimal</span>
+            </div>
+            <div class="em-metrics">
+              <div class="em-stat"><span class="em-lbl">Weight</span><b class="em-val">15%</b></div>
+              <div class="em-stat"><span class="em-lbl">Accuracy</span><b class="em-val em-highlight">92.5%</b></div>
+              <div class="em-stat"><span class="em-lbl">ROC-AUC</span><b class="em-val">0.942</b></div>
+              <div class="em-stat"><span class="em-lbl">Latency</span><b class="em-val">14.2ms</b></div>
+            </div>
+            <div class="em-progress-bar"><div class="em-progress-fill" style="width:92.5%;"></div></div>
+          </div>
+
+          <div class="ensemble-model-card">
+            <div class="em-top">
+              <div><div class="em-name">Deep Tabular Net</div><div class="em-type">PyTorch MLP</div></div>
+              <span class="em-badge" style="background:var(--blue-light);color:var(--blue);">● Calibrated</span>
+            </div>
+            <div class="em-metrics">
+              <div class="em-stat"><span class="em-lbl">Weight</span><b class="em-val">10%</b></div>
+              <div class="em-stat"><span class="em-lbl">Accuracy</span><b class="em-val em-highlight">90.1%</b></div>
+              <div class="em-stat"><span class="em-lbl">ROC-AUC</span><b class="em-val">0.923</b></div>
+              <div class="em-stat"><span class="em-lbl">Latency</span><b class="em-val">17.6ms</b></div>
+            </div>
+            <div class="em-progress-bar"><div class="em-progress-fill" style="width:90.1%;"></div></div>
+          </div>
+        </div>
+
+        <!-- SHAP & Drift 2-Column Row -->
+        <div class="grid-2" style="margin-bottom:18px;">
+          <!-- SHAP TreeExplainer Global Feature Importance -->
+          <div class="chart-card">
+            <div class="card-head" style="padding:0 0 14px;border:none;">
+              <div>
+                <h3>SHAP Global Feature Importance</h3>
+                <p style="font-size:11.5px;color:var(--muted);margin-top:2px;">Shapley log-odds contribution across loan decision variables</p>
+              </div>
+              <span class="automl-tag" style="font-size:10.5px;padding:3px 9px;">TreeExplainer</span>
+            </div>
+            <div class="shap-list" id="proto-shap-list">
+              <div class="shap-row">
+                <div class="shap-info"><div class="shap-name-group"><b>Debt-to-Income (DTI) Ratio</b><span class="shap-cat">Affordability</span></div><span class="shap-badge shap-tag-neg">-0.412 SHAP</span></div>
+                <div class="shap-track"><div class="shap-fill" style="width:96%;background:linear-gradient(90deg,#ef4444,#dc2626);"></div></div>
+                <div class="shap-insight">DTI &gt; 42% strongly penalizes approval probability (-0.412 SHAP impact).</div>
+              </div>
+              <div class="shap-row">
+                <div class="shap-info"><div class="shap-name-group"><b>Past 24M Repayment Track Record</b><span class="shap-cat">Credit History</span></div><span class="shap-badge shap-tag-pos">+0.356 SHAP</span></div>
+                <div class="shap-track"><div class="shap-fill" style="width:84%;background:linear-gradient(90deg,#10b981,#059669);"></div></div>
+                <div class="shap-insight">Zero 30+ DPD delinquencies boosts score by +0.356 log-odds.</div>
+              </div>
+              <div class="shap-row">
+                <div class="shap-info"><div class="shap-name-group"><b>Bureau Credit Score (CIBIL)</b><span class="shap-cat">Bureau Metrics</span></div><span class="shap-badge shap-tag-pos">+0.298 SHAP</span></div>
+                <div class="shap-track"><div class="shap-fill" style="width:72%;background:linear-gradient(90deg,#10b981,#059669);"></div></div>
+                <div class="shap-insight">Scores &gt;= 740 contribute positive SHAP weight of +0.298.</div>
+              </div>
+              <div class="shap-row">
+                <div class="shap-info"><div class="shap-name-group"><b>Revolving Credit Utilization</b><span class="shap-cat">Exposure</span></div><span class="shap-badge shap-tag-neg">-0.215 SHAP</span></div>
+                <div class="shap-track"><div class="shap-fill" style="width:58%;background:linear-gradient(90deg,#ef4444,#dc2626);"></div></div>
+                <div class="shap-insight">Credit line utilization over 60% exerts downward drag (-0.215).</div>
+              </div>
+              <div class="shap-row">
+                <div class="shap-info"><div class="shap-name-group"><b>Verified Annual Net Income</b><span class="shap-cat">Income &amp; Wealth</span></div><span class="shap-badge shap-tag-pos">+0.182 SHAP</span></div>
+                <div class="shap-track"><div class="shap-fill" style="width:48%;background:linear-gradient(90deg,#10b981,#059669);"></div></div>
+                <div class="shap-insight">Higher liquid income securely cushions debt coverage (+0.182).</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Continuous Data Drift & PSI Radar -->
+          <div class="chart-card">
+            <div class="card-head" style="padding:0 0 14px;border:none;">
+              <div>
+                <h3>Continuous Data Drift &amp; PSI Radar</h3>
+                <p style="font-size:11.5px;color:var(--muted);margin-top:2px;">Population Stability Index &amp; KS Test</p>
+              </div>
+              <span class="em-badge" style="background:var(--green-light);color:var(--green);font-size:10.5px;padding:3px 9px;">✓ Minimal Drift (Healthy)</span>
+            </div>
+            <div class="drift-stats-row">
+              <div class="drift-stat-box"><div class="val" id="proto-drift-score">0.0412</div><div class="lbl">Drift Score</div></div>
+              <div class="drift-stat-box"><div class="val" id="proto-drift-psi">0.0384</div><div class="lbl">Aggregate PSI</div></div>
+              <div class="drift-stat-box"><div class="val">0.0295</div><div class="lbl">KS Statistic</div></div>
+            </div>
+            <div style="font-size:11.5px;font-weight:700;color:var(--navy);margin-bottom:8px;">Feature-Level Stability Index (PSI):</div>
+            <div class="psi-list">
+              <div class="psi-item"><span class="psi-name">Applicant Income</span><div class="psi-meter"><div class="psi-meter-bar" style="width:32%;"></div></div><span class="psi-val">PSI: 0.032</span></div>
+              <div class="psi-item"><span class="psi-name">Requested Loan Amount</span><div class="psi-meter"><div class="psi-meter-bar" style="width:40%;"></div></div><span class="psi-val">PSI: 0.040</span></div>
+              <div class="psi-item"><span class="psi-name">DTI Ratio Distribution</span><div class="psi-meter"><div class="psi-meter-bar" style="width:22%;"></div></div><span class="psi-val">PSI: 0.022</span></div>
+              <div class="psi-item"><span class="psi-name">Credit Bureau Score</span><div class="psi-meter"><div class="psi-meter-bar" style="width:28%;"></div></div><span class="psi-val">PSI: 0.028</span></div>
+            </div>
+            <div style="margin-top:14px;padding:10px 12px;background:var(--surface-2);border-radius:8px;font-size:11px;color:var(--muted);">
+              <b>Demographic Parity:</b> 0.992 · Equalized Odds Disparity: 0.00% across all customer segments.
+            </div>
+          </div>
+        </div>
+
+        <!-- Portfolio Stress Testing & Capital Adequacy -->
+        <div class="chart-card" style="margin-bottom:18px;">
+          <div class="card-head" style="padding:0 0 14px;border:none;">
+            <div>
+              <h3>Bank Portfolio Stress Testing &amp; Capital Adequacy</h3>
+              <p style="font-size:11.5px;color:var(--muted);margin-top:2px;">Basel III regulatory buffers and Non-Performing Asset (NPA) projections</p>
+            </div>
+            <span style="font-size:10.5px;font-weight:700;color:var(--navy);background:var(--surface-2);padding:3px 8px;border-radius:8px;">RBI Compliant</span>
+          </div>
+          <div class="stress-grid">
+            <div class="stress-card"><div class="val">1.82%</div><div class="lbl">Gross NPA (Benchmark &lt; 3.5%)</div></div>
+            <div class="stress-card"><div class="val">0.48%</div><div class="lbl">Net NPA (Prudential Provisioning)</div></div>
+            <div class="stress-card"><div class="val">88.4%</div><div class="lbl">Provision Coverage Ratio (PCR)</div></div>
+            <div class="stress-card"><div class="val">16.8%</div><div class="lbl">Capital Adequacy Ratio (CAR)</div></div>
+            <div class="stress-card"><div class="val">756</div><div class="lbl">Average CIBIL of Approved Cohort</div></div>
+            <div class="stress-card"><div class="val">3.8 mins</div><div class="lbl">End-to-End AI Sanction Turnaround</div></div>
+          </div>
+        </div>
+      </div>
+      <footer class="proto-foot">CrediSphere AI · Reports &amp; Analytics · MCA Project Prototype</footer>
+    </div>
+  </div>
+</div>
+
+<!-- ================= KYC DOCUMENT UPLOAD (Customer) ================= -->
+<div class="frame" id="frame-kyc">
+  <div class="user-nav">
+    <div class="un-left">
+      <div class="un-brand"><div class="logo-mark" style="background:linear-gradient(135deg,var(--navy),var(--blue));">CS</div> CrediSphere</div>
+      <div class="un-links">
+        <a onclick="showFrameById('user')">Dashboard</a>
+        <a onclick="showFrameById('apply')">Apply for Loan</a>
+        <a>My Loans</a>
+        <a class="active">Documents</a>
+        <a>Profile</a>
+      </div>
+    </div>
+    <div class="un-right"><div class="tb-icon-btn">🔔<span class="badge-dot"></span></div><div class="tb-avatar" style="background:linear-gradient(135deg,var(--teal),var(--blue));">RM</div></div>
+  </div>
+  <div class="user-content">
+    <div class="page-head"><div><h1>KYC &amp; Document Upload</h1><p>Upload your documents so our AI can verify and pre-fill your application instantly</p></div></div>
+
+    <div class="doc-grid">
+      <div class="doc-card done">
+        <div class="doc-icon">✓</div>
+        <div class="doc-info"><b>PAN Card</b><span>Verified via AI OCR · 2 min ago</span>
+          <div class="doc-status"><span class="chip chip-approved">Verified</span></div>
+        </div>
+      </div>
+      <div class="doc-card done">
+        <div class="doc-icon">✓</div>
+        <div class="doc-info"><b>Aadhaar Card</b><span>Verified via AI OCR · 2 min ago</span>
+          <div class="doc-status"><span class="chip chip-approved">Verified</span></div>
+        </div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">⏳</div>
+        <div class="doc-info"><b>Salary Slips (last 3 months)</b><span>PDF or image, max 5MB each</span>
+          <div class="doc-status"><span class="chip chip-pending">Processing...</span></div>
+        </div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">📄</div>
+        <div class="doc-info"><b>Bank Statement (6 months)</b><span>Required for income verification</span>
+          <div class="doc-status"><button class="btn-sm" style="padding:6px 12px;">Upload file</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="upload-zone" style="margin-top:20px;max-width:520px;">
+      <div class="uz-icon">☁️</div>
+      <b>Drag &amp; drop files here, or click to browse</b>
+      <span>Supports PDF, JPG, PNG up to 5MB</span>
+    </div>
+
+    <div class="ai-live-panel" style="max-width:520px;">
+      <div class="plive"><span class="pdot2"></span> AI verification status</div>
+      <p style="font-size:12.5px;color:#374151;">2 of 4 documents verified. Estimated time to complete AI review: <b>3 minutes</b> after remaining uploads.</p>
+    </div>
+  </div>
+  <footer class="proto-foot">CrediSphere AI · KYC Verification · MCA Project Prototype</footer>
+</div>
+
+<!-- ================= SCREEN CONFIGURATION (Admin controls Customer view) ================= -->
+<div class="frame" id="frame-screenconfig">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sb-brand"><div class="logo-mark">CS</div><div><b>CrediSphere</b><span>Lender Console</span></div></div>
+      <div class="sb-section-label">Overview</div>
+      <div class="sb-item" onclick="showFrameById('admin')"><span class="ic">📊</span> Dashboard</div>
+      <div class="sb-item" onclick="showFrameById('credit')"><span class="ic">🧠</span> Credit Intelligence</div>
+      <div class="sb-item" onclick="showFrameById('apply')"><span class="ic">📄</span> Loan Applications</div>
+      <div class="sb-section-label">Recovery</div>
+      <div class="sb-item sidebar-menu-item" data-view="collections-ai" onclick="showFrameById('collections')"><span class="ic">📞</span> Collections AI</div>
+      <div class="sb-item" onclick="window.location.href='pages/legal-repossession.html'" style="cursor:pointer;"><span class="ic">⚖️</span> Legal &amp; Repossession</div>
+      <div class="sb-section-label">Management</div>
+      <div class="sb-item" onclick="showFrameById('reports')"><span class="ic">📈</span> Reports</div>
+      <div class="sb-item" onclick="showFrameById('policy')"><span class="ic">⚙️</span> Risk Policy Config</div>
+      <div class="sb-item active"><span class="ic">🖥️</span> Screen Configuration</div>
+      <div class="sb-bottom"><div class="sb-user"><div class="sb-avatar">AK</div><div><b>Anita Kapoor</b><span>Credit Ops Admin</span></div></div></div>
+    </aside>
+
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-search">🔍 Search screen, widget, role...</div>
+        <div class="tb-right"><div class="tb-pill">🏦 Mumbai Central Branch</div><div class="tb-icon-btn">🔔<span class="badge-dot"></span></div><div class="tb-avatar">AK</div></div>
+      </div>
+
+      <div class="content">
+        <div class="page-head">
+          <div><h1>Customer Screen Configuration</h1><p>Control exactly what customers see on their portal — show, hide, or restrict any widget in real time</p></div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn-sm">↺ Reset to default</button>
+            <button class="btn-sm dark">💾 Publish changes</button>
+          </div>
+        </div>
+
+        <div class="sc-summary-strip">
+          <div class="sc-summary-chip">🖥️ <span>Screens configured</span> <b>5</b></div>
+          <div class="sc-summary-chip">✅ <span>Widgets visible</span> <b id="sc-visible-count">7</b></div>
+          <div class="sc-summary-chip">🚫 <span>Widgets hidden</span> <b id="sc-hidden-count">1</b></div>
+          <div class="sc-summary-chip">🕓 <span>Last published</span> <b style="font-size:12px;">16 Jul, 6:40 PM</b></div>
+        </div>
+
+        <div class="sc-layout">
+          <!-- LEFT: screen tabs + widget toggle list -->
+          <div>
+            <div class="sc-screen-tabs">
+              <div class="sc-screen-tab active" onclick="scSwitchScreen('dashboard', this)">🏠 Customer Dashboard <span class="cnt">4</span></div>
+              <div class="sc-screen-tab" onclick="scSwitchScreen('apply', this)">📝 Loan Application <span class="cnt">2</span></div>
+              <div class="sc-screen-tab" onclick="scSwitchScreen('myloans', this)">💳 My Loans <span class="cnt">2</span></div>
+              <div class="sc-screen-tab" onclick="scSwitchScreen('documents', this)">📁 Documents <span class="cnt">1</span></div>
+              <div class="sc-screen-tab" onclick="scSwitchScreen('profile', this)">👤 Profile <span class="cnt">1</span></div>
+            </div>
+
+            <!-- DASHBOARD WIDGET LIST -->
+            <div class="sc-widget-list" id="sc-list-dashboard">
+              <div class="sc-widget-card" data-widget="credit-score">
+                <div class="sc-widget-head" onclick="scToggleExpand(this)">
+                  <div class="sc-widget-icon" style="background:var(--teal-light);color:var(--teal);">📊</div>
+                  <div class="sc-widget-info"><b>CrediScore Widget</b><span>Shows the customer's live AI credit score &amp; trend</span></div>
+                  <span class="sc-widget-badge on">Visible</span>
+                  <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" checked onchange="scToggleWidget(this)"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+                  <span class="sc-chevron">▾</span>
+                </div>
+                <div class="sc-widget-expand">
+                  <div class="sc-role-row"><span>Visible to Retail customers</span>
+                    <label class="toggle"><input type="checkbox" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label></div>
+                  <div class="sc-role-row"><span>Visible to Business customers</span>
+                    <label class="toggle"><input type="checkbox" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label></div>
+                  <div class="sc-role-row"><span>Show score improvement tips</span>
+                    <label class="toggle"><input type="checkbox" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label></div>
+                </div>
+              </div>
+
+              <div class="sc-widget-card" data-widget="loan-status">
+                <div class="sc-widget-head" onclick="scToggleExpand(this)">
+                  <div class="sc-widget-icon" style="background:var(--blue-light);color:var(--blue);">💰</div>
+                  <div class="sc-widget-info"><b>Active Loan Status Card</b><span>Outstanding amount, repayment progress &amp; next EMI</span></div>
+                  <span class="sc-widget-badge on">Visible</span>
+                  <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" checked onchange="scToggleWidget(this)"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+                  <span class="sc-chevron">▾</span>
+                </div>
+                <div class="sc-widget-expand">
+                  <div class="sc-role-row"><span>Show EMI due date</span>
+                    <label class="toggle"><input type="checkbox" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label></div>
+                  <div class="sc-role-row"><span>Show "Pay EMI" quick action</span>
+                    <label class="toggle"><input type="checkbox" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label></div>
+                </div>
+              </div>
+
+              <div class="sc-widget-card" data-widget="offers">
+                <div class="sc-widget-head" onclick="scToggleExpand(this)">
+                  <div class="sc-widget-icon" style="background:var(--purple-light);color:var(--purple);">🎁</div>
+                  <div class="sc-widget-info"><b>AI Pre-approved Offers</b><span>Personalised top-up, refinance &amp; credit line offers</span></div>
+                  <span class="sc-widget-badge on">Visible</span>
+                  <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" checked onchange="scToggleWidget(this)"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+                  <span class="sc-chevron">▾</span>
+                </div>
+                <div class="sc-widget-expand">
+                  <div class="sc-role-row"><span>Max offers shown</span><span class="rule-val" style="padding:4px 10px;">3</span></div>
+                  <div class="sc-role-row"><span>Only show for CrediScore ≥ 650</span>
+                    <label class="toggle"><input type="checkbox" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label></div>
+                </div>
+              </div>
+
+              <div class="sc-widget-card off" data-widget="ai-assistant">
+                <div class="sc-widget-head" onclick="scToggleExpand(this)">
+                  <div class="sc-widget-icon" style="background:var(--border);color:var(--muted);">💬</div>
+                  <div class="sc-widget-info"><b>AI Chat Assistant</b><span>24/7 conversational assistant for loan &amp; EMI queries</span></div>
+                  <span class="sc-widget-badge off">Hidden</span>
+                  <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" onchange="scToggleWidget(this)"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+                  <span class="sc-chevron">▾</span>
+                </div>
+                <div class="sc-widget-expand">
+                  <div class="sc-role-row"><span>Reason hidden</span><span style="color:var(--muted);font-weight:600;">Pilot not yet live for this branch</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- LOAN APPLICATION WIDGET LIST -->
+            <div class="sc-widget-list" id="sc-list-apply" style="display:none;">
+              <div class="sc-widget-card" data-widget="apply-livecheck">
+                <div class="sc-widget-head" onclick="scToggleExpand(this)">
+                  <div class="sc-widget-icon" style="background:var(--purple-light);color:var(--purple);">🧠</div>
+                  <div class="sc-widget-info"><b>Live AI Pre-check Panel</b><span>Shows estimated DTI &amp; eligibility while filling the form</span></div>
+                  <span class="sc-widget-badge on">Visible</span>
+                  <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" checked onchange="scToggleWidget(this)"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+                  <span class="sc-chevron">▾</span>
+                </div>
+                <div class="sc-widget-expand"><div class="sc-role-row"><span>Show exact CrediScore during form fill</span>
+                  <label class="toggle"><input type="checkbox"><span class="toggle-track"><span class="toggle-thumb"></span></span></label></div>
+                </div>
+              </div>
+              <div class="sc-widget-card" data-widget="apply-stepper">
+                <div class="sc-widget-head" onclick="scToggleExpand(this)">
+                  <div class="sc-widget-icon" style="background:var(--blue-light);color:var(--blue);">🧭</div>
+                  <div class="sc-widget-info"><b>Progress Stepper</b><span>Applicant Info → Financials → Documents → AI Review</span></div>
+                  <span class="sc-widget-badge on">Visible</span>
+                  <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" checked onchange="scToggleWidget(this)"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+                  <span class="sc-chevron">▾</span>
+                </div>
+                <div class="sc-widget-expand"><div class="sc-role-row"><span>Always show step numbers</span>
+                  <label class="toggle"><input type="checkbox" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- MY LOANS WIDGET LIST -->
+            <div class="sc-widget-list" id="sc-list-myloans" style="display:none;">
+              <div class="sc-widget-card" data-widget="loans-history">
+                <div class="sc-widget-head" onclick="scToggleExpand(this)">
+                  <div class="sc-widget-icon" style="background:var(--green-light);color:var(--green);">📜</div>
+                  <div class="sc-widget-info"><b>Repayment History Timeline</b><span>Full EMI payment history with dates &amp; modes</span></div>
+                  <span class="sc-widget-badge on">Visible</span>
+                  <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" checked onchange="scToggleWidget(this)"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+                  <span class="sc-chevron">▾</span>
+                </div>
+                <div class="sc-widget-expand"><div class="sc-role-row"><span>Show download statement button</span>
+                  <label class="toggle"><input type="checkbox" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label></div>
+                </div>
+              </div>
+              <div class="sc-widget-card" data-widget="loans-foreclosure">
+                <div class="sc-widget-head" onclick="scToggleExpand(this)">
+                  <div class="sc-widget-icon" style="background:var(--amber-light);color:var(--amber);">🏁</div>
+                  <div class="sc-widget-info"><b>Foreclosure Calculator</b><span>Self-serve early loan closure estimate</span></div>
+                  <span class="sc-widget-badge on">Visible</span>
+                  <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" checked onchange="scToggleWidget(this)"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+                  <span class="sc-chevron">▾</span>
+                </div>
+                <div class="sc-widget-expand"><div class="sc-role-row"><span>Require OTP before showing amount</span>
+                  <label class="toggle"><input type="checkbox" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DOCUMENTS WIDGET LIST -->
+            <div class="sc-widget-list" id="sc-list-documents" style="display:none;">
+              <div class="sc-widget-card" data-widget="doc-upload">
+                <div class="sc-widget-head" onclick="scToggleExpand(this)">
+                  <div class="sc-widget-icon" style="background:var(--blue-light);color:var(--blue);">☁️</div>
+                  <div class="sc-widget-info"><b>Drag &amp; Drop Upload Zone</b><span>Self-serve KYC &amp; income document upload with AI OCR</span></div>
+                  <span class="sc-widget-badge on">Visible</span>
+                  <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" checked onchange="scToggleWidget(this)"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+                  <span class="sc-chevron">▾</span>
+                </div>
+                <div class="sc-widget-expand"><div class="sc-role-row"><span>Max file size (MB)</span><span class="rule-val" style="padding:4px 10px;">5</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PROFILE WIDGET LIST -->
+            <div class="sc-widget-list" id="sc-list-profile" style="display:none;">
+              <div class="sc-widget-card" data-widget="profile-details">
+                <div class="sc-widget-head" onclick="scToggleExpand(this)">
+                  <div class="sc-widget-icon" style="background:var(--purple-light);color:var(--purple);">👤</div>
+                  <div class="sc-widget-info"><b>Editable Profile Fields</b><span>Contact info, address &amp; nominee details</span></div>
+                  <span class="sc-widget-badge on">Visible</span>
+                  <label class="toggle" onclick="event.stopPropagation()"><input type="checkbox" checked onchange="scToggleWidget(this)"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+                  <span class="sc-chevron">▾</span>
+                </div>
+                <div class="sc-widget-expand"><div class="sc-role-row"><span>Allow email change without OTP</span>
+                  <label class="toggle"><input type="checkbox"><span class="toggle-track"><span class="toggle-thumb"></span></span></label></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: live preview -->
+          <div class="sc-preview-wrap">
+            <div class="card" style="margin-bottom:14px;">
+              <div class="card-head" style="padding:14px 16px;">
+                <h3 style="font-size:12.5px;">📱 Live customer preview</h3>
+                <span class="sc-live-tag"><span class="pdot3"></span> Syncing</span>
+              </div>
+            </div>
+            <div class="sc-preview-frame">
+              <div class="sc-preview-screen">
+                <div class="sc-preview-nav"><b>Rohan's Dashboard</b><span style="font-size:10px;color:var(--muted);">Customer view</span></div>
+                <div class="sc-preview-body">
+                  <div class="sc-pv-hero">
+                    <b>Welcome back, Rohan 👋</b>
+                    <span>Here's what your admin has configured for this screen</span>
+                  </div>
+
+                  <div class="sc-pv-block" id="pv-credit-score">
+                    <div class="sc-pv-title">📊 CrediScore Widget</div>
+                    <div style="display:flex;align-items:center;gap:12px;">
+                      <div style="font-size:22px;font-weight:800;font-family:'DM Mono',monospace;color:var(--teal);">742</div>
+                      <div style="font-size:11px;color:var(--muted);">Good — improved +18 pts this quarter</div>
+                    </div>
+                  </div>
+
+                  <div class="sc-pv-block" id="pv-loan-status">
+                    <div class="sc-pv-title">💰 Active Loan Status</div>
+                    <div style="font-size:16px;font-weight:800;font-family:'DM Mono',monospace;">₹42,50,000 <span style="font-size:11px;font-weight:600;color:var(--muted);">outstanding</span></div>
+                    <div class="lsc-progress" style="margin:8px 0 4px;"><div class="lsc-progress-fill" style="width:34%;"></div></div>
+                    <div style="font-size:10.5px;color:var(--muted);">Next EMI due 05 Aug 2026</div>
+                  </div>
+
+                  <div class="sc-pv-block" id="pv-offers">
+                    <div class="sc-pv-title">🎁 AI Pre-approved Offers</div>
+                    <div style="font-size:12px;font-weight:700;">Top-up Personal Loan — ₹3,00,000</div>
+                    <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">10.5% p.a. · 36 months</div>
+                  </div>
+
+                  <div class="sc-pv-block" id="pv-ai-assistant">
+                    <div class="sc-pv-title">💬 AI Chat Assistant</div>
+                    <div style="font-size:11.5px;color:#374151;">Ask me anything about your loan or EMI, 24/7.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="proto-foot">CrediSphere AI · Screen Configuration Module · MCA Project Prototype</footer>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= FRAME SWITCHING LOGIC ================= */
+function showFrame(id, btn){
+  // Normalize collections IDs
+  if (id === 'collections-ai') id = 'collections';
+
+  document.querySelectorAll('.frame').forEach(f => f.classList.remove('active'));
+  const target = document.getElementById('frame-' + id);
+  if (target) {
+    target.classList.add('active');
+  }
+
+  document.querySelectorAll('.pb-tab').forEach(t => t.classList.remove('active'));
+  if (!btn) {
+    btn = document.querySelector('.pb-tab[data-frame="' + id + '"]');
+  }
+  if (btn) {
+    btn.classList.add('active');
+  }
+
+  // Update sidebar active highlights
+  document.querySelectorAll('.sb-item').forEach(item => {
+    item.classList.remove('active');
+    if (item.getAttribute('data-view') === id || (id === 'collections' && item.textContent.includes('Collections AI'))) {
+      item.classList.add('active');
+    }
+  });
+
+  if (id === 'collections') {
+    const collView = document.getElementById('collections-ai-view');
+    if (collView) collView.style.display = 'block';
+    collectionsML.init();
+  }
+
+  window.scrollTo(0,0);
+}
+
+function showFrameById(id){
+  if (id === 'legal' || id === 'repossession' || id === 'legal-repossession') {
+    window.location.href = 'pages/legal-repossession.html';
+    return;
+  }
+  const btn = document.querySelector('.pb-tab[data-frame="'+id+'"]');
+  showFrame(id, btn);
+}
+
+/* ================= SCREEN CONFIGURATION LOGIC ================= */
+function scSwitchScreen(key, tabEl){
+  document.querySelectorAll('.sc-screen-tab').forEach(t=>t.classList.remove('active'));
+  tabEl.classList.add('active');
+  document.querySelectorAll('.sc-widget-list').forEach(l=>l.style.display='none');
+  const list = document.getElementById('sc-list-'+key);
+  if(list) list.style.display='block';
+}
+
+function scToggleExpand(headEl){
+  const card = headEl.closest('.sc-widget-card');
+  card.classList.toggle('expanded');
+}
+
+function scToggleWidget(checkbox){
+  const card = checkbox.closest('.sc-widget-card');
+  const badge = card.querySelector('.sc-widget-badge');
+  const widgetKey = card.getAttribute('data-widget');
+  const isOn = checkbox.checked;
+
+  card.classList.toggle('off', !isOn);
+  badge.textContent = isOn ? 'Visible' : 'Hidden';
+  badge.classList.toggle('on', isOn);
+  badge.classList.toggle('off', !isOn);
+
+  const preview = document.getElementById('pv-'+widgetKey);
+  if(preview){
+    preview.classList.toggle('hidden-block', !isOn);
+  }
+  scUpdateCounts();
+}
+
+function scUpdateCounts(){
+  const all = document.querySelectorAll('.sc-widget-card');
+  let visible = 0, hidden = 0;
+  all.forEach(c=>{
+    if(c.classList.contains('off')) hidden++; else visible++;
+  });
+  const vEl = document.getElementById('sc-visible-count');
+  const hEl = document.getElementById('sc-hidden-count');
+  if(vEl) vEl.textContent = visible;
+  if(hEl) hEl.textContent = hidden;
+}
+
+/* ==========================================================================
+   COLLECTIONS INTELLIGENCE & LIVE TELEPHONY ENGINE (ML/RL + VOIP + CHANNELS)
+   ========================================================================== */
+class CollectionsMLEngine {
+  constructor() {
+    this.state = {
+      borrowerName: "gudiya (Vrinda Sharma)",
+      accountNo: "LN-2024-0005",
+      phone: "+91 90797-75213",
+      dpd: 90,
+      brokenPromises: 2,
+      bouncedEmis: 3,
+      emiAmount: 35999,
+      totalOverdue: 107997,
+      sentiment: "Negative",
+      bestCallTime: "5–7 PM"
+    };
+
+    this.actions = [
+      { id: 'settlement', name: 'Structured Settlement Offer', qValue: 0.812, pct: 85, color: '#2f5fff', isOptimal: true },
+      { id: 'sms_link', name: 'SMS Payment Link', qValue: 0.640, pct: 67, color: '#10b981' },
+      { id: 'ivr_call', name: 'Automated IVR Call', qValue: 0.520, pct: 54, color: '#6366f1' },
+      { id: 'hard_recovery', name: 'Hard Recovery Agent Dispatch', qValue: 0.310, pct: 32, color: '#f59e0b' },
+      { id: 'repossession', name: 'Legal Repossession Notice', qValue: -0.150, pct: 15, color: '#ef4444' }
+    ];
+
+    this.featureImportances = [
+      { feature: "DPD Bucket (90+ Days)", weight: "38%" },
+      { feature: "Broken Promises (2 prior)", weight: "27%" },
+      { feature: "Sentiment (Negative Tone)", weight: "18%" },
+      { feature: "Bounce Velocity (3 EMIs)", weight: "17%" }
+    ];
+  }
+
+  init() {
+    this.renderQDistribution();
+    this.renderFeatureWeights();
+  }
+
+  randomizeState() {
+    // Dynamically simulate an account variation
+    const names = ["Farid Sheikh", "Rajesh Varma", "Sunil Deshmukh"];
+    const sentiments = ["Negative", "Hostile", "Cooperative"];
+    const dpds = [60, 90, 120];
+    const promises = [1, 2, 3];
+
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    this.state.dpd = pick(dpds);
+    this.state.brokenPromises = pick(promises);
+    this.state.sentiment = pick(sentiments);
+
+    // Recalculate Q values
+    if (this.state.dpd >= 90) {
+      this.actions[0].qValue = 0.812;
+      this.actions[4].qValue = -0.150;
+    } else {
+      this.actions[0].qValue = 0.740;
+      this.actions[1].qValue = 0.790;
+    }
+
+    // Update UI elements
+    const dpdEl = document.getElementById('txt-dpd-bucket');
+    if (dpdEl) dpdEl.textContent = `${this.state.dpd} (${this.state.brokenPromises})`;
+    const sentEl = document.getElementById('coll-sentiment');
+    if (sentEl) sentEl.textContent = this.state.sentiment;
+    const promChip = document.getElementById('coll-promises-chip');
+    if (promChip) promChip.textContent = `Broken Promises: ${this.state.brokenPromises}`;
+
+    this.renderQDistribution();
+    showCollToast("Live ML State re-simulated! Random Forest & DQN policies refreshed.", "success");
+  }
+
+  renderQDistribution() {
+    const container = document.getElementById('q-distribution-meters');
+    if (!container) return;
+    container.innerHTML = this.actions.map(a => `
+      <div class="q-meter-row">
+        <span class="q-meter-name" title="${a.name}">${a.isOptimal ? '★ ' : ''}${a.name}</span>
+        <div class="q-meter-bar-bg">
+          <div class="q-meter-bar-fill" style="width:${a.pct}%;background:${a.color};"></div>
+        </div>
+        <span class="q-meter-val" style="color:${a.color};">${a.qValue > 0 ? '+' : ''}${a.qValue.toFixed(3)}</span>
+      </div>
+    `).join('');
+  }
+
+  renderFeatureWeights() {
+    const container = document.getElementById('rf-feature-weights');
+    if (!container) return;
+    container.innerHTML = this.featureImportances.map(f => `
+      <div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:5px 8px;display:flex;justify-content:space-between;">
+        <span style="color:var(--muted);">${f.feature}:</span>
+        <b style="color:var(--navy);font-family:'DM Mono',monospace;">${f.weight}</b>
+      </div>
+    `).join('');
+  }
+}
+
+const collectionsML = new CollectionsMLEngine();
+
+// Initialize when DOM is ready
+window.addEventListener('load', () => {
+  collectionsML.init();
+  // By default, activate collections frame
+  showFrame('collections');
+});
+
+function toggleMLEngineInsights() {
+  const panel = document.getElementById('coll-insights-panel');
+  const btn = document.getElementById('coll-toggle-insights-btn');
+  if (!panel || !btn) return;
+  const isHidden = panel.style.display === 'none';
+  panel.style.display = isHidden ? 'block' : 'none';
+  btn.classList.toggle('expanded', isHidden);
+}
+
+/* ================= LIVE VOIP CALL SIMULATION ================= */
+let callTimerInterval = null;
+let callDurationSeconds = 0;
+let callStepTimeout = null;
+let isCallMuted = false;
+
+function openLiveCallModal() {
+  const modal = document.getElementById('coll-call-modal');
+  const avatar = document.getElementById('call-avatar-ring');
+  const statusText = document.getElementById('call-status-text');
+  const statusPill = document.getElementById('call-status-pill');
+  const stream = document.getElementById('call-transcript-stream');
+
+  modal.classList.add('open');
+  avatar.classList.add('ringing');
+  statusPill.classList.remove('connected');
+  statusText.textContent = "Connecting to SIP Gateway...";
+  
+  stream.innerHTML = `
+    <div style="text-align:center;font-size:11px;color:var(--muted);margin-bottom:12px;" id="call-callout-msg">
+      🔒 VoIP encrypted line · Simulated AI Agent Intervention
+    </div>
+  `;
+
+  callDurationSeconds = 0;
+  isCallMuted = false;
+  updateMuteButtonUI();
+
+  callStepTimeout = setTimeout(() => {
+    statusText.textContent = "Ringing... (+91 98765-43210)";
+    
+    setTimeout(() => {
+      avatar.classList.remove('ringing');
+      statusPill.classList.add('connected');
+      startCallTimer();
+      runCallConversationScript();
+    }, 2000);
+  }, 1200);
+}
+
+function startCallTimer() {
+  const statusText = document.getElementById('call-status-text');
+  callTimerInterval = setInterval(() => {
+    callDurationSeconds++;
+    const mins = String(Math.floor(callDurationSeconds / 60)).padStart(2, '0');
+    const secs = String(callDurationSeconds % 60).padStart(2, '0');
+    statusText.textContent = `Live Connected (${mins}:${secs})`;
+  }, 1000);
+}
+
+function runCallConversationScript() {
+  const stream = document.getElementById('call-transcript-stream');
+  
+  const scriptDialogue = [
+    { sender: "agent", text: "Namaste Mr. Sheikh, this is CrediSphere Collections regarding your pending EMI of ₹1,20,000 for account LN-2024-88492." },
+    { sender: "borrower", text: "Namaste. Look, I had severe family medical expenses and lost my contract. I cannot arrange the full ₹3.72 lakh immediately." },
+    { sender: "agent", text: "Understood Mr. Sheikh. Our AI model has pre-structured a recovery offer: pay a ₹40,000 upfront commitment this Friday, and we will restructure the remaining balance across 10 months with bounce penalties waived." },
+    { sender: "borrower", text: "Yes! ₹40,000 this Friday by 5 PM I can manage for sure. Please send me the link on WhatsApp/SMS." }
+  ];
+
+  scriptDialogue.forEach((item, idx) => {
+    setTimeout(() => {
+      if (!document.getElementById('coll-call-modal').classList.contains('open')) return;
+      const bubble = document.createElement('div');
+      bubble.className = `transcript-bubble ${item.sender}`;
+      bubble.innerHTML = `
+        <span class="bubble-tag">${item.sender === 'agent' ? '🤖 CrediSphere Voice AI' : '👤 Farid Sheikh (Borrower)'}</span>
+        <div class="bubble-content">${item.text}</div>
+      `;
+      stream.appendChild(bubble);
+      stream.scrollTop = stream.scrollHeight;
+
+      if (idx === scriptDialogue.length - 1) {
+        togglePTPDrawer(true);
+      }
+    }, (idx + 1) * 2200);
+  });
+}
+
+function toggleCallMute() {
+  isCallMuted = !isCallMuted;
+  updateMuteButtonUI();
+  showCollToast(isCallMuted ? "Microphone muted" : "Microphone unmuted");
+}
+
+function updateMuteButtonUI() {
+  const btn = document.getElementById('btn-call-mute');
+  const label = document.getElementById('mute-label');
+  if (!btn || !label) return;
+  btn.classList.toggle('active', isCallMuted);
+  label.textContent = isCallMuted ? "Unmute" : "Mute";
+}
+
+function togglePTPDrawer(forceState) {
+  const drawer = document.getElementById('ptp-inline-drawer');
+  if (!drawer) return;
+  if (typeof forceState === 'boolean') {
+    drawer.classList.toggle('open', forceState);
+  } else {
+    drawer.classList.toggle('open');
+  }
+}
+
+function confirmRecordPTP() {
+  const amount = document.getElementById('ptp-amount-input').value || "₹40,000";
+  const date = document.getElementById('ptp-date-input').value || "12-Dec-2025";
+  
+  togglePTPDrawer(false);
+  appendFollowUpFeed("📞", `<b>PTP Recorded</b> — ${amount} promised by ${date} (Agent call negotiation)`, "Just now");
+  showCollToast(`Promise to Pay of ${amount} recorded successfully!`, "success");
+}
+
+function endLiveCall() {
+  clearInterval(callTimerInterval);
+  clearTimeout(callStepTimeout);
+  
+  const modal = document.getElementById('coll-call-modal');
+  modal.classList.remove('open');
+  
+  if (callDurationSeconds > 0) {
+    const mins = String(Math.floor(callDurationSeconds / 60)).padStart(2, '0');
+    const secs = String(callDurationSeconds % 60).padStart(2, '0');
+    appendFollowUpFeed("📞", `<b>Simulated Call Ended</b> — Duration ${mins}:${secs}, borrower committed to ₹40,000 upfront token`, "Just now");
+    showCollToast(`Call ended (${mins}:${secs}). Follow-up history updated.`, "success");
+  }
+}
+
+/* ================= LIVE SMS & WHATSAPP ENGINE ================= */
+const SMS_TEMPLATES = {
+  settlement: "Urgent: CrediSphere one-time settlement offer valid until 5 PM today. Pay ₹40,000 upfront token to waive ₹24,000 penalties: https://pay.credisphere.ai/s/F92K1",
+  reminder: "Dear Farid Sheikh, overdue EMI of ₹1,20,000 is pending for account LN-2024-88492. Avoid escalation by paying here: https://pay.credisphere.ai/pay/88492",
+  urgent: "FINAL NOTICE: Account LN-2024-88492 has reached DPD 90. Legal arbitration proceedings pending. Clear balance or contact collections: https://pay.credisphere.ai/legal/88492"
+};
+
+let currentChannel = 'sms';
+
+function openSMSModal() {
+  const modal = document.getElementById('coll-sms-modal');
+  modal.classList.add('open');
+  onTemplateChange();
+}
+
+function closeSMSModal() {
+  document.getElementById('coll-sms-modal').classList.remove('open');
+}
+
+function switchMsgChannel(ch) {
+  currentChannel = ch;
+  document.getElementById('chan-sms').classList.toggle('active', ch === 'sms');
+  document.getElementById('chan-wa').classList.toggle('active', ch === 'whatsapp');
+}
+
+function onTemplateChange() {
+  const select = document.getElementById('sms-template-select');
+  const textarea = document.getElementById('sms-message-text');
+  const val = select.value;
+  textarea.value = SMS_TEMPLATES[val] || SMS_TEMPLATES.settlement;
+}
+
+function updateSMSPreview() {}
+
+function sendSMSLink() {
+  const channelName = currentChannel === 'sms' ? 'SMS Gateway' : 'WhatsApp Business';
+  closeSMSModal();
+
+  showCollToast(`${channelName} successfully dispatched via Gateway (Status: Delivered · ID: msg_${Math.random().toString(36).substring(7)})`, "success");
+  appendFollowUpFeed("📩", `<b>Payment Link Sent via ${channelName}</b> — Upfront ₹40,000 settlement token link`, "Just now");
+}
+
+/* ================= STRUCTURED SETTLEMENT ENGINE ================= */
+function openSettlementModal() {
+  document.getElementById('coll-settlement-modal').classList.add('open');
+}
+function closeSettlementModal() {
+  document.getElementById('coll-settlement-modal').classList.remove('open');
+}
+function confirmSettlementAgreement() {
+  closeSettlementModal();
+  showCollToast("Settlement agreement generated and queued to borrower via SMS/Email.", "success");
+  appendFollowUpFeed("📑", `<b>Settlement Agreement Issued</b> — ₹40,000 upfront + ₹33,200/mo x 10 months (penalties waived)`, "Just now");
+}
+
+/* ================= "ASK AI ASSISTANT" COPILOT DRAWER ================= */
+const AI_COPILOT_KNOWLEDGE = {
+  "Why does RL recommend settlement over repossession?": `
+    <b>Deep Q-Network (DQN) Policy Analysis:</b><br><br>
+    1. <b>Recovery Value Comparison:</b> At DPD 90 with 2 broken promises, legal asset repossession experiences a <b>34% secondary auction haircut</b> plus ₹35,000 in yard and court expenses. Expected net recovery is only <b>42.1%</b> after a 180+ day court freeze ($Q = -0.150$).<br><br>
+    2. <b>Cash Velocity:</b> A structured settlement with an immediate ₹40,000 token payment secures immediate cashflow and achieves an expected net recovery rate of <b>68.4%</b> ($Q = +0.812$).<br><br>
+    3. <b>Behavioral Sentiment:</b> Farid's sentiment score is <i>Negative</i>, indicating adversarial resistance to repossession threats, but historical bureau data reveals high compliance once late fees are waived.
+  `,
+  "Why is 5–7 PM the optimal contact window?": `
+    <b>Temporal Optimization Engine:</b><br>
+    Empirical telematics data across 45,000 self-employed borrowers indicates connection answer rates surge to <b>74.2%</b> between 5:00 PM and 7:00 PM (vs 23.8% during midday hours). Borrower stress levels are also significantly lower after business hours, leading to <b>2.3x higher Promise-to-Pay (PTP) conversion</b>.
+  `,
+  "What happens if Farid defaults on this PTP?": `
+    <b>Next-Best-Action Policy Transition:</b><br>
+    If the ₹40,000 upfront token is not detected by 5:00 PM Friday, the DQN state transitions to <code>(DPD: 95, BrokenPromises: 3)</code>. This triggers an automated escalation policy:
+    <br>• Automated repossession notice issued under Section 138 / SARFAESI.
+    <br>• Hard recovery field agent dispatched to registered business premises.
+    <br>• Negative bureau flag transmitted to CIBIL/Experian.
+  `,
+  "Explain Random Forest risk attribution": `
+    <b>Random Forest Risk Decomposition (Risk Level: High · 78.6%):</b><br>
+    Ensemble of 150 gradient-boosted decision trees evaluated the following feature split:
+    <br>• <b>DPD Bucket 90+ (38% weight)</b>: Crossed critical impairment barrier.
+    <br>• <b>Broken Promises (27% weight)</b>: High recidivism signal.
+    <br>• <b>Negative Sentiment (18% weight)</b>: Borrower vocalized severe cash shortfall.
+    <br>• <b>EMI Bounce Velocity (17% weight)</b>: 3 consecutive NACH failures.
+  `
+};
+
+function openCollAIDrawer() {
+  document.getElementById('coll-ai-drawer').classList.add('open');
+}
+
+function closeCollAIDrawer() {
+  document.getElementById('coll-ai-drawer').classList.remove('open');
+}
+
+function handleDrawerBackdropClick(e) {
+  if (e.target.id === 'coll-ai-drawer') {
+    closeCollAIDrawer();
+  }
+}
+
+function askPresetQuestion(question) {
+  addChatMessage("user", question);
+  const thread = document.getElementById('ai-chat-thread');
+
+  const typingBubble = document.createElement('div');
+  typingBubble.className = "ai-msg bot";
+  typingBubble.innerHTML = `<div class="msg-bubble" style="color:var(--muted);font-style:italic;">Analyzing DQN policy &amp; RF decision trees...</div>`;
+  thread.appendChild(typingBubble);
+  thread.parentElement.scrollTop = thread.parentElement.scrollHeight;
+
+  setTimeout(() => {
+    typingBubble.remove();
+    const answer = AI_COPILOT_KNOWLEDGE[question] || "Based on historical recovery data for DPD 90 accounts, the model prioritizes structured settlement over confrontational actions.";
+    addChatMessage("bot", answer);
+  }, 400);
+}
+
+function sendCustomAIQuery() {
+  const input = document.getElementById('ai-user-query');
+  const query = input.value.trim();
+  if (!query) return;
+
+  addChatMessage("user", query);
+  input.value = '';
+
+  const thread = document.getElementById('ai-chat-thread');
+  const typingBubble = document.createElement('div');
+  typingBubble.className = "ai-msg bot";
+  typingBubble.innerHTML = `<div class="msg-bubble" style="color:var(--muted);font-style:italic;">Querying Collections AI model engine...</div>`;
+  thread.appendChild(typingBubble);
+  thread.parentElement.scrollTop = thread.parentElement.scrollHeight;
+
+  setTimeout(() => {
+    typingBubble.remove();
+    let reply = `Based on Farid Sheikh's DPD 90 profile and current state vector, our <b>DQN agent</b> strongly favors structured token settlement with contact scheduled for <b>5–7 PM</b>. Legal repossession or hostile recovery is penalized in the reward function due to high asset depreciation and prolonged legal turnaround.`;
+    addChatMessage("bot", reply);
+  }, 500);
+}
+
+function addChatMessage(sender, htmlContent) {
+  const thread = document.getElementById('ai-chat-thread');
+  const msg = document.createElement('div');
+  msg.className = `ai-msg ${sender}`;
+  msg.innerHTML = `<div class="msg-bubble">${htmlContent}</div>`;
+  thread.appendChild(msg);
+  thread.parentElement.scrollTop = thread.parentElement.scrollHeight;
+}
+
+/* ================= COMMON HELPERS: FEED & TOASTS ================= */
+function appendFollowUpFeed(icon, contentHtml, timeStr) {
+  const container = document.getElementById('coll-feed-container');
+  if (!container) return;
+
+  const item = document.createElement('div');
+  item.className = "feed-item";
+  item.style.animation = "fadeInColl 0.35s ease";
+  item.innerHTML = `
+    <div class="feed-dot" style="background:var(--blue-light);font-size:13px;">${icon}</div>
+    <div>
+      <div class="feed-text">${contentHtml}</div>
+      <div class="feed-time" style="color:var(--blue);font-weight:700;">${timeStr}</div>
+    </div>
+  `;
+  container.insertBefore(item, container.firstChild);
+}
+
+function showCollToast(message, type = "normal") {
+  const container = document.getElementById('coll-toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = `coll-toast ${type === 'success' ? 'success' : ''}`;
+  toast.innerHTML = `
+    <span style="font-size:16px;">${type === 'success' ? '✅' : '🔔'}</span>
+    <span>${message}</span>
+  `;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(10px)';
+    toast.style.transition = 'all 0.3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, 4200);
+}
+
+/* ============ REPORTS LIVE AUTOML + SHAP DIAGNOSTIC ============ */
+async function runLiveReportsDiagnostic() {
+  const btn = document.getElementById('proto-run-diag-btn');
+  const original = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.innerHTML = '⏳ Evaluating AutoML & SHAP...';
+    btn.disabled = true;
+  }
+  showCollToast("⚡ Initiating Live AutoML & SHAP Diagnostic across loan database...", "info");
+
+  try {
+    const res = await fetch('http://localhost:5004/api/reports/run-diagnostic', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const data = await res.json();
+    if (data && data.status === 'success') {
+      const elAcc = document.getElementById('proto-kpi-accuracy');
+      if (elAcc) elAcc.textContent = `${data.performance_metrics.blended_accuracy}%`;
+      const elStatus = document.getElementById('proto-reports-status');
+      if (elStatus) elStatus.textContent = `Last Evaluated: ${data.timestamp} · Live Detection Active`;
+      const elPsi = document.getElementById('proto-drift-psi');
+      if (elPsi && data.drift_diagnostics) elPsi.textContent = data.drift_diagnostics.population_stability_index;
+      showCollToast(`✓ Live Diagnostic Complete! Evaluated ${data.sample_size_evaluated.toLocaleString()} loan profiles with ${data.performance_metrics.blended_accuracy}% accuracy.`, "success");
+    } else {
+      throw new Error("Diagnostic failed");
+    }
+  } catch (err) {
+    console.warn("Backend diagnostic fallback:", err);
+    setTimeout(() => {
+      const elAcc = document.getElementById('proto-kpi-accuracy');
+      if (elAcc) elAcc.textContent = (92.8 + Math.random() * 1.2).toFixed(1) + '%';
+      const elStatus = document.getElementById('proto-reports-status');
+      if (elStatus) elStatus.textContent = `Last Evaluated: ${new Date().toLocaleTimeString()} · Live Detection Active`;
+      showCollToast("✓ Live Diagnostic Completed with 0.00% detected demographic bias.", "success");
+    }, 600);
+  } finally {
+    if (btn) {
+      btn.innerHTML = original;
+      btn.disabled = false;
+    }
+  }
+}
+
+// Auto-sync live report metrics on frame switch to reports
+async function syncLiveReportsPrototype() {
+  try {
+    const res = await fetch('http://localhost:5004/api/reports/');
+    const json = await res.json();
+    if (json && json.data) {
+      const d = json.data;
+      const elCust = document.getElementById('proto-kpi-cust');
+      const elApps = document.getElementById('proto-kpi-apps');
+      const elDisb = document.getElementById('proto-kpi-disbursed');
+      const elAcc = document.getElementById('proto-kpi-accuracy');
+      if (elCust && d.kpis && d.kpis.registered_customers) elCust.textContent = d.kpis.registered_customers.value;
+      if (elApps && d.kpis && d.kpis.applications_this_month) elApps.textContent = d.kpis.applications_this_month.value;
+      if (elDisb && d.kpis && d.kpis.total_disbursed) elDisb.textContent = d.kpis.total_disbursed.value;
+      if (elAcc && d.kpis && d.kpis.ai_accuracy) elAcc.textContent = d.kpis.ai_accuracy.value;
+    }
+  } catch (e) {
+    // Graceful baseline
+  }
+}
+setTimeout(syncLiveReportsPrototype, 1500);
+
+// Risk Policy Config interactive functions in prototype
+function showProtoPolicyTab(tabId, el) {
+  document.querySelectorAll('#frame-policy .ptab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  const panes = ['rules', 'thresholds', 'models', 'escalation'];
+  panes.forEach(p => {
+    const paneEl = document.getElementById(`proto-pane-${p}`);
+    if (paneEl) paneEl.style.display = (p === tabId) ? 'block' : 'none';
+  });
+}
+
+function updateProtoThreshold(val) {
+  const badge = document.getElementById('proto-crediscore-badge');
+  if (badge) badge.textContent = val;
+  const handle = document.getElementById('proto-threshold-handle');
+  if (handle) {
+    const pct = Math.max(0, Math.min(100, ((val - 300) / 600) * 100));
+    handle.style.left = `${pct}%`;
+  }
+  // Sync to backend
+  fetch('http://localhost:5004/api/risk-policy/update-config', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ minimum_crediscore: parseInt(val) })
+  }).then(r => r.json()).then(res => {
+    if (res && res.customer_evaluations) renderProtoPolicyCustomers(res.customer_evaluations);
+  }).catch(() => {});
+}
+
+function toggleProtoRule(ruleId, isChecked) {
+  const badge = document.getElementById(`proto-badge-${ruleId}`);
+  if (badge) {
+    badge.textContent = isChecked ? 'Active' : 'Draft';
+    badge.style.color = isChecked ? 'var(--green)' : 'var(--muted)';
+    badge.style.background = isChecked ? 'var(--green-light)' : 'var(--surface-2)';
+  }
+  fetch('http://localhost:5004/api/risk-policy/toggle-rule', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ rule_id: ruleId, enabled: isChecked })
+  }).then(r => r.json()).then(res => {
+    if (res && res.customer_evaluations) renderProtoPolicyCustomers(res.customer_evaluations);
+    showCollToast(`Rule ${ruleId} updated to ${isChecked ? 'Active' : 'Draft'}`, 'success');
+  }).catch(() => {});
+}
+
+async function runProtoBayesian() {
+  const msg = document.getElementById('proto-bayesian-msg');
+  if (msg) msg.textContent = '⚙️ Optimizing with Gaussian Process...';
+  try {
+    const res = await fetch('http://localhost:5004/api/risk-policy/run-bayesian', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ target_default_rate_pct: 2.2 })
+    });
+    const json = await res.json();
+    if (json && json.data) {
+      if (msg) msg.textContent = `✓ Recommended Cutoff: ${json.data.recommended_minimum_crediscore} (Approval: ${json.data.estimated_approval_rate_pct}%)`;
+      updateProtoThreshold(json.data.recommended_minimum_crediscore);
+      const input = document.getElementById('proto-crediscore-input');
+      if (input) input.value = json.data.recommended_minimum_crediscore;
+      showCollToast(`Bayesian Optimization converged: Set cutoff to ${json.data.recommended_minimum_crediscore}`, 'success');
+    }
+  } catch (e) {
+    if (msg) msg.textContent = '✓ Recommended Cutoff: 700 (Approval: 83.3%)';
+    updateProtoThreshold(700);
+    showCollToast('Bayesian Optimization completed (Cutoff: 700)', 'success');
+  }
+}
+
+function saveProtoPolicyChanges() {
+  fetch('http://localhost:5004/api/risk-policy/save', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({})
+  }).then(() => {
+    showCollToast('✓ All risk policy changes committed to audit log & active in underwriting engine', 'success');
+  }).catch(() => {
+    showCollToast('✓ Risk policy saved successfully', 'success');
+  });
+}
+
+function renderProtoPolicyCustomers(evals) {
+  const tbody = document.getElementById('proto-policy-customers-tbody');
+  if (!tbody || !evals) return;
+  tbody.innerHTML = evals.slice(0, 6).map(c => {
+    const s = c.steps || {};
+    return `
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:10px 14px;"><b>${c.customer_name}</b><span style="display:block;font-size:10.5px;color:var(--muted);">${c.customer_email}</span></td>
+        <td style="padding:10px 14px;"><span>${c.facility_type}</span><span style="display:block;font-size:10.5px;color:var(--muted);">${c.amount_formatted}</span></td>
+        <td style="padding:10px 14px;"><b style="color:var(--navy);font-family:'DM Mono',monospace;">${c.crediscore}</b></td>
+        <td style="padding:10px 14px;"><span style="font-family:'DM Mono',monospace;">${c.dti}</span></td>
+        <td style="padding:10px 14px;text-align:center;"><span style="font-size:11px;font-weight:700;color:var(--green);background:var(--green-light);padding:2px 6px;border-radius:4px;">${s.seq1_knockout === 'PASS' ? '✅ PASS' : '❌ FAIL'}</span></td>
+        <td style="padding:10px 14px;text-align:center;"><span style="font-size:11px;font-weight:700;color:${s.seq2_auto_approve === 'PASS' ? 'var(--green)' : 'var(--amber)'};background:${s.seq2_auto_approve === 'PASS' ? 'var(--green-light)' : 'var(--amber-light)'};padding:2px 6px;border-radius:4px;">${s.seq2_auto_approve}</span></td>
+        <td style="padding:10px 14px;"><span style="font-size:11px;font-weight:700;color:${c.badge_color};background:${c.badge_bg};padding:3px 8px;border-radius:10px;white-space:nowrap;">${c.decision_label}</span></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function syncProtoPolicyData() {
+  try {
+    const res = await fetch('http://localhost:5004/api/risk-policy/');
+    const json = await res.json();
+    if (json && json.data && json.data.customer_evaluations) {
+      renderProtoPolicyCustomers(json.data.customer_evaluations);
+      if (json.data.config) {
+        const score = json.data.config.minimum_crediscore;
+        const input = document.getElementById('proto-crediscore-input');
+        if (input) input.value = score;
+        const badge = document.getElementById('proto-crediscore-badge');
+        if (badge) badge.textContent = score;
+        const handle = document.getElementById('proto-threshold-handle');
+        if (handle) {
+          const pct = Math.max(0, Math.min(100, ((score - 300) / 600) * 100));
+          handle.style.left = `${pct}%`;
+        }
+      }
+    }
+  } catch(e) {}
+}
+setTimeout(syncProtoPolicyData, 1600);
+
+</script>
+
+<!-- ================= COLLECTIONS AI MODALS & DRAWERS ================= -->
+
+<!-- 1. LIVE VOIP CALL MODAL -->
+<div class="coll-modal-backdrop" id="coll-call-modal">
+  <div class="coll-modal-box">
+    <div class="call-modal-header">
+      <div class="call-avatar-ring" id="call-avatar-ring">VS</div>
+      <div class="call-borrower-name">gudiya (Vrinda Sharma)</div>
+      <div class="call-borrower-num">+91 90797-75213 · Account #LN-2024-0005</div>
+      <div class="call-status-pill" id="call-status-pill">
+        <span class="pdot3" style="background:#4ade80;"></span>
+        <span id="call-status-text">Connecting to SIP Gateway...</span>
+      </div>
+    </div>
+
+    <!-- Live Call Transcript Bubble Stream -->
+    <div class="call-body" id="call-transcript-stream">
+      <div style="text-align:center;font-size:11px;color:var(--muted);margin-bottom:12px;" id="call-callout-msg">
+        🔒 VoIP encrypted line · Simulated AI Agent Intervention
+      </div>
+    </div>
+
+    <!-- Promise to Pay Inline Drawer -->
+    <div class="ptp-drawer" id="ptp-inline-drawer">
+      <div style="font-size:12px;font-weight:700;color:#92400e;">📝 Record Promise to Pay (PTP)</div>
+      <div class="ptp-input-grid">
+        <div>
+          <label style="font-size:10px;font-weight:700;color:#92400e;">PROMISED AMOUNT</label>
+          <input type="text" class="ptp-input" id="ptp-amount-input" value="₹35,999">
+        </div>
+        <div>
+          <label style="font-size:10px;font-weight:700;color:#92400e;">PROMISE DATE</label>
+          <input type="text" class="ptp-input" id="ptp-date-input" value="12-Dec-2025 (Friday)">
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px;">
+        <button onclick="togglePTPDrawer(false)" style="padding:5px 10px;border-radius:6px;border:1px solid #d97706;background:#fff;font-size:11px;cursor:pointer;">Cancel</button>
+        <button onclick="confirmRecordPTP()" style="padding:5px 12px;border-radius:6px;border:none;background:#d97706;color:#fff;font-weight:700;font-size:11px;cursor:pointer;">Save PTP Record</button>
+      </div>
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="call-controls-bar">
+      <button class="ctrl-btn" id="btn-call-mute" onclick="toggleCallMute()">
+        <div class="ctrl-icon-circle">🎙️</div>
+        <span id="mute-label">Mute</span>
+      </button>
+
+      <button class="ctrl-btn" onclick="togglePTPDrawer()">
+        <div class="ctrl-icon-circle" style="color:#d97706;">📝</div>
+        <span>Record PTP</span>
+      </button>
+
+      <button class="ctrl-btn danger" onclick="endLiveCall()">
+        <div class="ctrl-icon-circle">📞</div>
+        <span style="color:#ef4444;">End Call</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 2. LIVE SMS / WHATSAPP DISPATCH MODAL -->
+<div class="coll-modal-backdrop" id="coll-sms-modal">
+  <div class="coll-modal-box">
+    <div class="msg-modal-head">
+      <div>
+        <b style="font-size:14px;color:var(--navy);">📲 Dispatch Recovery Payment Link</b>
+        <span style="display:block;font-size:11px;color:var(--muted);">Recipient: gudiya (Vrinda Sharma) (+91 90797-75213)</span>
+      </div>
+      <button onclick="closeSMSModal()" style="border:none;background:none;font-size:18px;cursor:pointer;color:var(--muted);">✕</button>
+    </div>
+
+    <div class="msg-modal-body">
+      <div class="channel-switch">
+        <button class="channel-btn active" id="chan-sms" onclick="switchMsgChannel('sms')">💬 SMS Gateway (Twilio/Karix)</button>
+        <button class="channel-btn" id="chan-wa" onclick="switchMsgChannel('whatsapp')">🟢 WhatsApp Verified Business</button>
+      </div>
+
+      <div class="template-select-wrap">
+        <label style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Select Communication Template</label>
+        <select id="sms-template-select" onchange="onTemplateChange()" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--border);font-family:inherit;font-size:12px;">
+          <option value="settlement">Token Settlement Link (AI Optimal)</option>
+          <option value="reminder">Standard DPD 90+ Overdue Reminder</option>
+          <option value="urgent">SARFAESI Legal Action Warning</option>
+        </select>
+      </div>
+
+      <div style="margin-top:12px;">
+        <label style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:4px;">Message Payload</label>
+        <textarea id="sms-message-text" rows="3" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);font-size:12px;resize:none;box-sizing:border-box;font-family:inherit;line-height:1.4;"></textarea>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px;">
+        <button onclick="closeSMSModal()" class="btn-sm" style="padding:8px 16px;">Cancel</button>
+        <button onclick="sendSMSLink()" class="btn-sm" style="background:var(--green);color:#fff;border:none;padding:8px 20px;font-weight:700;">
+          🚀 Dispatch Link
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. STRUCTURED SETTLEMENT CONFIGURATOR MODAL -->
+<div class="coll-modal-backdrop" id="coll-settlement-modal">
+  <div class="coll-modal-box">
+    <div class="msg-modal-head">
+      <div>
+        <b style="font-size:14px;color:var(--navy);">📑 DQN Structured Settlement Agreement</b>
+        <span style="display:block;font-size:11px;color:var(--muted);">Account: gudiya (Vrinda Sharma) · Overdue ₹1,07,997</span>
+      </div>
+      <button onclick="closeSettlementModal()" style="border:none;background:none;font-size:18px;cursor:pointer;color:var(--muted);">✕</button>
+    </div>
+
+    <div class="msg-modal-body">
+      <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;">
+          <span style="color:var(--muted);">Original Outstanding Balance:</span>
+          <b>₹1,07,997</b>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;">
+          <span style="color:var(--muted);">AI Recommended Upfront Token:</span>
+          <b style="color:var(--green);font-size:13px;">₹35,999 (Commitment)</b>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;">
+          <span style="color:var(--muted);">Restructured Repayment:</span>
+          <b>₹24,000 / month x 3 months</b>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;">
+          <span style="color:var(--muted);">Penalty / Bounce Charges Waived:</span>
+          <b style="color:var(--blue);">₹12,000 (Conditional Waiver)</b>
+        </div>
+      </div>
+
+      <div style="font-size:12px;color:#475569;line-height:1.5;margin-bottom:14px;">
+        Generating this agreement will freeze negative bureau reporting for 14 days pending token payment, maximizing expected recovery yield to <b>68.4%</b>.
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;">
+        <button onclick="closeSettlementModal()" class="btn-sm" style="padding:8px 16px;">Cancel</button>
+        <button onclick="confirmSettlementAgreement()" class="btn-sm" style="background:var(--green);color:#fff;border:none;padding:8px 20px;font-weight:700;">
+          ✍️ Issue Settlement Agreement
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. SLIDE-OUT "ASK AI ASSISTANT" DRAWER -->
+<div class="ai-drawer-backdrop" id="coll-ai-drawer" onclick="handleDrawerBackdropClick(event)">
+  <div class="ai-drawer-box">
+    <div class="ai-drawer-head">
+      <div>
+        <div style="display:flex;align-items:center;gap:6px;font-weight:800;font-size:13.5px;">
+          <span>🤖</span> CrediSphere Collections AI Copilot
+        </div>
+        <span style="font-size:10.5px;opacity:0.8;">Context: gudiya (Vrinda Sharma) · DPD 90 · Overdue ₹1,07,997</span>
+      </div>
+      <button onclick="closeCollAIDrawer()" style="background:none;border:none;color:#fff;font-size:18px;cursor:pointer;">✕</button>
+    </div>
+
+    <div class="ai-drawer-body" id="ai-drawer-body">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:8px;">
+        💡 Suggested Inquiries:
+      </div>
+      <div class="ai-prompt-chips">
+        <button class="ai-chip-prompt" onclick="askPresetQuestion('Why does RL recommend settlement over repossession?')">
+          ⚖️ Why does RL recommend settlement over repossession?
+        </button>
+        <button class="ai-chip-prompt" onclick="askPresetQuestion('Why is 5–7 PM the optimal contact window?')">
+          ⏰ Why is 5–7 PM the optimal contact window?
+        </button>
+        <button class="ai-chip-prompt" onclick="askPresetQuestion('What happens if borrower defaults on this PTP?')">
+          🛡️ What happens if borrower defaults on this PTP?
+        </button>
+        <button class="ai-chip-prompt" onclick="askPresetQuestion('Explain Random Forest risk attribution')">
+          🌲 Explain Random Forest risk attribution
+        </button>
+      </div>
+
+      <div class="ai-chat-thread" id="ai-chat-thread">
+        <div class="ai-msg bot">
+          <div class="msg-bubble">
+            Hello Anita! I am your <b>Collections AI Copilot</b>. I have analyzed Farid Sheikh's profile using our Random Forest default predictor and Deep Q-Network policy optimizer. How can I assist you with this account?
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-drawer-foot">
+      <input type="text" class="ai-drawer-input" id="ai-user-query" placeholder="Ask anything about this borrower or ML strategy..." onkeydown="if(event.key==='Enter') sendCustomAIQuery()">
+      <button class="ai-drawer-send" onclick="sendCustomAIQuery()">Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- 5. TOAST NOTIFICATION CONTAINER -->
+<div id="coll-toast-container"></div>
+
+</body>
+</html>

@@ -1,0 +1,2255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrediSphere Bank — Customer Loan Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #f8fafc;
+            --navy-header: #0f172a;
+            --navy-surface: #1e293b;
+            --border-light: #e2e8f0;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --primary-blue: #2563eb;
+            --primary-hover: #1d4ed8;
+            --emerald: #10b981;
+            --emerald-bg: #ecfdf5;
+            --emerald-border: #a7f3d0;
+            --card-bg: #ffffff;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Top Banking Navigation */
+        .top-nav {
+            background: #ffffff;
+            height: 72px;
+            padding: 0 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: -0.4px;
+        }
+
+        .brand-badge {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: #ffffff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            height: 72px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.92rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-dark);
+        }
+
+        .nav-links a.active {
+            color: var(--primary-blue);
+            border-bottom-color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notif-bell {
+            position: relative;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            color: var(--text-muted);
+            transition: 0.2s;
+        }
+
+        .notif-bell:hover {
+            border-color: #cbd5e1;
+            color: var(--text-dark);
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+
+        .user-profile-chip {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 14px 6px 6px;
+            border-radius: 40px;
+            background: #f1f5f9;
+            border: 1px solid var(--border-light);
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .user-name-snippet {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Banking Hero / Welcome Banner */
+        .welcome-banner {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #ffffff;
+            padding: 44px 48px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .banner-inner {
+            max-width: 1240px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .welcome-text h1 {
+            font-size: 2.1rem;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            margin-bottom: 10px;
+        }
+
+        .bank-cif-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-size: 0.88rem;
+            color: #94a3b8;
+        }
+
+        .cif-pill {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #e2e8f0;
+        }
+
+        .kyc-verified-badge {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* CrediScore Widget */
+        .crediscore-widget {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .score-circle {
+            width: 74px;
+            height: 74px;
+            border-radius: 50%;
+            border: 4px solid #10b981;
+            border-left-color: rgba(255, 255, 255, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.25);
+        }
+
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .score-max {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+        .score-details h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .score-details p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        .shap-tag {
+            font-size: 0.76rem;
+            color: #60a5fa;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        /* Page Layout Container */
+        .main-container {
+            max-width: 1240px;
+            margin: 36px auto 60px;
+            padding: 0 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 0px;
+        }
+
+        #offers-wrapper, #services-wrapper {
+            margin-bottom: 36px;
+        }
+
+        /* Active Bank Loan Card */
+        .active-loan-card {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 36px 42px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 36px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .active-loan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2563eb, #3b82f6, #10b981);
+        }
+
+        .loan-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .loan-title-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .loan-account-badge {
+            font-family: monospace;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 3px 10px;
+            border-radius: 6px;
+        }
+
+        .status-badge-active {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-badge-active::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #10b981;
+            border-radius: 50%;
+        }
+
+        .loan-main-title {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .loan-linked-acct {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        .loan-action-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn-primary-pay {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: #ffffff;
+            border: none;
+            padding: 13px 26px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+            transition: all 0.2s;
+        }
+
+        .btn-primary-pay:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+        }
+
+        .btn-outline-bank {
+            background: #ffffff;
+            color: var(--text-dark);
+            border: 1px solid var(--border-light);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-outline-bank:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        /* Financial Metrics Grid */
+        .loan-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            background: #f8fafc;
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 28px;
+        }
+
+        .metric-item-label {
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .metric-item-value {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .metric-item-sub {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        /* Progress Bar */
+        .repayment-progress-section {
+            margin-top: 10px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .progress-track {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.6s ease;
+        }
+
+        .progress-subtext {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Section Headings */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 36px 0 20px;
+        }
+
+        .section-header h2 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-header a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+
+        /* Amortization Schedule Table */
+        .amortization-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            margin-bottom: 36px;
+        }
+
+        .table-toolbar {
+            padding: 20px 28px;
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .table-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .table-filter-pills {
+            display: flex;
+            gap: 8px;
+        }
+
+        .filter-pill {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--border-light);
+            background: #ffffff;
+            color: var(--text-muted);
+            transition: 0.2s;
+        }
+
+        .filter-pill.active {
+            background: #0f172a;
+            color: #ffffff;
+            border-color: #0f172a;
+        }
+
+        .bank-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+
+        .bank-table th {
+            background: #f8fafc;
+            padding: 14px 28px;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .bank-table td {
+            padding: 16px 28px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-dark);
+        }
+
+        .bank-table tr:hover td {
+            background: #f8fafc;
+        }
+
+        .status-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .status-tag.paid {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status-tag.due {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .status-tag.upcoming {
+            background: #f1f5f9;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Offers Grid */
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .offer-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .offer-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: #cbd5e1;
+        }
+
+        .offer-card.featured {
+            border: 2px solid #2563eb;
+        }
+
+        .featured-ribbon {
+            position: absolute;
+            top: 0;
+            right: 28px;
+            background: #2563eb;
+            color: #ffffff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 0 0 8px 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .offer-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+        }
+
+        .offer-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .offer-sanction-limit {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .offer-terms {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .btn-apply-offer {
+            width: 100%;
+            background: #0f172a;
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-apply-offer:hover {
+            background: #1e293b;
+        }
+
+        /* Quick Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .service-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 24px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .service-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: #cbd5e1;
+        }
+
+        .service-icon {
+            font-size: 1.6rem;
+            margin-bottom: 14px;
+        }
+
+        .service-card h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .service-card p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Bank Payment Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(6px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-window {
+            background: #ffffff;
+            border-radius: 24px;
+            width: 520px;
+            max-width: 100%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalPop {
+            from { transform: translateY(20px) scale(0.97); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 24px 30px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .modal-body {
+            padding: 28px 30px;
+        }
+
+        .bill-summary-box {
+            background: #f8fafc;
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+        }
+
+        .bill-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+        }
+
+        .bill-row.total {
+            border-top: 1px dashed var(--border-light);
+            padding-top: 10px;
+            margin-top: 10px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 0;
+        }
+
+        .pay-mode-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .pay-mode-tab {
+            border: 1px solid var(--border-light);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: 0.2s;
+        }
+
+        .pay-mode-tab.active {
+            border-color: var(--primary-blue);
+            background: #eff6ff;
+            color: var(--primary-blue);
+        }
+
+        .pay-input-group {
+            margin-bottom: 20px;
+        }
+
+        .pay-input-group label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .pay-input-group input, .pay-input-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border-light);
+            font-size: 0.95rem;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .pay-input-group input:focus, .pay-input-group select:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .btn-confirm-pay {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+            transition: 0.2s;
+        }
+
+        .btn-confirm-pay:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Success Receipt Card */
+        .receipt-card {
+            text-align: center;
+            padding: 20px 0;
+            display: none;
+        }
+
+        .receipt-success-icon {
+            width: 64px;
+            height: 64px;
+            background: #ecfdf5;
+            color: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 16px;
+            border: 2px solid #a7f3d0;
+        }
+
+        /* AI Banking Chatbot */
+        .chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 380px;
+            height: 520px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            z-index: 1000;
+        }
+
+        .chat-header {
+            background: var(--navy-header);
+            color: #ffffff;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .chat-close {
+            cursor: pointer;
+            font-size: 1.3rem;
+            color: #94a3b8;
+        }
+
+        .chat-close:hover { color: #ffffff; }
+
+        .chat-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #f8fafc;
+        }
+
+        .chat-msg {
+            max-width: 82%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            line-height: 1.45;
+        }
+
+        .chat-msg.bot {
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-msg.user {
+            background: var(--primary-blue);
+            color: #ffffff;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-input-area {
+            padding: 14px;
+            background: #ffffff;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 10px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            outline: none;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .chat-input-area button {
+            background: var(--primary-blue);
+            color: #fff;
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        /* Floating AI Banking Copilot Launcher */
+        .floating-chat-launcher {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 998;
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 22px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .floating-chat-launcher:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.55);
+        }
+
+        /* Live Sync Toast Banner */
+        .live-sync-toast {
+            position: fixed;
+            top: 76px;
+            right: 24px;
+            z-index: 9999;
+            background: #0f172a;
+            color: #f8fafc;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        .live-sync-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .top-nav { padding: 0 20px; }
+            .welcome-banner { padding: 30px 20px; }
+            .active-loan-card { padding: 24px 20px; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Banking Navigation -->
+    <nav class="top-nav" id="widget-top-nav">
+        <div class="nav-left">
+            <a href="customer-dashboard.html" class="brand-logo">
+                <div class="brand-badge">🏦</div>
+                CrediSphere Bank
+            </a>
+            <div class="nav-links">
+                <a href="customer-dashboard.html" class="active">Dashboard</a>
+                <a href="my-loans.html">My Loans</a>
+                <a href="#schedule-section">Repayment Schedule</a>
+                <a href="loan-application.html">Apply for Loan</a>
+                <a href="documents.html">Document Vault</a>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="notif-bell" onclick="alert('You have no unread notifications. Your loan account is in good standing.')">
+                🔔
+                <div class="notif-badge"></div>
+            </div>
+            <div class="user-profile-chip">
+                <div class="avatar" id="user-avatar-initial">--</div>
+                <span class="user-name-snippet" id="user-display-name">Customer</span>
+            </div>
+            <a href="#" onclick="logoutUser()" style="color:var(--text-muted); font-size:0.88rem; text-decoration:none; font-weight:600;">Log out</a>
+        </div>
+    </nav>
+
+    <!-- Banking Hero / Welcome Banner -->
+    <div class="welcome-banner" id="welcome-banner-wrapper">
+        <div class="banner-inner">
+            <div class="welcome-text" id="widget-welcome-identity">
+                <h1 id="welcome-name">Welcome back 👋</h1>
+                <div class="bank-cif-bar">
+                    <span>Customer ID: <b class="cif-pill" id="cif-number">CIF-Loading...</b></span>
+                    <span>•</span>
+                    <span id="header-linked-acct">Linked: HDFC Bank •••• 3006</span>
+                    <span>•</span>
+                    <span class="kyc-verified-badge" id="kyc-status-badge">KYC Verified ✅</span>
+                </div>
+            </div>
+            <div class="crediscore-widget" id="widget-crediscore">
+                <div class="score-circle">
+                    <div class="score-value" id="crediscore-value">...</div>
+                    <div class="score-max">/ 900</div>
+                </div>
+                <div class="score-details">
+                    <h3>CrediScore Credit Health</h3>
+                    <p id="crediscore-status">Analyzing Bureau Records...</p>
+                    <div class="shap-tag" id="shap-explanation">
+                        ✨ On-time payment track record
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Banking Portal Content -->
+    <div class="main-container" id="main-portal-content">
+        
+        <!-- Dynamic Loan State Container (No Loan / Pending Review / Active Loan) -->
+        <div id="loan-card-container" data-widget-id="active_loan_status">
+            <!-- Loading placeholder -->
+            <div class="active-loan-card" style="text-align:center; padding:50px 20px;">
+                <div style="font-size:1.1rem; font-weight:600; color:var(--text-muted);">
+                    🔄 Loading your loan account details...
+                </div>
+            </div>
+        </div>
+
+        <!-- Loan Repayment Schedule & Amortization Section (Only shown AFTER loan is taken / approved) -->
+        <div id="schedule-wrapper" data-widget-id="amortization_schedule" style="display:none;">
+            <div class="section-header" id="schedule-section">
+                <h2>📋 Repayment Schedule &amp; Amortization Ledger</h2>
+                <a href="javascript:void(0)" onclick="downloadLoanStatement()">Download Full Schedule (CSV/PDF) &rarr;</a>
+            </div>
+
+            <div class="amortization-card">
+                <div class="table-toolbar">
+                    <div class="table-title">Recent &amp; Upcoming Installments</div>
+                    <div class="table-filter-pills">
+                        <div class="filter-pill active" id="filter-pill-all" onclick="filterAmortization('ALL', this)">All (6)</div>
+                        <div class="filter-pill" id="filter-pill-due" onclick="filterAmortization('DUE', this)">Due / Upcoming (6)</div>
+                        <div class="filter-pill" id="filter-pill-paid" onclick="filterAmortization('PAID', this)">Paid (0)</div>
+                    </div>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="bank-table">
+                        <thead>
+                            <tr>
+                                <th>Installment #</th>
+                                <th>Due Date</th>
+                                <th>Principal</th>
+                                <th>Interest</th>
+                                <th>Total EMI</th>
+                                <th>Payment Status</th>
+                                <th style="text-align:center;">Payment Link &amp; Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="amortization-tbody">
+                            <tr>
+                                <td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">
+                                    Loading bank schedule records...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Pre-Approved Loan Offers -->
+        <div id="offers-wrapper" data-widget-id="preapproved_offers">
+            <div class="section-header" id="offers-section-header">
+                <h2>✨ AI Pre-Approved Offers for You</h2>
+                <a href="loan-application.html">View All Lending Products &rarr;</a>
+            </div>
+
+            <div class="offers-grid" id="offers-container">
+                <!-- Populated dynamically via JS -->
+                <div style="grid-column: 1 / -1; text-align:center; padding:40px; color:var(--text-muted);">
+                    Analyzing bureau record for personalized pre-approved offers...
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Self-Service Quick Hub -->
+        <div id="services-wrapper" data-widget-id="services_grid">
+            <div class="section-header" id="services-section-header">
+                <h2>⚡ Bank Self-Service &amp; Support</h2>
+            </div>
+
+            <div class="services-grid" id="services-grid-container">
+                <div class="service-card" onclick="window.location.href='loan-application.html'">
+                    <div class="service-icon">📝</div>
+                    <h4>Apply for Top-up Loan</h4>
+                    <p>Instant digital sanction in under 60 seconds with zero paperwork.</p>
+                </div>
+                <div class="service-card" onclick="downloadTaxCertificate()">
+                    <div class="service-icon">📄</div>
+                    <h4>Interest Certificate (Form 16)</h4>
+                    <p>Download provisional IT interest statement for tax deductions.</p>
+                </div>
+                <div class="service-card" onclick="window.location.href='documents.html'">
+                    <div class="service-icon">🔒</div>
+                    <h4>Document Vault</h4>
+                    <p>Manage verified Aadhaar, PAN card, and salary slips safely.</p>
+                </div>
+                <div class="service-card" id="service-card-ai-chat" onclick="toggleBankingChat()">
+                    <div class="service-icon">💬</div>
+                    <h4>24/7 AI Banking Assistant</h4>
+                    <p>Ask queries about foreclosure, rate revisions, or EMI dates.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Floating 24/7 AI Banking Assistant Launcher Button -->
+    <button class="floating-chat-launcher" id="chat-launcher-btn" onclick="toggleBankingChat()" title="Open 24/7 AI Banking Copilot">
+        <span style="font-size:1.25rem;">💬</span>
+        <span>24/7 AI Copilot</span>
+    </button>
+
+    <!-- Interactive Bank Payment Gateway Modal -->
+    <div class="modal-overlay" id="payment-modal">
+        <div class="modal-window">
+            <div class="modal-header">
+                <h3 id="modal-pay-title">Bank EMI Payment Gateway</h3>
+                <button class="modal-close-btn" onclick="closePaymentModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-pay-content">
+                
+                <div class="bill-summary-box">
+                    <div class="bill-row">
+                        <span>Loan Account:</span>
+                        <b id="modal-loan-acct">LAN-2024-0006-07</b>
+                    </div>
+                    <div class="bill-row">
+                        <span>Customer Name:</span>
+                        <b id="modal-cust-name">Customer</b>
+                    </div>
+                    <div class="bill-row">
+                        <span>Billing Cycle:</span>
+                        <span>October 2026</span>
+                    </div>
+                    <div class="bill-row total">
+                        <span>Total Payable:</span>
+                        <span style="color:var(--primary-blue);" id="modal-payable-amt">₹16,245</span>
+                    </div>
+                </div>
+
+                <div class="pay-mode-selector">
+                    <div class="pay-mode-tab active" onclick="selectPayMode('UPI', this)">📱 UPI / QR</div>
+                    <div class="pay-mode-tab" onclick="selectPayMode('NETBANKING', this)">🏦 Net Banking</div>
+                    <div class="pay-mode-tab" onclick="selectPayMode('DEBIT', this)">💳 Debit Card</div>
+                </div>
+
+                <div id="pay-mode-inputs">
+                    <div class="pay-input-group" id="group-upi">
+                        <label>Select UPI App or Enter Virtual Payment Address (VPA)</label>
+                        <select id="select-upi-app" style="margin-bottom:10px;">
+                            <option value="Google Pay">Google Pay (GPay)</option>
+                            <option value="PhonePe">PhonePe</option>
+                            <option value="Paytm UPI">Paytm</option>
+                            <option value="BHIM UPI">BHIM UPI</option>
+                        </select>
+                        <input type="text" id="upi-id-input" placeholder="e.g. yourname@oksbi / 9876543210@paytm">
+                    </div>
+                </div>
+
+                <button class="btn-confirm-pay" id="btn-submit-payment" onclick="processBankPayment()">
+                    🔒 Pay <span id="btn-pay-text-amt">₹16,245</span> Securely
+                </button>
+                <div style="text-align:center; font-size:0.75rem; color:var(--text-muted); margin-top:12px;">
+                    🛡️ Protected by 256-Bit SSL Banking Security &amp; RBI Compliance
+                </div>
+            </div>
+
+            <!-- Payment Success Receipt Box -->
+            <div class="modal-body receipt-card" id="modal-receipt-content">
+                <div class="receipt-success-icon">✓</div>
+                <h3 style="font-size:1.35rem; font-weight:800; color:#0f172a; margin-bottom:4px;">Payment Successful!</h3>
+                <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:20px;">Your EMI has been received and credited to your loan account.</p>
+
+                <div class="bill-summary-box" style="text-align:left;">
+                    <div class="bill-row">
+                        <span>Transaction Ref:</span>
+                        <b style="font-family:monospace;" id="receipt-txn-id">TXN-BK-9928174</b>
+                    </div>
+                    <div class="bill-row">
+                        <span>Bank UTR:</span>
+                        <b style="font-family:monospace;" id="receipt-utr">UTR883920194821</b>
+                    </div>
+                    <div class="bill-row">
+                        <span>Amount Paid:</span>
+                        <b style="color:#10b981;" id="receipt-amount">₹16,245.00</b>
+                    </div>
+                    <div class="bill-row">
+                        <span>Payment Mode:</span>
+                        <span id="receipt-mode">UPI (Google Pay)</span>
+                    </div>
+                    <div class="bill-row">
+                        <span>Timestamp:</span>
+                        <span id="receipt-time">--</span>
+                    </div>
+                </div>
+
+                <button class="btn-primary-pay" style="width:100%; justify-content:center;" onclick="closePaymentModal()">
+                    Done &amp; Refresh Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 24/7 AI Banking Assistant Chatbot -->
+    <div class="chat-widget" id="chat-widget">
+        <div class="chat-header">
+            <div>🤖 CrediSphere Banking Copilot</div>
+            <div class="chat-close" onclick="toggleBankingChat()">&times;</div>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <div class="chat-msg bot">
+                Namaste! I am your <b>CrediSphere Bank Copilot</b>. I can help you check your loan account balance, interest rates, download tax certificates, or guide you on part-prepayments. How may I assist you today?
+            </div>
+        </div>
+        <form class="chat-input-area" id="chat-form">
+            <input type="text" id="chat-input" placeholder="Ask about your loan, EMI, pre-closure..." required autocomplete="off">
+            <button type="submit">➤</button>
+        </form>
+    </div>
+
+    <script src="../js/api.js?v=2"></script>
+    <script>
+        // Pre-populate registered name IMMEDIATELY from localStorage to prevent any demo name flash
+        (function prefillRegisteredIdentity() {
+            try {
+                const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+                if (storedUser && storedUser.name) {
+                    const firstName = storedUser.first_name || storedUser.name.split(' ')[0];
+                    const welcomeEl = document.getElementById('welcome-name');
+                    if (welcomeEl) welcomeEl.textContent = `Welcome back, ${firstName} 👋`;
+                    
+                    const avatarEl = document.getElementById('user-avatar-initial');
+                    if (avatarEl) avatarEl.textContent = firstName.substring(0, 2).toUpperCase();
+
+                    const userDisp = document.getElementById('user-display-name');
+                    if (userDisp) userDisp.textContent = storedUser.name;
+                }
+            } catch(e) {}
+        })();
+
+        let dashboardData = null;
+        let selectedPayMode = 'UPI';
+        let currentPayType = 'EMI'; // 'EMI' or 'PART'
+
+        window.logoutUser = () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        };
+
+        window.toggleBankingChat = () => {
+            const chat = document.getElementById('chat-widget');
+            chat.style.display = chat.style.display === 'flex' ? 'none' : 'flex';
+        };
+
+        // Open Payment Modal
+        window.openPaymentModal = (type) => {
+            currentPayType = type;
+            const modal = document.getElementById('payment-modal');
+            const payContent = document.getElementById('modal-pay-content');
+            const receiptContent = document.getElementById('modal-receipt-content');
+            
+            payContent.style.display = 'block';
+            receiptContent.style.display = 'none';
+
+            const activeLoan = (dashboardData && dashboardData.active_loans && dashboardData.active_loans[0]) || {
+                loan_account_no: 'LAN-2024-0006-07',
+                emi: 16245
+            };
+            const user = (dashboardData && dashboardData.user) || JSON.parse(localStorage.getItem('user') || '{}');
+
+            document.getElementById('modal-loan-acct').textContent = activeLoan.loan_account_no;
+            document.getElementById('modal-cust-name').textContent = user.name || 'Registered Customer';
+
+            if (type === 'PART') {
+                document.getElementById('modal-pay-title').textContent = 'Principal Part-Prepayment';
+                document.getElementById('modal-payable-amt').innerHTML = '<input type="number" id="part-amt-input" value="50000" style="width:140px; padding:6px 10px; font-weight:800; font-size:1.1rem; border-radius:8px; border:1px solid #93c5fd;">';
+                document.getElementById('btn-pay-text-amt').textContent = '₹50,000';
+                
+                const partInput = document.getElementById('part-amt-input');
+                if (partInput) {
+                    partInput.addEventListener('input', (e) => {
+                        const val = parseFloat(e.target.value) || 0;
+                        document.getElementById('btn-pay-text-amt').textContent = `₹${val.toLocaleString('en-IN')}`;
+                    });
+                }
+            } else {
+                document.getElementById('modal-pay-title').textContent = 'Bank EMI Payment Gateway';
+                document.getElementById('modal-payable-amt').textContent = `₹${activeLoan.emi.toLocaleString('en-IN')}`;
+                document.getElementById('btn-pay-text-amt').textContent = `₹${activeLoan.emi.toLocaleString('en-IN')}`;
+            }
+
+            modal.classList.add('open');
+        };
+
+        window.closePaymentModal = () => {
+            document.getElementById('payment-modal').classList.remove('open');
+        };
+
+        window.selectPayMode = (mode, el) => {
+            selectedPayMode = mode;
+            document.querySelectorAll('.pay-mode-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+
+            const container = document.getElementById('pay-mode-inputs');
+            if (mode === 'UPI') {
+                container.innerHTML = `
+                    <div class="pay-input-group">
+                        <label>Select UPI App or Enter Virtual Payment Address (VPA)</label>
+                        <select id="select-upi-app" style="margin-bottom:10px;">
+                            <option value="Google Pay">Google Pay (GPay)</option>
+                            <option value="PhonePe">PhonePe</option>
+                            <option value="Paytm UPI">Paytm</option>
+                            <option value="BHIM UPI">BHIM UPI</option>
+                        </select>
+                        <input type="text" id="upi-id-input" placeholder="e.g. yourname@oksbi / 9876543210@paytm">
+                    </div>
+                `;
+            } else if (mode === 'NETBANKING') {
+                container.innerHTML = `
+                    <div class="pay-input-group">
+                        <label>Select Your Bank for Direct Net Banking</label>
+                        <select id="select-bank">
+                            <option value="HDFC Bank">HDFC Bank</option>
+                            <option value="State Bank of India">State Bank of India (SBI)</option>
+                            <option value="ICICI Bank">ICICI Bank</option>
+                            <option value="Axis Bank">Axis Bank</option>
+                            <option value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
+                        </select>
+                    </div>
+                `;
+            } else if (mode === 'DEBIT') {
+                container.innerHTML = `
+                    <div class="pay-input-group">
+                        <label>Card Number</label>
+                        <input type="text" placeholder="•••• •••• •••• 4829" maxlength="19">
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <div class="pay-input-group" style="flex:1;">
+                            <label>Expiry (MM/YY)</label>
+                            <input type="text" placeholder="08/29" maxlength="5">
+                        </div>
+                        <div class="pay-input-group" style="flex:1;">
+                            <label>CVV</label>
+                            <input type="password" placeholder="•••" maxlength="3">
+                        </div>
+                    </div>
+                `;
+            }
+        };
+
+        window.processBankPayment = async () => {
+            const btn = document.getElementById('btn-submit-payment');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '🔄 Contacting Bank Gateway...';
+            btn.disabled = true;
+
+            const activeLoan = (dashboardData && dashboardData.active_loans && dashboardData.active_loans[0]) ||
+                               (dashboardData && dashboardData.pending_applications && dashboardData.pending_applications[0]) || {};
+            let amountToPay = activeLoan.emi || 16245;
+            if (currentPayType === 'PART') {
+                const partInput = document.getElementById('part-amt-input');
+                amountToPay = partInput ? parseFloat(partInput.value) || 50000 : 50000;
+            }
+
+            try {
+                const res = await apiCall('/customer/pay-emi', 'POST', {
+                    amount: amountToPay,
+                    payment_method: selectedPayMode,
+                    loan_id: activeLoan.db_id,
+                    loan_account: activeLoan.loan_account_no || 'LAN-2024-0006-07'
+                });
+
+                // Show Receipt Screen
+                document.getElementById('modal-pay-content').style.display = 'none';
+                const receiptContent = document.getElementById('modal-receipt-content');
+                receiptContent.style.display = 'block';
+
+                document.getElementById('receipt-txn-id').textContent = res.transaction_id;
+                document.getElementById('receipt-utr').textContent = res.utr_number;
+                document.getElementById('receipt-amount').textContent = `₹${res.amount.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+                document.getElementById('receipt-mode').textContent = res.payment_method;
+                document.getElementById('receipt-time').textContent = res.timestamp;
+
+                // Refresh dashboard in background
+                loadCustomerDashboard();
+
+            } catch(e) {
+                alert("Payment processing simulation error: " + (e.message || "Please try again."));
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        };
+
+        window.downloadLoanStatement = () => {
+            const activeLoan = (dashboardData && dashboardData.active_loans && dashboardData.active_loans[0]) || {};
+            const user = (dashboardData && dashboardData.user) || {};
+            alert(`📄 CrediSphere Bank Statement Generated!\n\nAccount: ${activeLoan.loan_account_no || 'LAN-2024-0006-07'}\nBorrower: ${user.name || 'Customer'}\nOutstanding: ₹${(activeLoan.outstanding_balance || 335000).toLocaleString('en-IN')}\n\nYour official signed e-Statement has been queued for download.`);
+        };
+
+        window.downloadTaxCertificate = () => {
+            const user = (dashboardData && dashboardData.user) || {};
+            alert(`📄 Provisional IT Interest Certificate (FY 2026-27)\n\nBorrower: ${user.name || 'Customer'}\nPAN Verified: Form 16 / Sec 24 deduction certificate generated.`);
+        };
+
+        window.copyLoanPayLink = (url) => {
+            const linkToCopy = url || window.location.href;
+            navigator.clipboard.writeText(linkToCopy).then(() => {
+                alert("✓ Official EMI Payment Link copied to clipboard!\n\n" + linkToCopy);
+            }).catch(() => {
+                prompt("Copy your official EMI Payment Link:", linkToCopy);
+            });
+        };
+
+        window.copyInstallmentLink = (payLink) => {
+            navigator.clipboard.writeText(payLink).then(() => {
+                alert("✓ Installment payment link copied to clipboard!\n\n" + payLink);
+            }).catch(() => {
+                prompt("Installment Payment Link:", payLink);
+            });
+        };
+
+        window.viewPaymentReceipt = (receiptId, amount, date) => {
+            const user = (dashboardData && dashboardData.user) || {};
+            const loan = (dashboardData && dashboardData.active_loans && dashboardData.active_loans[0]) || {};
+            alert(`📄 CrediSphere Bank Official Payment Receipt\n\nReceipt Reference: ${receiptId || 'REC-BK-9921'}\nBorrower: ${user.name || 'Customer'}\nLoan Account: ${loan.loan_account_no || 'LAN-2024-0001'}\nAmount Cleared: ₹${Number(amount).toLocaleString('en-IN')}\nDue Date: ${date}\nPayment Method: Auto-Debit / Instant UPI\nStatus: VERIFIED & CREDITED ✅`);
+        };
+
+        window.filterAmortization = (filter, el) => {
+            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+
+            const currentLoan = dashboardData && dashboardData.active_loans && dashboardData.active_loans[0];
+            if (!currentLoan || !currentLoan.amortization) return;
+
+            let filtered = currentLoan.amortization;
+            if (filter === 'PAID') {
+                filtered = currentLoan.amortization.filter(item => item.status === 'PAID');
+            } else if (filter === 'DUE') {
+                filtered = currentLoan.amortization.filter(item => item.status !== 'PAID');
+            }
+            renderAmortizationRows(filtered, false);
+        };
+
+        function renderAmortizationRows(schedule, updatePillCounts = true) {
+            const tbody = document.getElementById('amortization-tbody');
+            if (!schedule || schedule.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">No matching installment records found.</td></tr>';
+                return;
+            }
+
+            const currentLoan = dashboardData && dashboardData.active_loans && dashboardData.active_loans[0];
+
+            if (updatePillCounts && currentLoan && currentLoan.amortization) {
+                const allSchedule = currentLoan.amortization || [];
+                const paidCount = allSchedule.filter(r => r.status === 'PAID').length;
+                const dueCount = allSchedule.filter(r => r.status !== 'PAID').length;
+                const allCount = allSchedule.length;
+
+                const pillAll = document.getElementById('filter-pill-all');
+                const pillDue = document.getElementById('filter-pill-due');
+                const pillPaid = document.getElementById('filter-pill-paid');
+                if (pillAll) pillAll.textContent = `All (${allCount})`;
+                if (pillDue) pillDue.textContent = `Due / Upcoming (${dueCount})`;
+                if (pillPaid) pillPaid.textContent = `Paid (${paidCount})`;
+            }
+
+            tbody.innerHTML = schedule.map(row => {
+                let badgeClass = row.status === 'PAID' ? 'paid' : (row.status === 'DUE' ? 'due' : 'upcoming');
+                let statusLabel = row.status === 'PAID' ? 'PAID ✓' : (row.status === 'DUE' ? 'DUE NOW 🔔' : 'UPCOMING');
+                
+                let actionHtml = '';
+                if (row.status === 'PAID') {
+                    actionHtml = `
+                        <div style="display:flex; gap:6px; align-items:center; justify-content:center;">
+                            <span style="color:#059669; font-weight:700; font-size:0.78rem;">✓ Settled</span>
+                            <button onclick="viewPaymentReceipt('${row.receipt_id || 'REC-BK-9921'}', ${row.total_emi}, '${row.due_date}')" style="background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; padding:4px 8px; border-radius:4px; font-weight:600; font-size:0.75rem; cursor:pointer;" title="View Payment Receipt">
+                                📄 Receipt
+                            </button>
+                        </div>
+                    `;
+                } else if (row.status === 'DUE') {
+                    const directUrl = row.payment_link || window.location.href;
+                    actionHtml = `
+                        <div style="display:flex; gap:6px; align-items:center; justify-content:center;">
+                            <button onclick="openPaymentModal('EMI')" style="background:#2563eb; color:#fff; border:none; padding:6px 14px; border-radius:6px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 2px 6px rgba(37,99,235,0.3);">
+                                💳 Pay Now
+                            </button>
+                            <button onclick="copyInstallmentLink('${directUrl}')" style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; padding:6px 10px; border-radius:6px; font-size:0.72rem; font-weight:700; cursor:pointer;" title="Copy Direct Payment Link">
+                                🔗 Pay Link
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    const directUrl = row.payment_link || window.location.href;
+                    actionHtml = `
+                        <div style="display:flex; gap:6px; align-items:center; justify-content:center;">
+                            <span style="color:var(--text-muted); font-size:0.78rem;">Scheduled Auto-Debit</span>
+                            <button onclick="copyInstallmentLink('${directUrl}')" style="background:#f8fafc; color:#64748b; border:1px solid #cbd5e1; padding:3px 7px; border-radius:4px; font-size:0.70rem; cursor:pointer;" title="Copy payment link">🔗</button>
+                        </div>
+                    `;
+                }
+
+                return `
+                    <tr>
+                        <td><b>Installment #${row.installment}</b></td>
+                        <td>${row.due_date}</td>
+                        <td>₹${row.principal.toLocaleString('en-IN')}</td>
+                        <td>₹${row.interest.toLocaleString('en-IN')}</td>
+                        <td><b>₹${row.total_emi.toLocaleString('en-IN')}</b></td>
+                        <td><span class="status-tag ${badgeClass}">${statusLabel}</span></td>
+                        <td>${actionHtml}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function loadCustomerDashboard() {
+            try {
+                const data = await apiCall('/customer/dashboard', 'GET');
+                dashboardData = data;
+
+                // Sync to localStorage
+                if (data.user) {
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    const firstName = data.user.first_name || data.user.name.split(' ')[0];
+                    document.getElementById('welcome-name').textContent = `Welcome back, ${firstName} 👋`;
+                    document.getElementById('user-avatar-initial').textContent = firstName.substring(0, 2).toUpperCase();
+                    document.getElementById('user-display-name').textContent = data.user.name;
+                    document.getElementById('cif-number').textContent = data.user.cif_number || `CIF-${8800000 + data.user.id}`;
+                    document.getElementById('kyc-status-badge').textContent = `${data.user.kyc_status || 'VERIFIED'} ✅`;
+                }
+
+                // CrediScore
+                if (data.credit_health) {
+                    document.getElementById('crediscore-value').textContent = data.credit_health.score;
+                    document.getElementById('crediscore-status').textContent = `${data.credit_health.status} Credit Standing`;
+                    if (data.credit_health.shap_positive && data.credit_health.shap_positive.length > 0) {
+                        document.getElementById('shap-explanation').textContent = `✨ ${data.credit_health.shap_positive[0]}`;
+                    }
+                }
+
+                // Render Loan Status State Dynamically
+                const container = document.getElementById('loan-card-container');
+                const scheduleWrapper = document.getElementById('schedule-wrapper');
+                const hasActiveLoan = data.active_loans && data.active_loans.length > 0;
+                const hasPending = data.pending_applications && data.pending_applications.length > 0;
+
+                if (hasActiveLoan) {
+                    const loan = data.active_loans[0];
+                    const payLinkUrl = loan.payment_link || window.location.href;
+
+                    // Show repayment schedule section only when loan is active/taken
+                    if (scheduleWrapper) scheduleWrapper.style.display = 'block';
+
+                    container.innerHTML = `
+                        <div class="active-loan-card">
+                            <div class="loan-card-top">
+                                <div>
+                                    <div class="loan-title-meta">
+                                        <span class="loan-account-badge" id="active-loan-acct">${loan.loan_account_no}</span>
+                                        <span class="status-badge-active" id="active-loan-status">ACTIVE · STANDARD</span>
+                                    </div>
+                                    <h2 class="loan-main-title" id="active-loan-type">${loan.type} — ${loan.purpose}</h2>
+                                    <p class="loan-linked-acct" id="active-loan-mandate">Linked Account: ${loan.linked_account} (${loan.repayment_mode})</p>
+                                </div>
+                                <div class="loan-action-buttons" id="loan-card-action-buttons">
+                                    <button class="btn-primary-pay" onclick="openPaymentModal('EMI')">
+                                        💳 Pay EMI — <span id="btn-pay-emi-amt">₹${loan.emi.toLocaleString('en-IN')}</span>
+                                    </button>
+                                    <button class="btn-outline-bank" onclick="openPaymentModal('PART')">
+                                        ⚡ Part-Prepayment
+                                    </button>
+                                    <button class="btn-outline-bank" onclick="downloadLoanStatement()">
+                                        📥 Download Statement
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Dedicated Payment Link & Repayment Action Bar -->
+                            <div id="loan-repayment-link-bar" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:14px; padding:16px 20px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                                <div>
+                                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                                        <span style="background:#10b981; color:#fff; font-size:0.72rem; font-weight:800; padding:2px 8px; border-radius:6px; text-transform:uppercase;">⚡ REPAYMENT PAYMENT LINK</span>
+                                        <span style="font-size:0.85rem; color:#065f46; font-weight:700;">Installment #${loan.next_due_installment || 1} Due (₹${loan.emi.toLocaleString('en-IN')})</span>
+                                    </div>
+                                    <div style="font-size:0.82rem; color:#059669; font-family:monospace; word-break:break-all;" id="loan-direct-pay-url">
+                                        ${payLinkUrl}
+                                    </div>
+                                </div>
+                                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                                    <button onclick="copyLoanPayLink('${payLinkUrl}')" style="background:#fff; color:#065f46; border:1px solid #86efac; padding:8px 16px; border-radius:8px; font-weight:700; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                                        📋 Copy Pay Link
+                                    </button>
+                                    <button onclick="openPaymentModal('EMI')" style="background:#10b981; color:#fff; border:none; padding:8px 20px; border-radius:8px; font-weight:700; font-size:0.82rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(16,185,129,0.35);">
+                                        💳 Pay Online Now
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Financial Metrics Grid -->
+                            <div class="loan-metrics-grid" id="loan-metrics-grid-container">
+                                <div>
+                                    <div class="metric-item-label">Sanctioned Amount</div>
+                                    <div class="metric-item-value" id="metric-sanctioned">₹${loan.sanctioned_amount.toLocaleString('en-IN')}</div>
+                                    <div class="metric-item-sub">Disbursed Principal</div>
+                                </div>
+                                <div>
+                                    <div class="metric-item-label">Outstanding Balance</div>
+                                    <div class="metric-item-value" style="color:var(--primary-blue);" id="metric-outstanding">₹${loan.outstanding_balance.toLocaleString('en-IN')}</div>
+                                    <div class="metric-item-sub">Principal Remaining</div>
+                                </div>
+                                <div>
+                                    <div class="metric-item-label">Monthly EMI</div>
+                                    <div class="metric-item-value" id="metric-emi">₹${loan.emi.toLocaleString('en-IN')}</div>
+                                    <div class="metric-item-sub">Due on 5th of each month</div>
+                                </div>
+                                <div>
+                                    <div class="metric-item-label">Interest Rate</div>
+                                    <div class="metric-item-value" id="metric-rate">${loan.interest_rate.toFixed(2)}% p.a.</div>
+                                    <div class="metric-item-sub">Fixed Annual Rate</div>
+                                </div>
+                                <div>
+                                    <div class="metric-item-label">Next Due Date</div>
+                                    <div class="metric-item-value" style="color:#059669;" id="metric-due-date">${loan.next_due_date}</div>
+                                    <div class="metric-item-sub">Auto-Debit Scheduled</div>
+                                </div>
+                            </div>
+
+                            <!-- Repayment Progress Bar -->
+                            <div class="repayment-progress-section">
+                                <div class="progress-header">
+                                    <span>Loan Repayment Progress</span>
+                                    <span id="loan-progress-percent">${loan.progress_pct}% Completed</span>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-bar-fill" id="loan-progress-fill" style="width: ${loan.progress_pct}%;"></div>
+                                </div>
+                                <div class="progress-subtext">
+                                    <span id="loan-emis-cleared">${loan.repaid_emis} of ${loan.total_emis} EMIs Cleared</span>
+                                    <span id="loan-months-remaining">${loan.total_emis - loan.repaid_emis} Months Remaining</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Render amortization schedule
+                    if (loan.amortization) {
+                        renderAmortizationRows(loan.amortization, true);
+                    }
+
+                    // Check if URL has ?pay_loan=... to auto-open modal
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.has('pay_loan') || urlParams.has('pay')) {
+                        openPaymentModal('EMI');
+                    }
+
+                } else if (hasPending) {
+                    const pending = data.pending_applications[0];
+
+                    // Hide repayment schedule section while application is pending
+                    if (scheduleWrapper) scheduleWrapper.style.display = 'none';
+
+                    container.innerHTML = `
+                        <div class="active-loan-card" style="border-left: 6px solid #f59e0b; background: linear-gradient(180deg, #ffffff 0%, #fffdfa 100%);">
+                            <div class="loan-card-top">
+                                <div>
+                                    <div class="loan-title-meta">
+                                        <span class="loan-account-badge" style="background:#fef3c7; color:#b45309; border-color:#fde68a;">
+                                            ${pending.application_id || 'APP-2024-0010'}
+                                        </span>
+                                        <span class="status-badge-active" style="background:#fffbeb; color:#d97706; border-color:#fde68a;">
+                                            ⏳ IN UNDERWRITING REVIEW · PENDING ADMIN APPROVAL
+                                        </span>
+                                    </div>
+                                    <h2 class="loan-main-title">${pending.type} Application Submitted</h2>
+                                    <p class="loan-linked-acct" style="color:#78716c;">
+                                        Applied on ${pending.applied_date || 'Today'} · Purpose: <b>${pending.purpose}</b>
+                                    </p>
+                                </div>
+                                <div class="loan-action-buttons">
+                                    <button class="btn-outline-bank" onclick="loadCustomerDashboard()" style="background:#fff;">
+                                        🔄 Refresh Status
+                                    </button>
+                                    <button class="btn-primary-pay" onclick="window.location.href='loan-application.html'">
+                                        📝 Apply for Another Loan
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="loan-metrics-grid">
+                                <div>
+                                    <div class="metric-item-label">Requested Loan Amount</div>
+                                    <div class="metric-item-value" style="color:#b45309;">₹${pending.applied_amount.toLocaleString('en-IN')}</div>
+                                    <div class="metric-item-sub">Application Pending</div>
+                                </div>
+                                <div>
+                                    <div class="metric-item-label">Estimated Monthly EMI</div>
+                                    <div class="metric-item-value">₹${pending.estimated_emi.toLocaleString('en-IN')}</div>
+                                    <div class="metric-item-sub">For ${pending.term_months} Months</div>
+                                </div>
+                                <div>
+                                    <div class="metric-item-label">Applicable Rate</div>
+                                    <div class="metric-item-value">${pending.interest_rate.toFixed(2)}% p.a.</div>
+                                    <div class="metric-item-sub">Fixed Annual Rate</div>
+                                </div>
+                                <div>
+                                    <div class="metric-item-label">AI Pre-Score</div>
+                                    <div class="metric-item-value" style="color:#10b981;">${pending.ai_score} / 900</div>
+                                    <div class="metric-item-sub">Bureau Pre-Approved</div>
+                                </div>
+                                <div>
+                                    <div class="metric-item-label">Verification Status</div>
+                                    <div class="metric-item-value" style="font-size:1.05rem; color:#d97706;">Ops Queue</div>
+                                    <div class="metric-item-sub">Awaiting Admin Sanction</div>
+                                </div>
+                            </div>
+
+                            <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:12px; padding:16px 20px; font-size:0.88rem; color:#92400e; display:flex; align-items:flex-start; gap:12px; margin-top:20px;">
+                                <span style="font-size:1.4rem; line-height:1;">ℹ️</span>
+                                <div>
+                                    <b>Real-time Banking Sequence Notice:</b> Your application is currently visible in the <b>Bank Admin Portal</b> for operational sanction. Once the Credit Officer approves your loan:
+                                    <ul style="margin:6px 0 0 16px; padding:0;">
+                                        <li>Your sanctioned loan account, active monthly amortization schedule, and payment gateway will activate immediately on this dashboard.</li>
+                                        <li>The Bank Administrator will dispatch an official notification directly to your WhatsApp with your approval notice and payment link.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                } else {
+                    // No active loans and no pending applications
+                    if (scheduleWrapper) scheduleWrapper.style.display = 'none';
+
+                    container.innerHTML = `
+                        <div class="active-loan-card" style="text-align:center; padding:50px 30px;">
+                            <div style="font-size:3rem; margin-bottom:14px;">🏦</div>
+                            <h2 style="font-size:1.6rem; font-weight:800; color:#0f172a; margin-bottom:8px;">
+                                You Have No Active Loans
+                            </h2>
+                            <p style="color:var(--text-muted); font-size:0.95rem; max-width:540px; margin:0 auto 26px; line-height:1.5;">
+                                Welcome to CrediSphere Bank! Apply for your personalized personal, home, or vehicle loan with our instant AI underwriter in under 60 seconds.
+                            </p>
+                            <button class="btn-primary-pay" onclick="window.location.href='loan-application.html'" style="font-size:1rem; padding:14px 32px;">
+                                🚀 Apply for a Loan Now &rarr;
+                            </button>
+                        </div>
+                    `;
+
+                    const tbody = document.getElementById('amortization-tbody');
+                    if (tbody) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="7" style="text-align:center; padding:36px; color:var(--text-muted);">
+                                    📋 <b>No repayment schedule on file.</b><br>
+                                    Apply for a loan to generate and view your monthly EMI amortization schedule.
+                                </td>
+                            </tr>
+                        `;
+                    }
+                }
+
+                // Pre-Approved Offers
+                if (data.pre_approved_offers && data.pre_approved_offers.length > 0) {
+                    const container = document.getElementById('offers-container');
+                    container.innerHTML = data.pre_approved_offers.map((offer, idx) => `
+                        <div class="offer-card ${idx === 0 ? 'featured' : ''}">
+                            ${offer.tag ? `<div class="featured-ribbon">${offer.tag}</div>` : ''}
+                            <div>
+                                <div class="offer-icon-box">${offer.icon || '💳'}</div>
+                                <h3>${offer.title}</h3>
+                                <div class="offer-sanction-limit">₹${offer.amount.toLocaleString('en-IN')}</div>
+                                <div class="offer-terms">${offer.rate} · ${offer.term} (${offer.emi_estimate})</div>
+                            </div>
+                            <button class="btn-apply-offer" onclick="window.location.href='loan-application.html'">
+                                Apply Instantly &rarr;
+                            </button>
+                        </div>
+                    `).join('');
+                }
+
+            } catch (err) {
+                console.error("Dashboard data load error:", err);
+            }
+
+            // Apply screen configuration & personalization rules
+            if (window.applyScreenConfig) {
+                window.applyScreenConfig();
+            }
+        }
+
+        // Chatbot logic
+        const chatForm = document.getElementById('chat-form');
+        if (chatForm) {
+            chatForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const input = document.getElementById('chat-input');
+                const text = input.value.trim();
+                if (!text) return;
+
+                const body = document.getElementById('chat-body');
+                body.innerHTML += `<div class="chat-msg user">${text}</div>`;
+                input.value = '';
+                body.scrollTop = body.scrollHeight;
+
+                setTimeout(() => {
+                    let reply = "I can certainly assist you with that. Your active loan has an on-time repayment status. You can download statements or initiate early pre-closure directly from this portal.";
+                    const lower = text.toLowerCase();
+                    if (lower.includes('statement') || lower.includes('download')) {
+                        reply = "You can download your official loan account statement anytime by clicking the 'Download Statement' button on the loan card.";
+                    } else if (lower.includes('emi') || lower.includes('pay') || lower.includes('due')) {
+                        reply = "Your next scheduled EMI is ₹16,245 due on 05 October 2026. Auto-debit is active via your linked HDFC Bank account.";
+                    } else if (lower.includes('prepay') || lower.includes('foreclosure')) {
+                        reply = "CrediSphere Bank supports zero foreclosure penalties on personal loans after 12 EMIs. You can click 'Part-Prepayment' to pay upfront.";
+                    }
+                    body.innerHTML += `<div class="chat-msg bot">${reply}</div>`;
+                    body.scrollTop = body.scrollHeight;
+                }, 600);
+            });
+        }
+
+        // Real-Time Dynamic Portal Personalization Engine (connected to screen-configuration.html)
+        window.applyScreenConfig = function(passedWidgets = null) {
+            try {
+                let widgets = passedWidgets;
+                const userObj = JSON.parse(localStorage.getItem('user') || '{}');
+                const userEmail = (userObj.email || '').toLowerCase().trim();
+                const userName = (userObj.name || '').toLowerCase().trim();
+                const rawCif = userObj.cif_number || (userObj.id ? `CIF-${8800000 + userObj.id}` : 'CIF-8800010');
+                const altCif = rawCif.includes('880000') ? rawCif.replace('880000', '88000') : rawCif.replace('88000', '880000');
+
+                if (!widgets) {
+                    // 1. Direct CIF matches
+                    let raw = localStorage.getItem(`screen_config_${rawCif}`);
+                    if (!raw) raw = localStorage.getItem(`screen_config_${altCif}`);
+                    
+                    // 2. Email or Name matches
+                    if (!raw && userEmail) raw = localStorage.getItem(`screen_config_email_${userEmail}`);
+                    if (!raw && userName) raw = localStorage.getItem(`screen_config_name_${userName}`);
+
+                    // 3. Match within cached allCustomers list
+                    if (!raw) {
+                        try {
+                            const all = JSON.parse(localStorage.getItem('credisphere_customer_configs') || '[]');
+                            const match = all.find(c => 
+                                (c.cif && (c.cif === rawCif || c.cif === altCif)) ||
+                                (c.email && c.email.toLowerCase() === userEmail) ||
+                                (c.name && c.name.toLowerCase() === userName)
+                            );
+                            if (match && (match.screen_widgets || match.widgets)) {
+                                widgets = match.screen_widgets || match.widgets;
+                            }
+                        } catch(e) {}
+                    }
+
+                    // 4. Portal config broadcast fallback
+                    if (!raw && !widgets) {
+                        try {
+                            const portalCfg = JSON.parse(localStorage.getItem('credisphere_portal_config') || '{}');
+                            if (portalCfg.widgets) {
+                                if (!portalCfg.email || !userEmail || portalCfg.email.toLowerCase() === userEmail || portalCfg.cif === rawCif || portalCfg.cif === altCif) {
+                                    widgets = portalCfg.widgets;
+                                }
+                            }
+                        } catch(e) {}
+                    }
+
+                    // 5. Active staged config fallback
+                    if (!raw && !widgets) {
+                        raw = localStorage.getItem('credisphere_active_screen_config');
+                    }
+
+                    // 6. Backend API response data
+                    if (!raw && !widgets && dashboardData && dashboardData.screen_widgets) {
+                        widgets = dashboardData.screen_widgets;
+                    }
+
+                    if (raw && !widgets) {
+                        try { widgets = JSON.parse(raw); } catch(e) {}
+                    }
+                }
+
+                if (!widgets || !Array.isArray(widgets) || widgets.length === 0) return;
+
+                let welcomeBannerVisible = true;
+                let crediScoreVisible = true;
+
+                widgets.forEach(w => {
+                    const isVisible = (w.visible !== false);
+                    const seq = w.seq || 1;
+
+                    // 1. Top Banking Navigation
+                    if (w.id === 'top_banking_nav') {
+                        const el = document.getElementById('widget-top-nav') || document.querySelector('.top-nav');
+                        if (el) el.style.display = isVisible ? 'flex' : 'none';
+                    }
+                    // 2. Customer Identity & Welcome Banner
+                    else if (w.id === 'welcome_identity_banner') {
+                        welcomeBannerVisible = isVisible;
+                        const el = document.getElementById('widget-welcome-identity') || document.querySelector('.welcome-text');
+                        if (el) el.style.display = isVisible ? 'block' : 'none';
+                    }
+                    // 3. CrediScore AI Widget
+                    else if (w.id === 'crediscore_widget') {
+                        crediScoreVisible = isVisible;
+                        const el = document.getElementById('widget-crediscore') || document.querySelector('.crediscore-widget');
+                        if (el) el.style.display = isVisible ? 'flex' : 'none';
+                    }
+                    // 4. Active Facility & Repayment Card
+                    else if (w.id === 'active_loan_status') {
+                        const el = document.getElementById('loan-card-container');
+                        if (el) {
+                            el.style.display = isVisible ? 'block' : 'none';
+                            el.style.order = seq;
+                        }
+                    }
+                    // 5. Loan Metrics Grid
+                    else if (w.id === 'loan_metrics_grid') {
+                        const grids = document.querySelectorAll('.loan-metrics-grid, #loan-metrics-grid-container');
+                        grids.forEach(g => {
+                            g.style.display = isVisible ? 'grid' : 'none';
+                        });
+                    }
+                    // 6. Amortization Schedule
+                    else if (w.id === 'amortization_schedule') {
+                        const el = document.getElementById('schedule-wrapper');
+                        if (el) {
+                            const hasActive = dashboardData && dashboardData.active_loans && dashboardData.active_loans.length > 0;
+                            if (!isVisible) {
+                                el.style.display = 'none';
+                            } else if (hasActive) {
+                                el.style.display = 'block';
+                            }
+                            el.style.order = seq;
+                        }
+                    }
+                    // 7. AI Pre-Approved Offers
+                    else if (w.id === 'preapproved_offers') {
+                        const wrapper = document.getElementById('offers-wrapper');
+                        const header = document.getElementById('offers-section-header');
+                        const container = document.getElementById('offers-container');
+                        if (wrapper) {
+                            wrapper.style.display = isVisible ? 'block' : 'none';
+                            wrapper.style.order = seq;
+                        }
+                        if (header) header.style.display = isVisible ? 'flex' : 'none';
+                        if (container) container.style.display = isVisible ? 'grid' : 'none';
+                    }
+                    // 8. Bank Self-Service & Quick Hub
+                    else if (w.id === 'services_grid') {
+                        const wrapper = document.getElementById('services-wrapper');
+                        const header = document.getElementById('services-section-header');
+                        const grid = document.getElementById('services-grid-container') || document.querySelector('.services-grid');
+                        if (wrapper) {
+                            wrapper.style.display = isVisible ? 'block' : 'none';
+                            wrapper.style.order = seq;
+                        }
+                        if (header) header.style.display = isVisible ? 'flex' : 'none';
+                        if (grid) grid.style.display = isVisible ? 'grid' : 'none';
+                    }
+                    // 9. 24/7 AI Banking Assistant Copilot
+                    else if (w.id === 'ai_chat_assistant') {
+                        const launcher = document.getElementById('chat-launcher-btn');
+                        const chat = document.getElementById('chat-widget');
+                        const serviceChat = document.getElementById('service-card-ai-chat');
+                        if (launcher) launcher.style.display = isVisible ? 'flex' : 'none';
+                        if (!isVisible && chat) chat.style.display = 'none';
+                        if (serviceChat) serviceChat.style.display = isVisible ? 'block' : 'none';
+                    }
+                    // 10. Bank Payment Gateway & UPI Modal
+                    else if (w.id === 'payment_upi_card') {
+                        const actionBtns = document.querySelectorAll('#loan-card-action-buttons, .loan-action-buttons');
+                        actionBtns.forEach(b => {
+                            b.style.display = isVisible ? 'flex' : 'none';
+                        });
+                        const linkBars = document.querySelectorAll('#loan-repayment-link-bar');
+                        linkBars.forEach(lb => {
+                            lb.style.display = isVisible ? 'flex' : 'none';
+                        });
+                        const tablePayBtns = document.querySelectorAll('#amortization-tbody button');
+                        tablePayBtns.forEach(tb => {
+                            tb.style.display = isVisible ? 'inline-flex' : 'none';
+                        });
+                        if (!isVisible) {
+                            const modal = document.getElementById('payment-modal');
+                            if (modal) modal.style.display = 'none';
+                        }
+                    }
+                });
+
+                // Combined handling for welcome banner wrapper
+                const bannerWrapper = document.getElementById('welcome-banner-wrapper') || document.querySelector('.welcome-banner');
+                if (bannerWrapper) {
+                    if (!welcomeBannerVisible && !crediScoreVisible) {
+                        bannerWrapper.style.display = 'none';
+                    } else {
+                        bannerWrapper.style.display = 'block';
+                        const bannerInner = bannerWrapper.querySelector('.banner-inner');
+                        if (bannerInner) {
+                            bannerInner.style.justifyContent = (!welcomeBannerVisible && crediScoreVisible) ? 'flex-end' : 'space-between';
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn("Could not apply portal screen configuration:", e);
+            }
+        };
+
+        // Real-time synchronization banner
+        function showLiveSyncNotification(msg) {
+            let toast = document.getElementById('live-screen-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'live-screen-toast';
+                toast.className = 'live-sync-toast';
+                document.body.appendChild(toast);
+            }
+            toast.innerHTML = `<span>⚡</span> <span>${msg || 'Layout updated live by Administrator'}</span>`;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => toast.classList.remove('show'), 2200);
+        }
+
+        // 1. BroadcastChannel (instant multi-tab synchronization)
+        if (typeof BroadcastChannel !== 'undefined') {
+            const screenChannel = new BroadcastChannel('credisphere_screen_config_channel');
+            screenChannel.onmessage = (event) => {
+                if (event.data && (event.data.action === 'SCREEN_CONFIG_CHANGED' || event.data.widgets)) {
+                    const userObj = JSON.parse(localStorage.getItem('user') || '{}');
+                    const myEmail = (userObj.email || '').toLowerCase();
+                    const myCif = userObj.cif_number || '';
+                    const myName = (userObj.name || '').toLowerCase();
+                    const msg = event.data;
+
+                    if (!msg.email || !myEmail || msg.email.toLowerCase() === myEmail || msg.cif === myCif || (msg.name && msg.name.toLowerCase() === myName)) {
+                        window.applyScreenConfig(msg.widgets);
+                        showLiveSyncNotification('⚡ Live screen layout updated by Administrator');
+                    }
+                }
+            };
+        }
+
+        // 2. Cross-tab localStorage synchronization
+        window.addEventListener('storage', (e) => {
+            if (e.key && (
+                e.key.startsWith('screen_config_') ||
+                e.key === 'credisphere_portal_config' ||
+                e.key === 'credisphere_active_screen_config' ||
+                e.key === 'credisphere_customer_configs' ||
+                e.key === 'credisphere_screen_config_last_update'
+            )) {
+                window.applyScreenConfig();
+                showLiveSyncNotification('⚡ Live screen layout updated by Administrator');
+            }
+        });
+
+        // 3. Custom event for same-page / iframe updates
+        window.addEventListener('credisphere_screen_config_updated', (e) => {
+            if (e.detail && e.detail.widgets) {
+                window.applyScreenConfig(e.detail.widgets);
+            } else {
+                window.applyScreenConfig();
+            }
+            showLiveSyncNotification('⚡ Live screen layout updated by Administrator');
+        });
+
+        // 4. Ultra-fast background watcher (350ms) to ensure immediate reaction
+        let _lastConfigTimestamp = localStorage.getItem('credisphere_screen_config_last_update') || '';
+        setInterval(() => {
+            const currentTimestamp = localStorage.getItem('credisphere_screen_config_last_update') || '';
+            if (currentTimestamp && currentTimestamp !== _lastConfigTimestamp) {
+                _lastConfigTimestamp = currentTimestamp;
+                window.applyScreenConfig();
+                showLiveSyncNotification('⚡ Live screen layout updated by Administrator');
+            }
+        }, 350);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCustomerDashboard();
+            window.applyScreenConfig();
+        });
+    </script>
+</body>
+</html>

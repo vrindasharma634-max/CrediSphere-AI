@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrediSphere Bank — Reports &amp; Analytics Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0e1a3a;
+            --navy-2: #152a5c;
+            --navy-soft: rgba(255,255,255,.08);
+            --navy-border: rgba(255,255,255,.10);
+            --blue: #2f5fff;
+            --blue-2: #5b7fff;
+            --blue-light: #eef2ff;
+            --teal: #0ea394;
+            --teal-light: #e4f9f6;
+            --purple: #7c5cff;
+            --purple-light: #f2efff;
+            --green: #17a34a;
+            --green-light: #eefbf1;
+            --amber: #d97706;
+            --amber-light: #fff8ea;
+            --red: #e03131;
+            --red-light: #fef1f1;
+            --ink: #101a33;
+            --muted: #66708a;
+            --border: #e5e9f3;
+            --surface: #ffffff;
+            --surface-2: #f6f8fd;
+            --bg: #eef1f9;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-xs: 7px;
+            --shadow-sm: 0 1px 3px rgba(15,26,58,.06);
+            --shadow-md: 0 6px 20px rgba(15,26,58,.08);
+            --shadow-lg: 0 20px 48px rgba(15,26,58,.16);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .mono { font-family: 'DM Mono', monospace; }
+        button { font-family: inherit; cursor: pointer; }
+        input, select { font-family: inherit; }
+        a { color: inherit; text-decoration: none; }
+
+        /* App Shell */
+        .app-shell {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            min-height: 100vh;
+        }
+        @media (max-width: 1024px) {
+            .app-shell { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--navy);
+            color: #fff;
+            padding: 22px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sb-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 6px 20px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--navy-border);
+        }
+        .logo-mark {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 13px;
+            color: #fff;
+        }
+        .sb-brand b { font-size: 14.5px; display: block; color: #fff; }
+        .sb-brand span { display: block; font-size: 10.5px; color: rgba(255,255,255,.5); }
+        .sb-section-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.35);
+            padding: 14px 10px 6px;
+        }
+        .sb-item {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255,255,255,.72);
+            transition: .15s;
+        }
+        .sb-item .ic {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .sb-item:hover {
+            background: var(--navy-soft);
+            color: #fff;
+        }
+        .sb-item.active {
+            background: linear-gradient(90deg, rgba(47,95,255,.35), rgba(47,95,255,.08));
+            color: #fff;
+            box-shadow: inset 3px 0 0 var(--blue-2);
+        }
+        .sb-bottom {
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px solid var(--navy-border);
+        }
+        .sb-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 6px;
+        }
+        .sb-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .sb-user b { font-size: 12.5px; display: block; color: #fff; }
+        .sb-user span { font-size: 11px; color: rgba(255,255,255,.5); display: block; }
+
+        /* Main Section */
+        .main {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Topbar */
+        .topbar {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            padding: 14px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .tb-search {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 10px;
+            width: 380px;
+        }
+        .tb-search input {
+            border: none;
+            background: transparent;
+            font-size: 13px;
+            color: var(--ink);
+            outline: none;
+            width: 100%;
+        }
+        .tb-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+        }
+        .tb-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            padding: 7px 13px;
+            border-radius: 9px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--ink);
+            cursor: pointer;
+            transition: .15s;
+        }
+        .tb-pill:hover { background: #eef2fa; }
+        .tb-dropdown {
+            position: absolute;
+            top: 48px;
+            right: 80px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            width: 190px;
+            display: none;
+            flex-direction: column;
+            padding: 6px;
+            z-index: 101;
+        }
+        .tb-dropdown.show { display: flex; }
+        .tb-dropdown a {
+            padding: 8px 12px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--ink);
+            border-radius: 8px;
+            transition: .1s;
+        }
+        .tb-dropdown a:hover {
+            background: var(--surface-2);
+            color: var(--blue);
+        }
+        .tb-icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            border: 1px solid var(--border);
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            color: var(--muted);
+            cursor: pointer;
+            position: relative;
+            transition: .15s;
+        }
+        .tb-icon-btn:hover { background: var(--surface-2); color: var(--navy); }
+        .badge-dot {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--red);
+        }
+        .tb-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 11.5px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Content Area */
+        .content {
+            padding: 26px 28px 40px;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* Page Head */
+        .page-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+        .page-head h1 {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -.01em;
+            color: var(--navy);
+        }
+        .page-head p {
+            font-size: 13.5px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+        .head-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-sm {
+            padding: 9px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: #fff;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--ink);
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: .15s;
+        }
+        .btn-sm:hover {
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-sm.primary {
+            background: linear-gradient(135deg, var(--blue), var(--navy-2));
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 12px rgba(47,95,255,.25);
+        }
+        .btn-sm.primary:hover {
+            box-shadow: 0 6px 18px rgba(47,95,255,.35);
+        }
+
+        /* CBS Live Core Banking System Banner */
+        .cbs-hero-banner {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            border-left: 5px solid var(--green);
+        }
+        .cbs-hero-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .cbs-live-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: var(--green-light);
+            color: var(--green);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 12px;
+            letter-spacing: .02em;
+            border: 1px solid rgba(23,163,74,.2);
+        }
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--green);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 3px rgba(23,163,74,.25);
+            animation: pulseAnim 1.8s infinite;
+        }
+        @keyframes pulseAnim {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(23,163,74, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 7px rgba(23,163,74, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(23,163,74, 0); }
+        }
+        .cbs-hero-meta {
+            font-size: 12.5px;
+            color: var(--muted);
+        }
+        .cbs-hero-meta b { color: var(--navy); }
+        .cbs-hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 4 Main KPI Cards */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+        @media (max-width: 1100px) {
+            .kpi-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .kpi-row { grid-template-columns: 1fr; }
+        }
+        .kpi-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 22px;
+            box-shadow: var(--shadow-sm);
+            transition: .15s;
+        }
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .kpi-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .kpi-value {
+            font-size: 26px;
+            font-weight: 800;
+            font-family: 'DM Mono', monospace;
+            color: var(--navy);
+            margin-bottom: 3px;
+            transition: color .3s ease;
+        }
+        .kpi-value.flash-update {
+            color: var(--blue);
+            animation: textFlash 1.2s ease;
+        }
+        @keyframes textFlash {
+            0% { transform: scale(1.15); color: var(--green); }
+            100% { transform: scale(1.0); }
+        }
+        .kpi-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+        .kpi-sublabel {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+        @media (max-width: 1024px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        /* Generic Chart Card */
+        .chart-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 22px 24px;
+            position: relative;
+        }
+        .card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+        .card-head h3 {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: var(--navy);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Monthly Disbursement Bar Chart */
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 16px;
+            height: 190px;
+            padding-top: 25px;
+            padding-bottom: 8px;
+        }
+        .bar-chart .bar-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .bar-chart .bar {
+            width: 100%;
+            border-radius: 6px 6px 0 0;
+            background: linear-gradient(180deg, var(--blue-2), var(--blue));
+            position: relative;
+            transition: .2s ease;
+        }
+        .bar-chart .bar-col:hover .bar {
+            opacity: 0.85;
+            transform: scaleY(1.02);
+            transform-origin: bottom;
+        }
+        .bar-chart .bar-lbl {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+        .bar-chart .bar-lbl-active {
+            color: var(--blue);
+            font-weight: 800;
+        }
+        .bar-chart .bar-val {
+            position: absolute;
+            top: -22px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 11.5px;
+            font-weight: 700;
+            font-family: 'DM Mono', monospace;
+            color: var(--navy);
+        }
+
+        /* Donut Chart */
+        .donut-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .donut-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 16px;
+            width: 100%;
+        }
+        .dl-row {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 12.5px;
+        }
+        .dl-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+        .dl-row b {
+            margin-left: auto;
+            font-family: 'DM Mono', monospace;
+            font-size: 13px;
+        }
+
+        /* Credit Risk Rating Matrix (Basel III) */
+        .risk-matrix-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 22px 24px;
+            margin-bottom: 22px;
+        }
+        .risk-tiers-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-top: 16px;
+        }
+        @media (max-width: 900px) {
+            .risk-tiers-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        .risk-tier-box {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: .15s;
+        }
+        .risk-tier-box:hover {
+            background: #fff;
+            border-color: #cbd5e1;
+            box-shadow: var(--shadow-sm);
+        }
+        .rt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .rt-grade {
+            font-size: 11px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+        .grade-aaa { background: #dcfce7; color: #15803d; }
+        .grade-aa { background: #dbeafe; color: #1d4ed8; }
+        .grade-a { background: #fef3c7; color: #b45309; }
+        .grade-b { background: #fee2e2; color: #b91c1c; }
+        .rt-title { font-size: 13px; font-weight: 700; color: var(--navy); }
+        .rt-stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .rt-pct { font-size: 20px; font-weight: 800; font-family: 'DM Mono', monospace; color: var(--navy); }
+        .rt-count { font-size: 11.5px; color: var(--muted); font-weight: 600; }
+        .rt-bar {
+            height: 5px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .rt-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        /* Registered Customer Master Ledger Table */
+        .dossier-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 22px 24px;
+            margin-bottom: 22px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            text-align: left;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: var(--muted);
+            font-weight: 700;
+            padding: 12px 14px;
+            border-bottom: 1.5px solid var(--border);
+            background: var(--surface-2);
+        }
+        td {
+            padding: 13px 14px;
+            border-bottom: 1px solid var(--border);
+            font-size: 12.5px;
+            vertical-align: middle;
+        }
+        tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background: #f8fafd; }
+        
+        .cif-badge {
+            display: inline-block;
+            font-family: 'DM Mono', monospace;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--blue);
+            background: var(--blue-light);
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        .chip-approved { background: var(--green-light); color: var(--green); }
+        .chip-rejected { background: var(--red-light); color: var(--red); }
+        .chip-verified { background: var(--green-light); color: var(--green); border: 1px solid rgba(23,163,74,.2); }
+        .chip-active { background: #e0f2fe; color: #0284c7; }
+
+        /* Portfolio Stress Box */
+        .stress-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        @media (max-width: 800px) {
+            .stress-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        .stress-card {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 16px;
+        }
+        .stress-card .val {
+            font-size: 18px;
+            font-weight: 800;
+            font-family: 'DM Mono', monospace;
+            color: var(--navy);
+            margin-bottom: 2px;
+        }
+        .stress-card .lbl {
+            font-size: 11.5px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        /* Toast Notifications */
+        .reports-toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--navy);
+            color: #fff;
+            padding: 14px 22px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: .25s ease;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid var(--blue);
+            max-width: 480px;
+        }
+        .reports-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .reports-toast.success { border-left-color: var(--green); }
+        .reports-toast.info { border-left-color: var(--blue); }
+
+        /* Footer */
+        .page-foot {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+            background: #fff;
+        }
+
+        /* Print Stylesheet */
+        @media print {
+            .sidebar, .topbar, .head-actions, .cbs-hero-actions, .tb-dropdown { display: none !important; }
+            .app-shell { display: block; }
+            .content { padding: 0; max-width: 100%; }
+            body { background: #fff; }
+            .chart-card, .kpi-card, .dossier-card, .risk-matrix-card {
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sb-brand">
+            <div class="logo-mark">CS</div>
+            <div>
+                <b>CrediSphere</b>
+                <span>Lender Console</span>
+            </div>
+        </div>
+
+        <div class="sb-section-label">Overview</div>
+        <a href="admin-dashboard.html" class="sb-item">
+            <span class="ic">📊</span> Dashboard
+        </a>
+        <a href="credit-intelligence.html" class="sb-item">
+            <span class="ic">🧠</span> Credit Intelligence
+        </a>
+        <a href="admin-loans.html" class="sb-item">
+            <span class="ic">📄</span> Loan Applications
+        </a>
+
+        <div class="sb-section-label">Recovery</div>
+        <a href="collections-ai.html" class="sb-item">
+            <span class="ic">📞</span> Collections AI
+        </a>
+        <a href="legal-repossession.html" class="sb-item">
+            <span class="ic">⚖️</span> Legal &amp; Repossession
+        </a>
+
+        <div class="sb-section-label">Management</div>
+        <a href="reports.html" class="sb-item active">
+            <span class="ic">📈</span> Reports
+        </a>
+        <a href="risk-policy.html" class="sb-item">
+            <span class="ic">⚙️</span> Risk Policy Config
+        </a>
+        <a href="screen-configuration.html" class="sb-item">
+            <span class="ic">🖥️</span> Screen Configuration
+        </a>
+
+        <div class="sb-bottom">
+            <div class="sb-user">
+                <div class="sb-avatar" id="sidebar-admin-avatar">DS</div>
+                <div>
+                    <b id="sidebar-admin-name">devender sharma</b>
+                    <span id="sidebar-admin-role">Credit Ops Admin</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Section -->
+    <div class="main">
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="tb-search">
+                <span>🔍</span>
+                <input type="text" id="report-search-input" placeholder="Search registered customer, email, CIF, or facility...">
+            </div>
+            <div class="tb-right">
+                <div class="tb-pill" id="time-range-pill">
+                    <span id="time-range-text">📅 All Historical Records</span>
+                    <span style="font-size: 10px;">▼</span>
+                </div>
+                <!-- Time Range Dropdown -->
+                <div class="tb-dropdown" id="time-range-dropdown">
+                    <a href="javascript:void(0)" onclick="reportsEngine.setTimeRange('7d', 'Past 7 days'); reportsEngine.toggleTimeRangeDropdown();">Past 7 days</a>
+                    <a href="javascript:void(0)" onclick="reportsEngine.setTimeRange('30d', 'Past 30 days'); reportsEngine.toggleTimeRangeDropdown();">Past 30 days</a>
+                    <a href="javascript:void(0)" onclick="reportsEngine.setTimeRange('90d', 'Past 90 days'); reportsEngine.toggleTimeRangeDropdown();">Past 90 days</a>
+                    <a href="javascript:void(0)" onclick="reportsEngine.setTimeRange('all', 'All Historical Records'); reportsEngine.toggleTimeRangeDropdown();">All Historical Records</a>
+                </div>
+
+                <div class="tb-icon-btn" title="System Notifications">
+                    🔔<span class="badge-dot"></span>
+                </div>
+                <div class="tb-avatar" id="topbar-admin-avatar" title="Credit Ops Admin">DS</div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main class="content">
+            <!-- Page Title & Header -->
+            <div class="page-head">
+                <div>
+                    <h1>Reports &amp; Analytics</h1>
+                    <p>Live portfolio performance, Core Banking CIF ledger, capital adequacy, and asset quality metrics</p>
+                </div>
+                <div class="head-actions">
+                    <button class="btn-sm" id="btn-export-csv" title="Download Registered Borrowers & Loan Portfolio CSV">
+                        📊 Export CSV
+                    </button>
+                    <button class="btn-sm" id="btn-export-pdf" title="Export High-Res Bank Audit PDF">
+                        ⬇ Export PDF
+                    </button>
+                    <button class="btn-sm primary" id="btn-run-diagnostic" title="Force Immediate Real-Time CBS Sync">
+                        ⚡ Force CBS Sync
+                    </button>
+                </div>
+            </div>
+
+            <!-- CBS Live Core Banking System Banner -->
+            <div class="cbs-hero-banner">
+                <div class="cbs-hero-left">
+                    <div class="cbs-live-tag">
+                        <span class="pulse-dot" id="live-pulse-indicator"></span>
+                        CBS Live Core Banking Feed
+                    </div>
+                    <div class="cbs-hero-meta">
+                        <b>Active Database Cohort:</b> Synchronized with registered customer sign-ups &amp; live sanctioned loan facilities
+                    </div>
+                </div>
+                <div class="cbs-hero-actions">
+                    <span class="cbs-hero-meta" id="last-audited-label">
+                        Last Evaluated: Just now · Live Sync Active
+                    </span>
+                </div>
+            </div>
+
+            <!-- 4 Primary Banking KPI Cards -->
+            <div class="kpi-row">
+                <div class="kpi-card">
+                    <div class="kpi-top">
+                        <div class="kpi-value" id="kpi-customers">7</div>
+                        <span class="kpi-trend" style="font-size:11px; font-weight:700; color:var(--green); background:var(--green-light); padding:2px 8px; border-radius:10px;">
+                            100% Verified
+                        </span>
+                    </div>
+                    <div class="kpi-label">Registered Customers</div>
+                    <div class="kpi-sublabel" id="kpi-cust-sub">Active Borrower Accounts</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-top">
+                        <div class="kpi-value" id="kpi-apps">13</div>
+                        <span class="kpi-trend" style="font-size:11px; font-weight:700; color:var(--blue); background:var(--blue-light); padding:2px 8px; border-radius:10px;">
+                            92.3% Approved
+                        </span>
+                    </div>
+                    <div class="kpi-label">Total Loan Applications</div>
+                    <div class="kpi-sublabel" id="kpi-apps-sub">12 Approved · 1 Rejected</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-top">
+                        <div class="kpi-value" id="kpi-disbursed">₹53.5L</div>
+                        <span class="kpi-trend" style="font-size:11px; font-weight:700; color:var(--green); background:var(--green-light); padding:2px 8px; border-radius:10px;">
+                            Active Capital
+                        </span>
+                    </div>
+                    <div class="kpi-label">Total Sanctioned / Disbursed</div>
+                    <div class="kpi-sublabel" id="kpi-disb-sub">Avg Ticket: ₹4.5 Lakhs</div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-top">
+                        <div class="kpi-value" id="kpi-crar">18.6%</div>
+                        <span class="kpi-trend" style="font-size:11px; font-weight:700; color:var(--purple); background:var(--purple-light); padding:2px 8px; border-radius:10px;">
+                            Basel III Compliant
+                        </span>
+                    </div>
+                    <div class="kpi-label">Capital Adequacy Ratio (CRAR)</div>
+                    <div class="kpi-sublabel" id="kpi-crar-sub">Tier-1: 16.2% · RBI Min: 11.5%</div>
+                </div>
+            </div>
+
+            <!-- Visual Charts Row 1 (Loan Disbursement Timeline & Loan Type Donut) -->
+            <div class="grid-2">
+                <!-- Loan Disbursement Timeline Bar Chart -->
+                <div class="chart-card">
+                    <div class="card-head">
+                        <h3>Loan disbursement by timeline (₹Lakhs)</h3>
+                        <span style="font-size:11px; color:var(--muted); font-weight:600;">Sanctioned since launch</span>
+                    </div>
+                    <div class="bar-chart" id="bar-chart-container">
+                        <!-- Rendered dynamically by reports.js -->
+                    </div>
+                </div>
+
+                <!-- Applications by Loan Type Donut Chart -->
+                <div class="chart-card donut-wrap">
+                    <div class="card-head" style="width:100%;">
+                        <h3>Applications by loan type</h3>
+                        <span style="font-size:11px; color:var(--muted); font-weight:600;">Registered Cohort</span>
+                    </div>
+                    <svg width="150" height="150" viewBox="0 0 150 150" style="display:block;margin:0 auto;" id="donut-svg">
+                        <circle cx="75" cy="75" r="55" fill="none" stroke="#eef1f9" stroke-width="20"/>
+                        <!-- Dynamic Segments rendered by reports.js -->
+                    </svg>
+                    <div class="donut-legend" id="donut-legend-container">
+                        <!-- Populated dynamically by reports.js -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Credit Risk Rating & Asset Quality Matrix (Basel III & RBI Norms) -->
+            <div class="risk-matrix-card">
+                <div class="card-head" style="margin-bottom: 6px;">
+                    <div>
+                        <h3>🏛️ Credit Risk Rating &amp; Asset Quality Matrix (Basel III &amp; RBI Norms)</h3>
+                        <p style="font-size:12px; color:var(--muted); margin-top:2px;">
+                            Portfolio risk classification, borrower CIBIL distribution, and solvency benchmarks
+                        </p>
+                    </div>
+                    <div style="font-size:12px; font-weight:700; color:var(--green); background:var(--green-light); padding:4px 12px; border-radius:12px; border:1px solid rgba(23,163,74,.2);">
+                        ✓ Gross NPA: 0.00% · Net NPA: 0.00% (Pristine Performing Book)
+                    </div>
+                </div>
+                <div class="risk-tiers-grid" id="risk-tiers-container">
+                    <!-- Populated dynamically by reports.js -->
+                </div>
+            </div>
+
+            <!-- 1. LIVE REGISTERED CUSTOMERS MASTER REGISTER (CORE BANKING CIF LEDGER) -->
+            <div class="dossier-card">
+                <div class="card-head" style="margin-bottom:14px;">
+                    <div>
+                        <h3>👥 Live Registered Customers &amp; Borrowers Master Register</h3>
+                        <p style="font-size:12px; color:var(--muted); margin-top:2px;">
+                            Real-time core banking CIF register of all onboarded customer accounts, KYC records, and active facilities
+                        </p>
+                    </div>
+                    <span style="font-size:11.5px; font-weight:700; color:var(--green); background:var(--green-light); padding:4px 12px; border-radius:12px; border:1px solid rgba(23,163,74,.2);">
+                        🟢 Live Core Banking Stream (Auto-Syncing)
+                    </span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer Account</th>
+                            <th>CIF Ref</th>
+                            <th>Onboarding Date</th>
+                            <th>KYC Verification</th>
+                            <th>Credit Rating</th>
+                            <th>Active Facility</th>
+                            <th>Sanctioned Capital</th>
+                            <th>Account Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="registered-customers-tbody">
+                        <tr>
+                            <td>
+                                <div style="font-weight:700; color:var(--navy); font-size:13.5px;">devender sharma</div>
+                                <div style="font-size:11px; color:var(--muted);">devendersharma55@gmail.com</div>
+                            </td>
+                            <td><span class="cif-badge">CIF-1010</span></td>
+                            <td style="font-size:12px; color:var(--muted);">15 Sep 2026, 03:10 PM</td>
+                            <td><span class="chip chip-verified">✓ KYC VERIFIED</span></td>
+                            <td><b style="font-family:'DM Mono'; font-size:13px; color:var(--navy);">666</b> <span style="font-size:11px; color:var(--muted); margin-left:4px;">(Standard A)</span></td>
+                            <td><b>Home Loan</b></td>
+                            <td style="font-family:'DM Mono'; font-weight:700; color:var(--navy); font-size:13px;">₹900,000</td>
+                            <td><span class="chip chip-approved">● Active Borrower</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700; color:var(--navy); font-size:13.5px;">Karan Patel</div>
+                                <div style="font-size:11px; color:var(--muted);">karan.patel.live@gmail.com</div>
+                            </td>
+                            <td><span class="cif-badge">CIF-1008</span></td>
+                            <td style="font-size:12px; color:var(--muted);">10 Sep 2026, 02:22 PM</td>
+                            <td><span class="chip chip-verified">✓ KYC VERIFIED</span></td>
+                            <td><b style="font-family:'DM Mono'; font-size:13px; color:var(--navy);">608</b> <span style="font-size:11px; color:var(--muted); margin-left:4px;">(Standard A)</span></td>
+                            <td><b>Vehicle Loan</b></td>
+                            <td style="font-family:'DM Mono'; font-weight:700; color:var(--navy); font-size:13px;">₹350,000</td>
+                            <td><span class="chip chip-approved">● Active Borrower</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700; color:var(--navy); font-size:13.5px;">Aarav Sharma</div>
+                                <div style="font-size:11px; color:var(--muted);">aarav.sharma99@gmail.com</div>
+                            </td>
+                            <td><span class="cif-badge">CIF-1007</span></td>
+                            <td style="font-size:12px; color:var(--muted);">10 Sep 2026, 02:16 PM</td>
+                            <td><span class="chip chip-verified">✓ KYC VERIFIED</span></td>
+                            <td><b style="font-family:'DM Mono'; font-size:13px; color:var(--navy);">750</b> <span style="font-size:11px; color:var(--muted); margin-left:4px;">(Prime AAA)</span></td>
+                            <td><b>Personal Loan</b></td>
+                            <td style="font-family:'DM Mono'; font-weight:700; color:var(--navy); font-size:13px;">₹500,000</td>
+                            <td><span class="chip chip-approved">● Active Borrower</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700; color:var(--navy); font-size:13.5px;">poonam sharma</div>
+                                <div style="font-size:11px; color:var(--muted);">poonamsharma55@gmail.com</div>
+                            </td>
+                            <td><span class="cif-badge">CIF-1006</span></td>
+                            <td style="font-size:12px; color:var(--muted);">10 Sep 2026, 02:08 PM</td>
+                            <td><span class="chip chip-verified">✓ KYC VERIFIED</span></td>
+                            <td><b style="font-family:'DM Mono'; font-size:13px; color:var(--navy);">664</b> <span style="font-size:11px; color:var(--muted); margin-left:4px;">(Standard A)</span></td>
+                            <td><b>Home Loan</b></td>
+                            <td style="font-family:'DM Mono'; font-weight:700; color:var(--navy); font-size:13px;">₹500,000</td>
+                            <td><span class="chip chip-approved">● Active Borrower</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700; color:var(--navy); font-size:13.5px;">gudiya</div>
+                                <div style="font-size:11px; color:var(--muted);">vrindasharma634@gmail.com</div>
+                            </td>
+                            <td><span class="cif-badge">CIF-1003</span></td>
+                            <td style="font-size:12px; color:var(--muted);">30 Aug 2026, 04:24 PM</td>
+                            <td><span class="chip chip-verified">✓ KYC VERIFIED</span></td>
+                            <td><b style="font-family:'DM Mono'; font-size:13px; color:var(--navy);">664</b> <span style="font-size:11px; color:var(--muted); margin-left:4px;">(Standard A)</span></td>
+                            <td><b>Home Loan</b></td>
+                            <td style="font-family:'DM Mono'; font-weight:700; color:var(--navy); font-size:13px;">₹550,000</td>
+                            <td><span class="chip chip-approved">● Active Borrower</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700; color:var(--navy); font-size:13.5px;">Preeti Sharma</div>
+                                <div style="font-size:11px; color:var(--muted);">sharmapreeti8147@gmail.com</div>
+                            </td>
+                            <td><span class="cif-badge">CIF-1002</span></td>
+                            <td style="font-size:12px; color:var(--muted);">30 Aug 2026, 03:33 PM</td>
+                            <td><span class="chip chip-verified">✓ KYC VERIFIED</span></td>
+                            <td><b style="font-family:'DM Mono'; font-size:13px; color:var(--navy);">664</b> <span style="font-size:11px; color:var(--muted); margin-left:4px;">(Standard A)</span></td>
+                            <td><b>Home Loan</b></td>
+                            <td style="font-family:'DM Mono'; font-weight:700; color:var(--navy); font-size:13px;">₹1,550,000</td>
+                            <td><span class="chip chip-approved">● Active Borrower</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="font-weight:700; color:var(--navy); font-size:13.5px;">Vrinda</div>
+                                <div style="font-size:11px; color:var(--muted);">vrinda2@credisphere.ai</div>
+                            </td>
+                            <td><span class="cif-badge">CIF-1001</span></td>
+                            <td style="font-size:12px; color:var(--muted);">30 Aug 2026, 03:32 PM</td>
+                            <td><span class="chip chip-verified">✓ KYC VERIFIED</span></td>
+                            <td><b style="font-family:'DM Mono'; font-size:13px; color:var(--navy);">760</b> <span style="font-size:11px; color:var(--muted); margin-left:4px;">(Prime AAA)</span></td>
+                            <td><b>Personal Credit Line</b></td>
+                            <td style="font-family:'DM Mono'; font-weight:700; color:var(--navy); font-size:13px;">₹1,000,000</td>
+                            <td><span class="chip chip-approved">● Active Borrower</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 2. SANCTIONED FACILITIES & UNDERWRITING DOSSIER -->
+            <div class="dossier-card">
+                <div class="card-head" style="margin-bottom:14px;">
+                    <div>
+                        <h3>📑 Sanctioned Facilities &amp; Credit Underwriting Dossier</h3>
+                        <p style="font-size:12px; color:var(--muted); margin-top:2px;">
+                            Live loan applications submitted by actual signed-up borrowers with interest rate, EMI, and credit verdict
+                        </p>
+                    </div>
+                    <span style="font-size:11.5px; font-weight:700; color:var(--navy); background:var(--surface-2); padding:4px 12px; border-radius:12px; border:1px solid var(--border);">
+                        Audited Underwriting Records
+                    </span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Facility Ref</th>
+                            <th>Borrower Account</th>
+                            <th>Loan Product</th>
+                            <th>Sanctioned Capital</th>
+                            <th>Rate &amp; Tenor</th>
+                            <th>Monthly EMI</th>
+                            <th>DTI Ratio</th>
+                            <th>CIBIL Score</th>
+                            <th>Sanction Status</th>
+                            <th>Credit Assessment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="registered-dossier-tbody">
+                        <tr>
+                            <td><span class="cif-badge">FAC-0014</span></td>
+                            <td>
+                                <div style="font-weight:700; color:var(--navy);">devender sharma</div>
+                                <div style="font-size:11px; color:var(--muted);">devendersharma55@gmail.com</div>
+                            </td>
+                            <td><b>Home Loan</b></td>
+                            <td style="font-family:'DM Mono'; font-weight:700;">₹900,000</td>
+                            <td style="font-size:12px; color:var(--muted);">11.5% p.a. · 60 M</td>
+                            <td style="font-family:'DM Mono'; font-weight:600; color:var(--navy);">₹18,683</td>
+                            <td style="font-family:'DM Mono'; font-weight:600; color:#10b981;">15.8%</td>
+                            <td style="font-family:'DM Mono'; font-weight:700;">666</td>
+                            <td><span class="chip chip-approved">✓ APPROVED</span></td>
+                            <td style="font-size:11.5px; color:var(--muted);">Verified Repayment Capacity &amp; Low DTI</td>
+                        </tr>
+                        <tr>
+                            <td><span class="cif-badge">FAC-0013</span></td>
+                            <td>
+                                <div style="font-weight:700; color:var(--navy);">Vrinda</div>
+                                <div style="font-size:11px; color:var(--muted);">vrinda2@credisphere.ai</div>
+                            </td>
+                            <td><b>Personal Loan</b></td>
+                            <td style="font-family:'DM Mono'; font-weight:700;">₹400,000</td>
+                            <td style="font-size:12px; color:var(--muted);">8.5% p.a. · 36 M</td>
+                            <td style="font-family:'DM Mono'; font-weight:600; color:var(--navy);">₹12,720</td>
+                            <td style="font-family:'DM Mono'; font-weight:600; color:#10b981;">15.8%</td>
+                            <td style="font-family:'DM Mono'; font-weight:700;">760</td>
+                            <td><span class="chip chip-approved">✓ APPROVED</span></td>
+                            <td style="font-size:11.5px; color:var(--muted);">Strong Income &amp; Prime AAA Credit Score</td>
+                        </tr>
+                        <tr>
+                            <td><span class="cif-badge">FAC-0012</span></td>
+                            <td>
+                                <div style="font-weight:700; color:var(--navy);">Vrinda</div>
+                                <div style="font-size:11px; color:var(--muted);">vrinda2@credisphere.ai</div>
+                            </td>
+                            <td><b>Personal Credit Line</b></td>
+                            <td style="font-family:'DM Mono'; font-weight:700;">₹600,000</td>
+                            <td style="font-size:12px; color:var(--muted);">8.5% p.a. · 36 M</td>
+                            <td style="font-family:'DM Mono'; font-weight:600; color:var(--navy);">₹18,945</td>
+                            <td style="font-family:'DM Mono'; font-weight:600; color:#10b981;">0.0%</td>
+                            <td style="font-family:'DM Mono'; font-weight:700;">712</td>
+                            <td><span class="chip chip-approved">✓ APPROVED</span></td>
+                            <td style="font-size:11.5px; color:var(--muted);">Verified Liquid Income &amp; Clean History</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Portfolio Risk, Solvency & Statutory Health -->
+            <div class="chart-card" style="margin-bottom: 24px;">
+                <div class="card-head">
+                    <div>
+                        <h3>Portfolio Risk, Solvency &amp; Statutory Compliance Health</h3>
+                        <p style="font-size:12px; color:var(--muted); margin-top:2px;">
+                            Asset quality, provision coverage, liquidity ratios, and RBI compliance
+                        </p>
+                    </div>
+                    <span style="font-size:11px; font-weight:700; color:var(--green); background:var(--green-light); padding:4px 10px; border-radius:10px; border:1px solid rgba(23,163,74,.2);">
+                        ✓ RBI Regulatory Compliant · Scheduled Bank Grade
+                    </span>
+                </div>
+                <div class="stress-grid">
+                    <div class="stress-card">
+                        <div class="val" id="risk-gross-npa">0.00%</div>
+                        <div class="lbl">Gross NPA (Zero Defaults)</div>
+                    </div>
+                    <div class="stress-card">
+                        <div class="val" id="risk-net-npa">0.00%</div>
+                        <div class="lbl">Net NPA (Pristine Standard Asset)</div>
+                    </div>
+                    <div class="stress-card">
+                        <div class="val" id="risk-pcr">100.0%</div>
+                        <div class="lbl">Provision Coverage Ratio (PCR)</div>
+                    </div>
+                    <div class="stress-card">
+                        <div class="val" id="risk-lcr">142.8%</div>
+                        <div class="lbl">Liquidity Coverage Ratio (LCR >100%)</div>
+                    </div>
+                    <div class="stress-card">
+                        <div class="val" id="risk-cibil">676</div>
+                        <div class="lbl">Average Approved CIBIL</div>
+                    </div>
+                    <div class="stress-card">
+                        <div class="val" id="risk-repayment">100% On-Time</div>
+                        <div class="lbl">Repayment Track (NACH Active)</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Toast Notification -->
+        <div class="reports-toast" id="reports-toast">
+            <span id="toast-icon">⚡</span>
+            <span id="toast-message">Connected to Core Banking System.</span>
+        </div>
+
+        <!-- Footer -->
+        <footer class="page-foot">
+            CrediSphere Bank · Core Banking &amp; Reports Console · RBI Regulated Scheduled Commercial Entity
+        </footer>
+    </div>
+</div>
+
+<script src="../js/reports.js?v=20260915_bank_live_4"></script>
+</body>
+</html>

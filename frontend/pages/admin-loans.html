@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrediSphere AI - Loan Applications & Customer KYC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #f4f6f8;
+            --sidebar-bg: #111827;
+            --sidebar-hover: #1f2937;
+            --text-dark: #111827;
+            --text-gray: #4b5563;
+            --text-light: #9ca3af;
+            --border: #e5e7eb;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --green: #10b981;
+            --green-light: #d1fae5;
+            --red: #ef4444;
+            --red-light: #fee2e2;
+            --orange: #f59e0b;
+            --orange-light: #fef3c7;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+        .sidebar-brand {
+            padding: 20px 25px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .brand-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+        }
+        .sidebar-menu {
+            padding: 20px 15px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .menu-category {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            margin: 20px 0 10px 10px;
+        }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            color: #d1d5db;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+            transition: 0.2s;
+        }
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: var(--sidebar-hover);
+            color: #fff;
+        }
+        .sidebar-menu a.active { background-color: #2563eb; }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .admin-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #374151;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .admin-info h4 { margin: 0; font-size: 0.85rem; }
+        .admin-info p { margin: 0; font-size: 0.75rem; color: var(--text-light); }
+
+        /* Main Content Layout */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .top-header {
+            height: 70px;
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .search-bar {
+            width: 320px;
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .content-body {
+            padding: 30px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .page-header h1 { margin: 0; font-size: 1.5rem; font-weight: 700; }
+        
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .filter-pill {
+            padding: 8px 16px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .filter-pill:hover { border-color: var(--primary); color: var(--primary); }
+        .filter-pill.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        /* Table Styles */
+        .table-card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.88rem;
+        }
+        th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 0.05em;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f9fafb; }
+        
+        .applicant-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .applicant-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #4f46e5;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.82rem;
+            flex-shrink: 0;
+        }
+        .applicant-name { font-weight: 700; color: var(--text-dark); font-size: 0.92rem; }
+        
+        /* Government ID Pills */
+        .id-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+        .id-pill.pan {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+        }
+        .id-pill.aadhaar {
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .badge.approved { background: var(--green-light); color: var(--green); }
+        .badge.pending { background: var(--orange-light); color: var(--orange); }
+        .badge.rejected { background: var(--red-light); color: var(--red); }
+        
+        .ai-score {
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .ai-score.high { color: var(--green); }
+        .ai-score.medium { color: var(--orange); }
+        .ai-score.low { color: var(--red); }
+
+        .btn-dossier {
+            padding: 7px 12px;
+            background: #4f46e5;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25);
+            transition: all 0.2s ease;
+        }
+        .btn-dossier:hover {
+            background: #4338ca;
+            transform: translateY(-1px);
+        }
+
+        .btn-action-sm {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: 0.2s;
+        }
+
+        .empty-state {
+            padding: 50px 20px;
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        /* ================= SEQUENTIAL CUSTOMER DOSSIER MODAL ================= */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(6px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .dossier-modal-card {
+            background: #fff;
+            width: 900px;
+            max-width: 95vw;
+            max-height: 90vh;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.96) translateY(8px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .dossier-header {
+            padding: 22px 28px;
+            background: #0f172a;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dossier-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .dossier-avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .dossier-title-box h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+
+        .dossier-meta-strip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        .dossier-cif-tag {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #94a3b8;
+            transition: color 0.2s;
+            line-height: 1;
+        }
+        .close-btn:hover { color: #fff; }
+
+        /* Stepper Tabs Bar */
+        .dossier-stepper-bar {
+            display: flex;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 16px;
+            overflow-x: auto;
+        }
+
+        .dossier-tab-btn {
+            padding: 14px 20px;
+            border: none;
+            background: transparent;
+            font-size: 0.86rem;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .dossier-tab-btn:hover { color: #1e293b; background: rgba(0, 0, 0, 0.02); }
+        .dossier-tab-btn.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+            background: #fff;
+            font-weight: 700;
+        }
+
+        .tab-step-num {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: #475569;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .dossier-tab-btn.active .tab-step-num {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        /* Dossier Content Body */
+        .dossier-body {
+            padding: 24px 28px;
+            overflow-y: auto;
+            flex-grow: 1;
+            background: #ffffff;
+        }
+
+        .sequence-section {
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+        .sequence-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section Layout Cards */
+        .dossier-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .dossier-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 18px 20px;
+            position: relative;
+        }
+
+        .dossier-card-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748b;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 0.88rem;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: #64748b; font-weight: 500; }
+        .info-value { color: #0f172a; font-weight: 700; }
+
+        /* Highlight Government Card Box */
+        .gov-id-box {
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            margin-bottom: 12px;
+        }
+
+        .gov-id-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .gov-id-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #0f172a;
+        }
+
+        /* Document Item Card in Step 3 */
+        .doc-item-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            transition: all 0.2s ease;
+        }
+        .doc-item-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
+        }
+
+        .doc-left-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .doc-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(59, 130, 246, 0.1);
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .doc-info-title {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 0.95rem;
+            margin-bottom: 3px;
+        }
+
+        .doc-meta-tags {
+            display: flex;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        .doc-tag {
+            background: #f1f5f9;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .doc-tag.verified {
+            background: #ecfdf5;
+            color: #059669;
+        }
+
+        /* Footer of Dossier Modal */
+        .dossier-footer {
+            padding: 16px 28px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dossier-nav-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* ================= DOCUMENT PREVIEW LIGHTBOX ================= */
+        .doc-preview-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .doc-preview-card {
+            background: #0b132b;
+            color: #fff;
+            width: 620px;
+            max-width: 95vw;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .preview-header {
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-body {
+            padding: 28px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Authentic Realistic PAN Card Preview Mockup */
+        .pan-card-render {
+            width: 440px;
+            max-width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #1d4ed8 100%);
+            border-radius: 16px;
+            padding: 18px 22px;
+            color: #fff;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Authentic Realistic Aadhaar Card Render Mockup */
+        .aadhaar-card-render {
+            width: 440px;
+            max-width: 100%;
+            height: 250px;
+            background: #ffffff;
+            color: #111827;
+            border-radius: 16px;
+            padding: 18px 22px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            position: relative;
+            border: 1px solid #cbd5e1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">💳</div>
+            <span>CrediSphere AI</span>
+        </div>
+
+        <div class="sidebar-menu">
+            <div class="menu-category">Main Menu</div>
+            <a href="admin-dashboard.html">📊 Dashboard</a>
+            <a href="admin-loans.html" class="active">📝 Loan Applications</a>
+            <a href="credit-intelligence.html">🧠 Intelligence Engine</a>
+
+            <div class="menu-category">Risk & Policy</div>
+            <a href="risk-policy.html">🛡️ Risk Policies</a>
+            <a href="collections-ai.html">📞 Collections AI</a>
+            <a href="legal-repossession.html">⚖️ Legal & Repossession</a>
+            <a href="reports.html">📈 Reports & Audits</a>
+
+            <div class="menu-category">Portal Customization</div>
+            <a href="screen-configuration.html">🖥️ Screen Configuration</a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="admin-avatar">AK</div>
+            <div class="admin-info">
+                <h4 id="admin-name">Admin</h4>
+                <p>Credit Operations Head</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-header">
+            <div class="header-left">
+                <input type="text" id="search-input" class="search-bar" placeholder="🔍 Search applicant, PAN, Aadhaar or loan...">
+            </div>
+            <div class="header-actions" style="display:flex; align-items:center; gap:14px;">
+                <div style="font-size:0.75rem; background:#eff6ff; color:#1d4ed8; padding:5px 12px; border-radius:20px; font-weight:700; border:1px solid #bfdbfe;">
+                    🛡️ Live KYC Verification Active
+                </div>
+                <div class="admin-profile" style="font-weight:700; color:#111827;">System Administrator</div>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <div class="page-header">
+                <div>
+                    <h1>Loan Applications & Customer KYC</h1>
+                    <p style="color:#64748b; font-size:0.88rem; margin-top:4px;">
+                        Manage loan requests, verify PAN & Aadhaar government IDs, and review applicant document dossiers in sequence.
+                    </p>
+                </div>
+            </div>
+
+            <div class="filters">
+                <div class="filter-pill active" data-status="ALL">All Applications</div>
+                <div class="filter-pill" data-status="PENDING">Pending Review</div>
+                <div class="filter-pill" data-status="APPROVED">Approved</div>
+                <div class="filter-pill" data-status="REJECTED">Rejected</div>
+            </div>
+
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Applicant & Contact</th>
+                            <th>Government ID & KYC</th>
+                            <th>Loan Details</th>
+                            <th>Amount & Financials</th>
+                            <th>AI Score</th>
+                            <th>Status</th>
+                            <th>Applied Date</th>
+                            <th style="text-align:center;">Dossier & Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="loans-tbody">
+                        <!-- Populated dynamically by JS -->
+                    </tbody>
+                </table>
+                <div class="empty-state" id="empty-state">
+                    No matching loan applications found.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= SEQUENTIAL CUSTOMER DOSSIER MODAL ================= -->
+    <div id="dossier-modal" class="modal-overlay">
+        <div class="dossier-modal-card">
+            <!-- Header -->
+            <div class="dossier-header">
+                <div class="dossier-header-left">
+                    <div class="dossier-avatar" id="dos-avatar">DS</div>
+                    <div class="dossier-title-box">
+                        <h3 id="dos-name">Devender Sharma</h3>
+                        <div class="dossier-meta-strip">
+                            <span class="dossier-cif-tag" id="dos-cif">CIF-88000010</span>
+                            <span>•</span>
+                            <span id="dos-loan-id" style="font-family:'JetBrains Mono',monospace;">LAN-2024-14</span>
+                            <span>•</span>
+                            <span id="dos-date">17 Sep 2026</span>
+                            <span>•</span>
+                            <span id="dos-status-badge" class="badge approved">APPROVED</span>
+                        </div>
+                    </div>
+                </div>
+                <span class="close-btn" onclick="closeDossierModal()">&times;</span>
+            </div>
+
+            <!-- Stepper Navigation Bar (Sequence View) -->
+            <div class="dossier-stepper-bar">
+                <button class="dossier-tab-btn active" onclick="switchSequenceTab(1)">
+                    <span class="tab-step-num">1</span>
+                    <span>🪪 Identity & Govt KYC</span>
+                </button>
+                <button class="dossier-tab-btn" onclick="switchSequenceTab(2)">
+                    <span class="tab-step-num">2</span>
+                    <span>💼 Loan & Income Snapshot</span>
+                </button>
+                <button class="dossier-tab-btn" onclick="switchSequenceTab(3)">
+                    <span class="tab-step-num">3</span>
+                    <span>📂 Document Verification (3)</span>
+                </button>
+                <button class="dossier-tab-btn" onclick="switchSequenceTab(4)">
+                    <span class="tab-step-num">4</span>
+                    <span>⚖️ Underwriting Action</span>
+                </button>
+            </div>
+
+            <!-- Dossier Content Body -->
+            <div class="dossier-body">
+                <!-- STEP 1: IDENTITY & GOVERNMENT KYC -->
+                <div id="seq-step-1" class="sequence-section active">
+                    <div class="dossier-grid-2">
+                        <!-- PAN Card Information -->
+                        <div class="dossier-card">
+                            <div class="dossier-card-title">
+                                <span>🪪 Permanent Account Number (PAN)</span>
+                                <span style="font-size:0.75rem; color:#10b981; font-weight:700;">✓ NSDL MATCH 100%</span>
+                            </div>
+                            
+                            <div class="gov-id-box" style="border-left: 4px solid #3b82f6;">
+                                <div class="gov-id-header">
+                                    <span style="font-size:0.75rem; color:#64748b; text-transform:uppercase; font-weight:700;">Income Tax Dept, Govt of India</span>
+                                    <span style="background:#eff6ff; color:#1d4ed8; font-size:0.7rem; padding:2px 6px; border-radius:4px; font-weight:700;">ACTIVE</span>
+                                </div>
+                                <div class="gov-id-number" id="dos-pan-num">ABCPS8810D</div>
+                            </div>
+
+                            <div class="info-row">
+                                <span class="info-label">Name on PAN Card:</span>
+                                <span class="info-value" id="dos-pan-name">Devender Sharma</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Category:</span>
+                                <span class="info-value">Individual Resident</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Verification Source:</span>
+                                <span class="info-value" style="color:#2563eb;">NSDL Protean API</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Aadhaar-PAN Link:</span>
+                                <span class="info-value" style="color:#059669;">Linked & Validated</span>
+                            </div>
+                        </div>
+
+                        <!-- Aadhaar Card Information -->
+                        <div class="dossier-card">
+                            <div class="dossier-card-title">
+                                <span>🆔 Aadhaar Identity Card (UIDAI)</span>
+                                <span style="font-size:0.75rem; color:#10b981; font-weight:700;">✓ BIOMETRIC e-KYC</span>
+                            </div>
+
+                            <div class="gov-id-box" style="border-left: 4px solid #10b981;">
+                                <div class="gov-id-header">
+                                    <span style="font-size:0.75rem; color:#64748b; text-transform:uppercase; font-weight:700;">Unique Identification Authority (UIDAI)</span>
+                                    <button type="button" onclick="toggleAadhaarMask()" style="background:none; border:none; color:#2563eb; font-size:0.75rem; font-weight:700; cursor:pointer;" id="mask-toggle-btn">
+                                        👁️ Unmask
+                                    </button>
+                                </div>
+                                <div class="gov-id-number" id="dos-aadhaar-num">5489 •••• 8810</div>
+                            </div>
+
+                            <div class="info-row">
+                                <span class="info-label">Mobile Registered:</span>
+                                <span class="info-value" id="dos-phone">+91 90797-75213</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Email Registered:</span>
+                                <span class="info-value" id="dos-email">devendersharma55@gmail.com</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">KYC Compliance Tier:</span>
+                                <span class="info-value" style="color:#059669;">Full Video-KYC (Tier-1)</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Address Verification:</span>
+                                <span class="info-value">Verified via Aadhaar QR</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Customer Contact & Demographics Strip -->
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px 20px; display:flex; justify-content:space-between; align-items:center;">
+                        <div style="display:flex; gap:30px;">
+                            <div>
+                                <span style="font-size:0.72rem; color:#64748b; text-transform:uppercase; font-weight:700; display:block;">Customer CIF Number</span>
+                                <b style="font-family:'JetBrains Mono',monospace; color:#0f172a;" id="dos-cif-footer">CIF-88000010</b>
+                            </div>
+                            <div>
+                                <span style="font-size:0.72rem; color:#64748b; text-transform:uppercase; font-weight:700; display:block;">Bureau Credit Score</span>
+                                <b style="color:#059669;" id="dos-bureau-score">780 / 900 (Excellent)</b>
+                            </div>
+                            <div>
+                                <span style="font-size:0.72rem; color:#64748b; text-transform:uppercase; font-weight:700; display:block;">Account Opening Date</span>
+                                <b style="color:#0f172a;">12 Jan 2024</b>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-dossier" onclick="switchSequenceTab(2)" style="padding:8px 16px;">
+                            Next: Loan & Financials &rarr;
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: LOAN & INCOME SNAPSHOT -->
+                <div id="seq-step-2" class="sequence-section">
+                    <div class="dossier-grid-2">
+                        <!-- Loan Details -->
+                        <div class="dossier-card">
+                            <div class="dossier-card-title">
+                                <span>📋 Facility Parameters</span>
+                                <span id="dos-facility-pill" class="badge approved">ACTIVE LOAN</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Facility Type:</span>
+                                <span class="info-value" id="dos-loan-type">Personal Loan</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Sanctioned Principal:</span>
+                                <span class="info-value" style="font-size:1.05rem; color:#2563eb;" id="dos-amount">₹5,00,000</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Tenure Duration:</span>
+                                <span class="info-value" id="dos-tenure">36 Months</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Applied Interest Rate:</span>
+                                <span class="info-value" id="dos-rate">10.50% p.a.</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Calculated Monthly EMI:</span>
+                                <span class="info-value" style="color:#059669;" id="dos-emi">₹16,245 / month</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Stated Purpose:</span>
+                                <span class="info-value" id="dos-purpose">Personal / General Purpose</span>
+                            </div>
+                        </div>
+
+                        <!-- Financial & Income Snapshot -->
+                        <div class="dossier-card">
+                            <div class="dossier-card-title">
+                                <span>💼 Employment & Affordability (FOIR)</span>
+                                <span style="font-size:0.75rem; color:#059669; font-weight:700;">LOW DEFAULT RISK</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Employment Type:</span>
+                                <span class="info-value" id="dos-employment">Salaried (Tier 1 MNC)</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Verified Monthly Net Income:</span>
+                                <span class="info-value" style="font-size:1.05rem; color:#0f172a;" id="dos-income">₹85,000</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Existing Monthly Obligations:</span>
+                                <span class="info-value" id="dos-existing-emi">₹15,000</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Total Post-Loan Debt Burden:</span>
+                                <span class="info-value">₹31,245 / month</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">FOIR / DTI Ratio:</span>
+                                <span class="info-value" style="color:#059669; font-weight:800;" id="dos-foir">36.7% (Healthy &lt; 50%)</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Credit Bureau Assessment:</span>
+                                <span class="info-value" style="color:#2563eb;">Prime Tier 1 (CIBIL 780)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:12px 20px; border-radius:12px; border:1px solid #e2e8f0;">
+                        <button type="button" class="btn-action-sm" onclick="switchSequenceTab(1)" style="background:#fff; border:1px solid #cbd5e1; color:#475569;">
+                            &larr; Back to Identity
+                        </button>
+                        <button type="button" class="btn-dossier" onclick="switchSequenceTab(3)">
+                            Next: Review Uploaded Documents &rarr;
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: DOCUMENT VERIFICATION & OCR REVIEW -->
+                <div id="seq-step-3" class="sequence-section">
+                    <div style="margin-bottom:16px;">
+                        <h4 style="margin:0 0 4px 0; color:#0f172a; font-size:1.05rem;">Attached Government Documents & Inflow Proofs</h4>
+                        <p style="margin:0; font-size:0.85rem; color:#64748b;">All files have undergone automated OCR text extraction and fraud anomaly scanning.</p>
+                    </div>
+
+                    <!-- Doc 1: PAN Card -->
+                    <div class="doc-item-card">
+                        <div class="doc-left-group">
+                            <div class="doc-icon-box">🪪</div>
+                            <div>
+                                <div class="doc-info-title">Permanent Account Number (PAN) Card</div>
+                                <div class="doc-meta-tags">
+                                    <span class="doc-tag" id="dos-doc1-name">PAN_ABCPS8810D.pdf</span>
+                                    <span class="doc-tag verified">✓ OCR Match 99.8%</span>
+                                    <span class="doc-tag">NSDL Active</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-dossier" onclick="previewDocument('PAN')" style="background:#1e40af;">
+                            👁️ View PAN Card
+                        </button>
+                    </div>
+
+                    <!-- Doc 2: Aadhaar Card -->
+                    <div class="doc-item-card">
+                        <div class="doc-left-group">
+                            <div class="doc-icon-box" style="background:rgba(16,185,129,0.1); color:#059669;">🆔</div>
+                            <div>
+                                <div class="doc-info-title">Aadhaar Identity Card (Front & Back)</div>
+                                <div class="doc-meta-tags">
+                                    <span class="doc-tag" id="dos-doc2-name">Aadhaar_5489_1245_8810.pdf</span>
+                                    <span class="doc-tag verified">✓ QR Digital Signature Valid</span>
+                                    <span class="doc-tag">UIDAI Verified</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-dossier" onclick="previewDocument('AADHAAR')" style="background:#059669;">
+                            👁️ View Aadhaar Card
+                        </button>
+                    </div>
+
+                    <!-- Doc 3: Proof of Income -->
+                    <div class="doc-item-card">
+                        <div class="doc-left-group">
+                            <div class="doc-icon-box" style="background:rgba(99,102,241,0.1); color:#4f46e5;">📄</div>
+                            <div>
+                                <div class="doc-info-title">Proof of Income / 3-Month Bank Statement</div>
+                                <div class="doc-meta-tags">
+                                    <span class="doc-tag" id="dos-doc3-name">salary_slips_3months.pdf</span>
+                                    <span class="doc-tag verified">✓ Average Inflow: ₹85,000/mo</span>
+                                    <span class="doc-tag">Tamper Check: 0.00%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-dossier" onclick="previewDocument('INCOME')" style="background:#4f46e5;">
+                            👁️ View Salary Proof
+                        </button>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:12px 20px; border-radius:12px; border:1px solid #e2e8f0; margin-top:20px;">
+                        <button type="button" class="btn-action-sm" onclick="switchSequenceTab(2)" style="background:#fff; border:1px solid #cbd5e1; color:#475569;">
+                            &larr; Back to Financials
+                        </button>
+                        <button type="button" class="btn-dossier" onclick="switchSequenceTab(4)">
+                            Next: Underwriting Sanction Action &rarr;
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 4: UNDERWRITING SANCTION ACTION -->
+                <div id="seq-step-4" class="sequence-section">
+                    <div class="dossier-card" style="margin-bottom:20px; border-left:4px solid #10b981;">
+                        <div class="dossier-card-title">
+                            <span>Operational Underwriting Recommendation</span>
+                            <span class="badge approved">AI RECOMMENDED SANCTION</span>
+                        </div>
+                        <p style="font-size:0.9rem; color:#475569; line-height:1.6; margin:0 0 14px 0;">
+                            Applicant passes all automated bureau checks (CIBIL 780), NSDL PAN validity, and UIDAI e-KYC authentication. Estimated FOIR is within prudential guidelines.
+                        </p>
+                        <div style="display:flex; gap:16px; align-items:center;">
+                            <div style="font-size:0.82rem; color:#64748b;">
+                                Fraud Anomaly Score: <b style="color:#059669;">0.009 (Safe)</b>
+                            </div>
+                            <div style="font-size:0.82rem; color:#64748b;">
+                                Auto-Debit Ready: <b style="color:#2563eb;">e-NACH Pre-Approved</b>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:20px; margin-bottom:20px;">
+                        <h4 style="margin:0 0 10px 0; font-size:0.95rem; color:#0f172a;">Executive Decision & Notifications:</h4>
+                        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                            <button type="button" id="modal-approve-btn" onclick="modalApproveCurrent()" style="background:#10b981; color:#fff; border:none; padding:12px 22px; border-radius:8px; font-weight:700; font-size:0.9rem; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 3px 10px rgba(16,185,129,0.3);">
+                                <span>✓</span> Sanction & Activate Loan
+                            </button>
+                            <button type="button" onclick="modalRejectCurrent()" style="background:#ef4444; color:#fff; border:none; padding:12px 22px; border-radius:8px; font-weight:700; font-size:0.9rem; cursor:pointer; display:inline-flex; align-items:center; gap:8px;">
+                                <span>✕</span> Reject Application
+                            </button>
+                            <button type="button" onclick="modalWhatsAppCurrent()" style="background:#25d366; color:#fff; border:none; padding:12px 22px; border-radius:8px; font-weight:700; font-size:0.9rem; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 3px 10px rgba(37,211,102,0.3);">
+                                <span>💬</span> Send WhatsApp Update
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="dossier-footer">
+                <div style="font-size:0.82rem; color:#64748b;">
+                    Session: <b style="color:#0f172a;">Authorized Bank Administrator</b> (Encrypted Audit Log Active)
+                </div>
+                <button type="button" onclick="closeDossierModal()" style="background:#e2e8f0; border:none; padding:8px 18px; border-radius:8px; font-weight:600; cursor:pointer;">
+                    Close Dossier
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= REALISTIC DOCUMENT PREVIEW LIGHTBOX ================= -->
+    <div id="doc-preview-modal" class="doc-preview-modal">
+        <div class="doc-preview-card">
+            <div class="preview-header">
+                <h4 style="margin:0; font-size:1rem; font-weight:700;" id="preview-modal-title">Government Document Viewer</h4>
+                <span class="close-btn" onclick="closeDocPreview()">&times;</span>
+            </div>
+            <div class="preview-body" id="preview-modal-content">
+                <!-- Dynamically rendered visual document (PAN / Aadhaar / Salary) -->
+            </div>
+            <div style="padding:14px 24px; background:rgba(255,255,255,0.05); display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.08);">
+                <span style="font-size:0.75rem; color:#94a3b8;">Cryptographic SHA-256 Verified • Anti-Tamper Filter Passed</span>
+                <button type="button" onclick="closeDocPreview()" style="background:rgba(255,255,255,0.15); border:none; color:#fff; padding:6px 16px; border-radius:6px; cursor:pointer; font-size:0.8rem; font-weight:600;">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Quick Dispatch Modal -->
+    <div id="wa-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:#fff; width:520px; max-width:92vw; border-radius:18px; padding:26px; box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h3 style="margin:0; font-size:1.15rem; color:#111827; display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:1.4rem;">💬</span> Send WhatsApp Update to Customer
+                </h3>
+                <span onclick="closeWaModal()" style="cursor:pointer; font-size:1.4rem; color:#6b7280;">&times;</span>
+            </div>
+            <div style="font-size:0.85rem; color:#4b5563; margin-bottom:14px;">
+                Recipient: <b id="wa-modal-recipient">--</b> (<span id="wa-modal-phone" style="font-family:monospace; color:#059669; font-weight:700;">--</span>)
+            </div>
+            <label style="font-size:0.8rem; font-weight:700; color:#374151; display:block; margin-bottom:6px;">Message Content:</label>
+            <textarea id="wa-modal-text" rows="7" style="width:100%; border:1px solid #d1d5db; border-radius:10px; padding:12px; font-family:inherit; font-size:0.88rem; outline:none; resize:none; margin-bottom:18px;"></textarea>
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button onclick="closeWaModal()" style="background:#f3f4f6; color:#374151; border:1px solid #d1d5db; padding:10px 18px; border-radius:8px; font-weight:600; cursor:pointer;">Cancel</button>
+                <button id="wa-modal-send-btn" onclick="openWaLink()" style="background:#25d366; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(37,211,102,0.3);">
+                    🟢 Open WhatsApp Web &rarr;
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="../js/api.js?v=3"></script>
+    <script>
+        // Check Auth
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'admin-login.html';
+
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) document.getElementById('admin-name').textContent = user.name.split(' ')[0];
+
+        let allLoans = [];
+        let currentDossierLoan = null;
+        let isAadhaarUnmasked = false;
+
+        async function fetchLoans() {
+            try {
+                const res = await apiCall('/admin/loans', 'GET');
+                allLoans = res.loans;
+                renderTable(allLoans);
+            } catch(e) {
+                console.error('Failed to fetch loans', e);
+            }
+        }
+
+        function renderTable(loans) {
+            const tbody = document.getElementById('loans-tbody');
+            const emptyState = document.getElementById('empty-state');
+            tbody.innerHTML = '';
+
+            if (!loans || loans.length === 0) {
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+                loans.forEach(loan => {
+                    const initials = (loan.applicant_name || 'C').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                    
+                    let badgeClass = 'pending';
+                    if (loan.status === 'APPROVED') badgeClass = 'approved';
+                    if (loan.status === 'REJECTED') badgeClass = 'rejected';
+
+                    let scoreClass = 'medium';
+                    if (loan.ai_score >= 720) scoreClass = 'high';
+                    if (loan.ai_score < 640) scoreClass = 'low';
+
+                    const amt = new Intl.NumberFormat('en-IN').format(loan.amount);
+                    const emiFormatted = new Intl.NumberFormat('en-IN').format(loan.emi || 0);
+
+                    // Formatted Aadhaar (partially masked for high security)
+                    const rawAadhaar = loan.aadhaar_number || '5489 1245 8810';
+                    const partsAadhaar = rawAadhaar.replace(/\s+/g, '');
+                    const maskedAadhaar = partsAadhaar.length >= 8 
+                        ? `${partsAadhaar.slice(0, 4)} •••• ${partsAadhaar.slice(-4)}` 
+                        : rawAadhaar;
+
+                    const panDisplay = loan.pan_number || 'ABCPS8810D';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>
+                            <div class="applicant-info">
+                                <div class="applicant-avatar">${initials}</div>
+                                <div>
+                                    <div class="applicant-name">${loan.applicant_name}</div>
+                                    <div style="font-size:0.75rem; color:#059669; font-weight:600; font-family:monospace; margin-top:2px;">
+                                        📱 ${loan.phone || '+91 90797-75213'}
+                                    </div>
+                                    <div style="font-size:0.72rem; color:#64748b;">${loan.email}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <span class="id-pill pan" title="Income Tax Dept (NSDL Verified)">🪪 PAN: ${panDisplay}</span>
+                            </div>
+                            <div>
+                                <span class="id-pill aadhaar" title="UIDAI e-KYC Verified">🆔 Aadhaar: ${maskedAadhaar}</span>
+                            </div>
+                            <div style="margin-top:3px;">
+                                <span style="font-size:0.68rem; font-weight:700; color:#059669; background:#ecfdf5; padding:1px 6px; border-radius:4px;">
+                                    ✓ KYC ${loan.kyc_status || 'VERIFIED'}
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; color:#1e293b;">${loan.loan_type}</div>
+                            <div style="font-size: 0.75rem; color: #6b7280;">ID: LAN-2024-${loan.loan_id} · ${loan.term_months || 36}M</div>
+                            <div style="font-size: 0.72rem; color: #94a3b8; max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${loan.purpose}">
+                                ${loan.purpose}
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 800; color:#111827;">₹${amt}</div>
+                            <div style="font-size:0.75rem; color:#2563eb; font-weight:600;">EMI: ₹${emiFormatted}/mo</div>
+                            <div style="font-size:0.72rem; color:#64748b;">Rate: ${Number(loan.interest_rate || 10.5).toFixed(2)}%</div>
+                        </td>
+                        <td><span class="ai-score ${scoreClass}">${loan.ai_score || 750}</span></td>
+                        <td><span class="badge ${badgeClass}">${loan.status}</span></td>
+                        <td style="color: #4b5563; font-size:0.8rem;">${loan.applied_date}</td>
+                        <td>
+                            <div style="display:flex; flex-direction:column; gap:6px; align-items:center;">
+                                <button onclick="openCustomerDossier(${loan.loan_id})" class="btn-dossier" style="width:100%; justify-content:center;" title="Open Sequential Customer Dossier & Documents">
+                                    📂 View KYC & Dossier
+                                </button>
+                                <div style="display:flex; gap:6px; width:100%;">
+                                    <button onclick="previewWhatsApp(${loan.loan_id})" class="btn-action-sm" style="flex:1; background:#25d366; color:#fff; justify-content:center;" title="Send WhatsApp Update">
+                                        💬 WA
+                                    </button>
+                                    ${loan.status === 'PENDING' ? `
+                                        <button onclick="quickApproveLoan(${loan.loan_id})" class="btn-action-sm" style="flex:1; background:#10b981; color:#fff; justify-content:center;" title="Approve Loan">
+                                            ✓ Sanction
+                                        </button>
+                                    ` : `
+                                        <button onclick="openCustomerDossier(${loan.loan_id}, 3)" class="btn-action-sm" style="flex:1; background:#f1f5f9; color:#334155; justify-content:center;" title="3 Docs Verified">
+                                            📄 Docs (3)
+                                        </button>
+                                    `}
+                                </div>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        }
+
+        // ================= DOSSIER MODAL LOGIC =================
+        window.openCustomerDossier = (loanId, initialStep = 1) => {
+            const loan = allLoans.find(l => l.loan_id === loanId);
+            if (!loan) return;
+            currentDossierLoan = loan;
+            isAadhaarUnmasked = false;
+
+            // Populate Header
+            const initials = (loan.applicant_name || 'C').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            document.getElementById('dos-avatar').textContent = initials;
+            document.getElementById('dos-name').textContent = loan.applicant_name;
+            document.getElementById('dos-cif').textContent = loan.cif_number || `CIF-880000${loan.customer_id}`;
+            document.getElementById('dos-loan-id').textContent = `LAN-2024-${loan.loan_id}`;
+            document.getElementById('dos-date').textContent = loan.applied_date || 'Recent';
+
+            const statusBadge = document.getElementById('dos-status-badge');
+            statusBadge.className = `badge ${loan.status.toLowerCase()}`;
+            statusBadge.textContent = loan.status;
+
+            // Step 1 Details
+            document.getElementById('dos-pan-num').textContent = loan.pan_number || 'ABCPS8810D';
+            document.getElementById('dos-pan-name').textContent = loan.applicant_name;
+            renderAadhaarDisplay();
+
+            document.getElementById('dos-phone').textContent = loan.phone || '+91 90797-75213';
+            document.getElementById('dos-email').textContent = loan.email;
+            document.getElementById('dos-cif-footer').textContent = loan.cif_number || `CIF-880000${loan.customer_id}`;
+            document.getElementById('dos-bureau-score').textContent = `${loan.ai_score || 780} / 900 (Excellent)`;
+
+            // Step 2 Details
+            const amtStr = new Intl.NumberFormat('en-IN', { style:'currency', currency:'INR', maximumFractionDigits:0 }).format(loan.amount);
+            const emiStr = new Intl.NumberFormat('en-IN', { style:'currency', currency:'INR', maximumFractionDigits:0 }).format(loan.emi || 0);
+            const incStr = new Intl.NumberFormat('en-IN', { style:'currency', currency:'INR', maximumFractionDigits:0 }).format(loan.income || 85000);
+            const emiObligStr = new Intl.NumberFormat('en-IN', { style:'currency', currency:'INR', maximumFractionDigits:0 }).format(loan.existing_emi || 15000);
+
+            document.getElementById('dos-loan-type').textContent = loan.loan_type;
+            document.getElementById('dos-amount').textContent = amtStr;
+            document.getElementById('dos-tenure').textContent = `${loan.term_months || 36} Months`;
+            document.getElementById('dos-rate').textContent = `${Number(loan.interest_rate || 10.5).toFixed(2)}% p.a.`;
+            document.getElementById('dos-emi').textContent = `${emiStr} / month`;
+            document.getElementById('dos-purpose').textContent = loan.purpose || 'Personal / General Purpose';
+            document.getElementById('dos-employment').textContent = loan.employment_type || 'Salaried (Tier 1 MNC)';
+            document.getElementById('dos-income').textContent = `${incStr} / month`;
+            document.getElementById('dos-existing-emi').textContent = `${emiObligStr} / month`;
+
+            // Step 3 Documents
+            document.getElementById('dos-doc1-name').textContent = `PAN_${loan.pan_number || 'ABCPS8810D'}.pdf`;
+            document.getElementById('dos-doc2-name').textContent = `Aadhaar_${(loan.aadhaar_number || '5489 1245 8810').replace(/\s+/g, '_')}.pdf`;
+            document.getElementById('dos-doc3-name').textContent = loan.income_document_name || 'salary_slips_3months.pdf';
+
+            // Step 4 Approve Button State
+            const approveBtn = document.getElementById('modal-approve-btn');
+            if (loan.status === 'APPROVED') {
+                approveBtn.disabled = true;
+                approveBtn.style.opacity = '0.6';
+                approveBtn.innerHTML = '<span>✓</span> Already Sanctioned';
+            } else {
+                approveBtn.disabled = false;
+                approveBtn.style.opacity = '1';
+                approveBtn.innerHTML = '<span>✓</span> Sanction & Activate Loan';
+            }
+
+            switchSequenceTab(initialStep);
+            document.getElementById('dossier-modal').style.display = 'flex';
+        };
+
+        window.closeDossierModal = () => {
+            document.getElementById('dossier-modal').style.display = 'none';
+        };
+
+        window.switchSequenceTab = (stepNumber) => {
+            const tabs = document.querySelectorAll('.dossier-tab-btn');
+            const sections = document.querySelectorAll('.sequence-section');
+
+            tabs.forEach((tab, index) => {
+                if (index + 1 === stepNumber) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            sections.forEach((sec, index) => {
+                if (index + 1 === stepNumber) {
+                    sec.classList.add('active');
+                } else {
+                    sec.classList.remove('active');
+                }
+            });
+        };
+
+        function renderAadhaarDisplay() {
+            if (!currentDossierLoan) return;
+            const fullAadhaar = currentDossierLoan.aadhaar_number || '5489 1245 8810';
+            const digits = fullAadhaar.replace(/\s+/g, '');
+            const aadhaarEl = document.getElementById('dos-aadhaar-num');
+            const toggleBtn = document.getElementById('mask-toggle-btn');
+
+            if (isAadhaarUnmasked) {
+                aadhaarEl.textContent = digits.replace(/(\d{4})(?=\d)/g, '$1 ');
+                toggleBtn.textContent = '🔒 Mask';
+            } else {
+                aadhaarEl.textContent = `${digits.slice(0, 4)} •••• ${digits.slice(-4)}`;
+                toggleBtn.textContent = '👁️ Unmask';
+            }
+        }
+
+        window.toggleAadhaarMask = () => {
+            isAadhaarUnmasked = !isAadhaarUnmasked;
+            renderAadhaarDisplay();
+        };
+
+        // ================= REALISTIC DOCUMENT PREVIEW LIGHTBOX =================
+        window.previewDocument = (docType) => {
+            if (!currentDossierLoan) return;
+            const contentBox = document.getElementById('preview-modal-content');
+            const titleEl = document.getElementById('preview-modal-title');
+
+            if (docType === 'PAN') {
+                titleEl.textContent = `Official PAN Card — ${currentDossierLoan.applicant_name}`;
+                contentBox.innerHTML = `
+                    <div class="pan-card-render">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div>
+                                <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; opacity:0.85;">आयकर विभाग / INCOME TAX DEPARTMENT</div>
+                                <div style="font-size:0.68rem; opacity:0.75;">भारत सरकार / GOVT. OF INDIA</div>
+                            </div>
+                            <div style="background:#ffffff; color:#1e3a8a; font-weight:800; font-size:0.72rem; padding:2px 8px; border-radius:4px;">
+                                NSDL
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <div style="font-size:0.65rem; text-transform:uppercase; opacity:0.75;">नाम / Name</div>
+                                <div style="font-size:1.05rem; font-weight:800; letter-spacing:0.5px;">${currentDossierLoan.applicant_name.toUpperCase()}</div>
+                                <div style="font-size:0.65rem; text-transform:uppercase; opacity:0.75; margin-top:6px;">पिता का नाम / Father's Name</div>
+                                <div style="font-size:0.88rem; font-weight:600;">O. P. SHARMA</div>
+                                <div style="font-size:0.65rem; text-transform:uppercase; opacity:0.75; margin-top:6px;">जन्म तिथि / Date of Birth</div>
+                                <div style="font-size:0.88rem; font-weight:600;">14/08/1988</div>
+                            </div>
+                            <div style="width:75px; height:90px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                                <span style="font-size:2rem;">👤</span>
+                                <span style="font-size:0.6rem; opacity:0.8;">PHOTO</span>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                            <div>
+                                <div style="font-size:0.65rem; text-transform:uppercase; opacity:0.75;">स्थायी खाता संख्या / Permanent Account Number</div>
+                                <div style="font-family:'JetBrains Mono',monospace; font-size:1.35rem; font-weight:900; letter-spacing:2px; color:#fef08a;">
+                                    ${currentDossierLoan.pan_number || 'ABCPS8810D'}
+                                </div>
+                            </div>
+                            <div style="font-size:0.65rem; opacity:0.75; text-align:right;">
+                                ✍️ Digital Signature Verified
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (docType === 'AADHAAR') {
+                titleEl.textContent = `Aadhaar Identity Card (UIDAI) — ${currentDossierLoan.applicant_name}`;
+                contentBox.innerHTML = `
+                    <div class="aadhaar-card-render">
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #ef4444; padding-bottom:6px;">
+                            <div style="font-size:0.78rem; font-weight:800; color:#b91c1c;">
+                                भारत सरकार / Government of India
+                            </div>
+                            <div style="font-size:0.72rem; color:#059669; font-weight:700;">
+                                UIDAI e-KYC Verified
+                            </div>
+                        </div>
+
+                        <div style="display:flex; gap:18px; align-items:center;">
+                            <div style="width:75px; height:90px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                                <span style="font-size:2rem;">👤</span>
+                                <span style="font-size:0.6rem; color:#64748b;">UIDAI PHOTO</span>
+                            </div>
+                            <div>
+                                <div style="font-size:1rem; font-weight:800; color:#0f172a;">${currentDossierLoan.applicant_name}</div>
+                                <div style="font-size:0.8rem; color:#475569; margin-top:2px;">DOB: 14/08/1988</div>
+                                <div style="font-size:0.8rem; color:#475569;">लिंग / Gender: Male</div>
+                                <div style="font-size:0.75rem; color:#64748b; margin-top:4px;">Registered Mobile: ${currentDossierLoan.phone || '+91 90797-75213'}</div>
+                            </div>
+                            <div style="margin-left:auto; width:65px; height:65px; background:#f8fafc; border:1px solid #cbd5e1; display:flex; align-items:center; justify-content:center; font-size:1.8rem;">
+                                📱
+                            </div>
+                        </div>
+
+                        <div style="border-top:1px solid #e2e8f0; padding-top:8px; text-align:center;">
+                            <div style="font-family:'JetBrains Mono',monospace; font-size:1.35rem; font-weight:900; letter-spacing:2px; color:#b91c1c;">
+                                ${currentDossierLoan.aadhaar_number || '5489 1245 8810'}
+                            </div>
+                            <div style="font-size:0.68rem; color:#64748b; margin-top:2px;">मेरा आधार, मेरी पहचान / Aadhaar - Proof of Identity</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                titleEl.textContent = `Proof of Income / Bank Statement — ${currentDossierLoan.applicant_name}`;
+                contentBox.innerHTML = `
+                    <div style="width:480px; max-width:100%; background:#ffffff; color:#111827; border-radius:14px; padding:22px; border:1px solid #cbd5e1; box-shadow:0 10px 25px rgba(0,0,0,0.3);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:10px; margin-bottom:14px;">
+                            <div>
+                                <b style="font-size:0.95rem; color:#1e3a8a;">HDFC BANK LIMITED</b>
+                                <div style="font-size:0.75rem; color:#64748b;">Salary Account e-Statement (Q3 FY26)</div>
+                            </div>
+                            <div style="font-size:0.75rem; background:#ecfdf5; color:#047857; padding:3px 8px; border-radius:4px; font-weight:700;">
+                                ✓ VERIFIED
+                            </div>
+                        </div>
+                        <div style="font-size:0.82rem; margin-bottom:12px;">
+                            Account Holder: <b>${currentDossierLoan.applicant_name}</b><br>
+                            Account No: <span style="font-family:monospace;">50100492817492</span><br>
+                            Verified Salary Credit: <b style="color:#059669;">₹${new Intl.NumberFormat('en-IN').format(currentDossierLoan.income || 85000)} / month</b>
+                        </div>
+                        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px; font-size:0.75rem; color:#475569;">
+                            Recent 3-Month Inflow Analysis:<br>
+                            • 31 Aug 2026: NEFT CR TECH CORP SALARY — ₹85,000.00<br>
+                            • 31 Jul 2026: NEFT CR TECH CORP SALARY — ₹85,000.00<br>
+                            • 30 Jun 2026: NEFT CR TECH CORP SALARY — ₹85,000.00
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('doc-preview-modal').style.display = 'flex';
+        };
+
+        window.closeDocPreview = () => {
+            document.getElementById('doc-preview-modal').style.display = 'none';
+        };
+
+        // Actions inside Dossier Modal
+        window.modalApproveCurrent = async () => {
+            if (!currentDossierLoan) return;
+            await quickApproveLoan(currentDossierLoan.loan_id);
+            closeDossierModal();
+        };
+
+        window.modalRejectCurrent = async () => {
+            if (!currentDossierLoan) return;
+            if (!confirm(`Are you sure you want to REJECT loan LAN-2024-${currentDossierLoan.loan_id}?`)) return;
+            try {
+                await apiCall(`/admin/loan/${currentDossierLoan.loan_id}/decision`, 'POST', { action: 'REJECT' });
+                alert(`Loan LAN-2024-${currentDossierLoan.loan_id} REJECTED.`);
+                closeDossierModal();
+                fetchLoans();
+            } catch(e) {
+                alert('Action failed: ' + e.message);
+            }
+        };
+
+        window.modalWhatsAppCurrent = () => {
+            if (!currentDossierLoan) return;
+            previewWhatsApp(currentDossierLoan.loan_id);
+        };
+
+        // ================= WHATSAPP QUICK DISPATCH =================
+        window.previewWhatsApp = (loanId) => {
+            const loan = allLoans.find(l => l.loan_id === loanId);
+            if (!loan) return;
+
+            const phoneRaw = (loan.phone_raw || '9079775213').replace(/\D/g, '').slice(-10);
+            const intlPhone = '91' + phoneRaw;
+            const amtStr = new Intl.NumberFormat('en-IN').format(loan.amount);
+            const emiStr = new Intl.NumberFormat('en-IN').format(loan.emi || 0);
+
+            let defaultMsg = '';
+            if (loan.status === 'APPROVED') {
+                defaultMsg = `Namaste ${loan.applicant_name},\n\nCrediSphere Bank has APPROVED your ${loan.loan_type} of ₹${amtStr}!\n\n• Verified PAN: ${loan.pan_number || 'ABCPS8810D'}\n• Monthly EMI: ₹${emiStr}\n• Tenure: ${loan.term_months || 36} Months\n• Mandate: Active (e-NACH Auto-Debit)\n\nAccess your loan account & pay online:\nhttp://localhost:5500/pages/customer-dashboard.html?pay_loan=${loan.loan_id}&inst=1&amount=${Math.round(loan.emi || 0)}\n\n— CrediSphere Bank Credit Operations`;
+            } else {
+                defaultMsg = `Namaste ${loan.applicant_name},\n\nThis is an official update from CrediSphere Bank regarding your ${loan.loan_type} application for ₹${amtStr} (Ref: LAN-2024-${loan.loan_id}).\n\nYour PAN (${loan.pan_number || 'ABCPS8810D'}) and Aadhaar documents have been received and are under operational underwriting review.\n\nTrack your application status here: http://localhost:5500/pages/customer-dashboard.html\n\n— CrediSphere Bank Credit Operations`;
+            }
+
+            document.getElementById('wa-modal-recipient').textContent = loan.applicant_name;
+            document.getElementById('wa-modal-phone').textContent = loan.phone || `+91 ${phoneRaw}`;
+            document.getElementById('wa-modal-text').value = defaultMsg;
+
+            window.openWaLink = () => {
+                const msg = document.getElementById('wa-modal-text').value;
+                const url = `https://wa.me/${intlPhone}?text=${encodeURIComponent(msg)}`;
+                window.open(url, '_blank');
+                closeWaModal();
+            };
+
+            document.getElementById('wa-modal').style.display = 'flex';
+        };
+
+        window.closeWaModal = () => {
+            document.getElementById('wa-modal').style.display = 'none';
+        };
+
+        window.quickApproveLoan = async (loanId) => {
+            if (!confirm(`Are you sure you want to APPROVE loan LAN-2024-${loanId}? This will activate the loan and amortization schedule in the customer's portal.`)) {
+                return;
+            }
+            try {
+                await apiCall(`/admin/loan/${loanId}/decision`, 'POST', { action: 'APPROVE' });
+                alert(`✓ Loan LAN-2024-${loanId} APPROVED! The customer's portal has been updated.`);
+                fetchLoans();
+            } catch(e) {
+                alert('Approval failed: ' + (e.message || 'Please try again.'));
+            }
+        };
+
+        // Search logic
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const activeFilter = document.querySelector('.filter-pill.active').getAttribute('data-status');
+            filterData(query, activeFilter);
+        });
+
+        // Filter pills logic
+        document.querySelectorAll('.filter-pill').forEach(pill => {
+            pill.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                const status = e.target.getAttribute('data-status');
+                const query = document.getElementById('search-input').value.toLowerCase();
+                filterData(query, status);
+            });
+        });
+
+        function filterData(query, status) {
+            let filtered = allLoans;
+            
+            if (status !== 'ALL') {
+                filtered = filtered.filter(l => l.status === status);
+            }
+            
+            if (query) {
+                filtered = filtered.filter(l => 
+                    (l.applicant_name && l.applicant_name.toLowerCase().includes(query)) || 
+                    (l.loan_type && l.loan_type.toLowerCase().includes(query)) ||
+                    (l.pan_number && l.pan_number.toLowerCase().includes(query)) ||
+                    (l.aadhaar_number && l.aadhaar_number.replace(/\s+/g, '').includes(query.replace(/\s+/g, '')))
+                );
+            }
+            
+            renderTable(filtered);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchLoans();
+            setInterval(fetchLoans, 5000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrediSphere AI — Collections Intelligence &amp; Live Telephony Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #f4f6f8;
+            --sidebar-bg: #111827;
+            --sidebar-hover: #1f2937;
+            --text-dark: #111827;
+            --text-gray: #6b7280;
+            --text-light: #9ca3af;
+            --border: #e5e7eb;
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
+            --green: #10b981;
+            --green-light: #d1fae5;
+            --red: #ef4444;
+            --red-light: #fee2e2;
+            --orange: #f59e0b;
+            --orange-light: #fef3c7;
+            --purple: #7c5cff;
+            --purple-light: #f3f0ff;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+        .sidebar-brand {
+            padding: 20px 25px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .brand-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #0ea394, #2563eb);
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .sidebar-menu {
+            padding: 20px 15px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .menu-category {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            margin: 20px 0 10px 10px;
+        }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            color: #d1d5db;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+            transition: 0.2s;
+        }
+        .sidebar-menu a:hover {
+            background-color: var(--sidebar-hover);
+            color: #fff;
+        }
+        .sidebar-menu a.active {
+            background: linear-gradient(90deg, #2563eb, #1d4ed8);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+        }
+        .sidebar-footer {
+            padding: 18px 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .admin-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #0ea394, #2563eb);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .admin-info h4 { margin: 0; font-size: 0.9rem; color: #fff; }
+        .admin-info p { margin: 0; font-size: 0.75rem; color: var(--text-light); }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: var(--bg-light);
+        }
+
+        /* Top Header */
+        .top-header {
+            height: 70px;
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            flex-shrink: 0;
+        }
+        .search-bar {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            padding: 9px 16px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            width: 320px;
+            outline: none;
+            font-family: inherit;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .branch-badge {
+            font-size: 0.78rem;
+            font-weight: 700;
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+            padding: 5px 12px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        .cbs-badge {
+            font-size: 0.76rem;
+            font-weight: 700;
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+            padding: 5px 12px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        .court-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 6px #10b981;
+            animation: cbs-pulse 2s infinite ease-in-out;
+        }
+        @keyframes cbs-pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1.15); box-shadow: 0 0 0 5px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* Unified Collections Dossier Hero Card */
+        .collections-hero-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 22px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .hero-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .hero-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--primary);
+        }
+        .hero-title {
+            margin: 0;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.02em;
+        }
+        .hero-subtitle {
+            margin: 0;
+            font-size: 0.82rem;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+        .hero-actions-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+        .hero-btn.secondary {
+            background: #fff;
+            color: var(--text-dark);
+            border: 1.5px solid var(--border);
+        }
+        .hero-btn.secondary:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+        }
+        .hero-btn.primary {
+            background: #111827;
+            color: #fff;
+            border: 1.5px solid #111827;
+            box-shadow: 0 2px 6px rgba(17,24,39,0.15);
+        }
+        .hero-btn.primary:hover {
+            background: #1f2937;
+            border-color: #1f2937;
+        }
+        .hero-btn.tel {
+            background: #10b981;
+            color: #fff;
+            border: 1.5px solid #10b981;
+            box-shadow: 0 2px 6px rgba(16,185,129,0.25);
+        }
+        .hero-btn.tel:hover {
+            background: #059669;
+            border-color: #059669;
+        }
+        .hero-btn.legal-link {
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1.5px solid #fecaca;
+        }
+        .hero-btn.legal-link:hover {
+            background: #fee2e2;
+            border-color: #fca5a5;
+        }
+
+        /* Dossier Selector & Quick Metric Strip */
+        .dossier-quick-bar {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+        .dossier-selector-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 320px;
+        }
+        .dossier-selector-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .hero-select {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1.5px solid #cbd5e1;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            background: #ffffff;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            max-width: 480px;
+        }
+        .hero-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+        }
+
+        .dossier-stats-strip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .dossier-stat-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.76rem;
+            white-space: nowrap;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+        .dossier-stat-pill .lbl {
+            color: #64748b;
+            font-weight: 600;
+        }
+        .dossier-stat-pill .val {
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .dossier-stat-pill.danger {
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+        .dossier-stat-pill.danger .lbl { color: #991b1b; }
+        .dossier-stat-pill.danger .val { color: #dc2626; font-size: 0.82rem; }
+
+        .statute-track-badge {
+            background: #ef4444;
+            color: #ffffff;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.72rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 1px 4px rgba(239, 68, 68, 0.3);
+            white-space: nowrap;
+        }
+
+        /* Scrollable Content Container */
+        .dashboard-scroll {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 22px 30px 40px 30px;
+        }
+
+        /* Cards Grid */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1.35fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 1200px) {
+            .grid-3 { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-head {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .card-head h3 {
+            margin: 0;
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .card-body {
+            padding: 18px 20px;
+            flex-grow: 1;
+        }
+
+        .factor-row {
+            padding: 9px 0;
+            border-bottom: 1px dashed var(--border);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+        .factor-row:last-child { border-bottom: none; }
+        .factor-row b { color: var(--text-gray); font-weight: 500; }
+        .factor-row span { font-weight: 700; color: var(--text-dark); }
+
+        /* Status badges */
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+        .chip-danger { background: var(--red-light); color: var(--red); }
+        .chip-warning { background: var(--orange-light); color: var(--orange); }
+        .ai-chip {
+            background: var(--purple-light);
+            color: var(--purple);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .bureau-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 14px 0;
+        }
+        .bureau-box {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+        .bureau-box span { font-size: 0.7rem; color: var(--text-gray); font-weight: 600; display: block; }
+        .bureau-box b { font-size: 0.95rem; font-family: 'DM Mono', monospace; margin-top: 3px; display: block; }
+
+        /* Action Hub Buttons */
+        .coll-action-hub {
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        .action-hub-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-gray);
+            margin-bottom: 10px;
+        }
+        .coll-action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 10px;
+        }
+        .coll-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 10px;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: center;
+            font-family: inherit;
+        }
+        .coll-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+        .coll-action-btn .btn-icon { font-size: 1.3rem; margin-bottom: 4px; }
+        .coll-action-btn .btn-title { font-size: 0.8rem; font-weight: 700; }
+        .coll-action-btn .btn-subtitle { font-size: 0.65rem; opacity: 0.85; margin-top: 2px; }
+
+        .coll-action-btn.primary {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(37,99,235,0.25);
+        }
+        .coll-action-btn.secondary {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(16,185,129,0.25);
+        }
+        .coll-action-btn.outline {
+            background: #fff;
+            border-color: var(--border);
+            color: var(--text-dark);
+        }
+        .coll-action-btn.outline:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        /* AI Diagnostics Panel */
+        .ai-engine-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--purple-light);
+            border: 1px solid rgba(124,92,255,0.3);
+            color: var(--purple);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .ai-engine-btn:hover { background: var(--purple); color: #fff; }
+        .ai-engine-btn .chevron-icon { transition: transform 0.2s; font-size: 10px; }
+        .ai-engine-btn.expanded .chevron-icon { transform: rotate(180deg); }
+
+        .coll-insights-panel {
+            margin-top: 16px;
+            padding: 16px;
+            background: #f8faff;
+            border: 1.5px solid #dbeafe;
+            border-radius: 12px;
+            display: block;
+        }
+        .coll-stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .coll-stat-box {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+        }
+        .coll-stat-box span { font-size: 0.65rem; color: var(--text-gray); font-weight: 600; display: block; }
+        .coll-stat-box b { font-size: 0.88rem; font-family: 'DM Mono', monospace; color: var(--text-dark); }
+
+        .q-meter-wrap { display: flex; flex-direction: column; gap: 7px; margin-top: 8px; }
+        .q-meter-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.72rem; gap: 8px; }
+        .q-meter-name { width: 140px; font-weight: 600; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .q-meter-bar-bg { flex: 1; height: 6px; background: #e5e7eb; border-radius: 10px; overflow: hidden; }
+        .q-meter-bar-fill { height: 100%; border-radius: 10px; transition: width 0.5s ease; }
+        .q-meter-val { width: 45px; text-align: right; font-family: 'DM Mono', monospace; font-weight: 700; }
+
+        /* Follow-up feed */
+        .feed-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.82rem;
+        }
+        .feed-item:last-child { border-bottom: none; }
+        .feed-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+
+        /* Modals */
+        .coll-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(17, 24, 39, 0.72);
+            backdrop-filter: blur(4px);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .coll-modal-backdrop.open { display: flex !important; }
+        .coll-modal-box {
+            background: #fff;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+            overflow: hidden;
+            margin: 16px;
+        }
+        .call-modal-header {
+            background: linear-gradient(135deg, #111827, #1e293b);
+            color: #fff;
+            padding: 24px;
+            text-align: center;
+        }
+        .call-avatar-ring {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            background: linear-gradient(135deg, #0ea394, #2563eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+            position: relative;
+        }
+        .call-avatar-ring.ringing::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 2px solid rgba(14,163,148,0.7);
+            animation: ringPulse 1.2s infinite;
+        }
+        @keyframes ringPulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.35); opacity: 0; } }
+
+        .call-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-top: 10px;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+        .call-status-pill.connected { background: rgba(16,185,129,0.25); color: #34d399; }
+
+        .call-body { padding: 18px 20px; max-height: 230px; overflow-y: auto; background: var(--bg-light); }
+        .transcript-bubble { margin-bottom: 10px; display: flex; flex-direction: column; }
+        .transcript-bubble.agent { align-items: flex-end; }
+        .transcript-bubble.borrower { align-items: flex-start; }
+        .bubble-tag { font-size: 0.65rem; font-weight: 700; color: var(--text-gray); margin-bottom: 3px; }
+        .bubble-content { max-width: 82%; padding: 9px 13px; border-radius: 12px; font-size: 0.8rem; line-height: 1.45; }
+        .transcript-bubble.agent .bubble-content { background: var(--sidebar-bg); color: #fff; border-bottom-right-radius: 2px; }
+        .transcript-bubble.borrower .bubble-content { background: #fff; border: 1px solid var(--border); color: var(--text-dark); border-bottom-left-radius: 2px; }
+
+        .call-controls-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 16px 20px;
+            background: #fff;
+            border-top: 1px solid var(--border);
+        }
+        .ctrl-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .ctrl-icon-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+        }
+        .ctrl-btn.active .ctrl-icon-circle { background: var(--orange-light); border-color: var(--orange); color: var(--orange); }
+        .ctrl-btn.danger .ctrl-icon-circle { background: #ef4444; color: #fff; border: none; }
+
+        .ptp-drawer { display: none; padding: 14px 18px; background: #fffbeb; border-top: 1.5px dashed #fcd34d; }
+        .ptp-drawer.open { display: block; }
+        .ptp-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+        .ptp-input { width: 100%; padding: 7px 10px; border-radius: 8px; border: 1px solid #f59e0b; font-size: 0.8rem; font-family: inherit; }
+
+        /* Slide-Out AI Copilot Drawer */
+        .ai-drawer-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(17, 24, 39, 0.55);
+            backdrop-filter: blur(2px);
+            z-index: 10500;
+            display: none;
+            justify-content: flex-end;
+        }
+        .ai-drawer-backdrop.open { display: flex !important; }
+        .ai-drawer-box {
+            width: 100%;
+            max-width: 480px;
+            height: 100%;
+            background: #fff;
+            box-shadow: -12px 0 40px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+        }
+        .ai-drawer-head {
+            padding: 20px 22px;
+            background: var(--sidebar-bg);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .ai-drawer-body { flex: 1; overflow-y: auto; padding: 18px 20px; }
+        .ai-prompt-chips { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+        .ai-chip-prompt {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 9px 13px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            color: var(--text-dark);
+            font-family: inherit;
+        }
+        .ai-chip-prompt:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+        .ai-chat-thread { display: flex; flex-direction: column; gap: 12px; }
+        .ai-msg { display: flex; flex-direction: column; }
+        .ai-msg.user { align-items: flex-end; }
+        .ai-msg.user .msg-bubble { background: var(--primary); color: #fff; border-radius: 12px 12px 2px 12px; font-size: 0.82rem; padding: 10px 14px; }
+        .ai-msg.bot { align-items: flex-start; }
+        .ai-msg.bot .msg-bubble { background: #f9fafb; border: 1px solid var(--border); border-radius: 12px 12px 12px 2px; font-size: 0.8rem; padding: 12px 15px; line-height: 1.55; }
+
+        .ai-drawer-foot {
+            padding: 14px 18px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+        }
+        .ai-drawer-input {
+            flex: 1;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 9px 14px;
+            font-size: 0.85rem;
+            font-family: inherit;
+            outline: none;
+        }
+        .ai-drawer-send {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0 18px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Floating Toast Container */
+        #coll-toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .coll-toast {
+            pointer-events: auto;
+            background: var(--sidebar-bg);
+            color: #fff;
+            border-radius: 10px;
+            padding: 12px 18px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .coll-toast.success { border-left: 4px solid var(--green); }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">CS</div>
+            CrediSphere
+        </div>
+        
+        <div class="sidebar-menu">
+            <div class="menu-category">Overview</div>
+            <a href="admin-dashboard.html">📊 Dashboard</a>
+            <a href="credit-intelligence.html">🧠 Credit Intelligence</a>
+            <a href="admin-loans.html">📝 Loan Applications</a>
+            
+            <div class="menu-category">Recovery</div>
+            <a href="collections-ai.html" class="active">📞 Collections AI</a>
+            <a href="legal-repossession.html">⚖️ Legal &amp; Repossession</a>
+            
+            <div class="menu-category">Management</div>
+            <a href="reports.html">📈 Reports</a>
+            <a href="risk-policy.html">⚙️ Risk Policy Config</a>
+            <a href="screen-configuration.html">🖥️ Screen Configuration</a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="admin-avatar">AK</div>
+            <div class="admin-info">
+                <h4 id="admin-name">Admin</h4>
+                <p>Credit Ops Admin</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Header (White Navbar) -->
+        <div class="top-header">
+            <div class="header-left">
+                <input type="text" class="search-bar" placeholder="🔍 Search borrower, registered phone, loan ID...">
+            </div>
+            <div class="header-actions">
+                <div class="cbs-badge">
+                    <span class="court-dot"></span>
+                    <span>Core Banking (CBS): Real-Time Sync</span>
+                </div>
+                <div class="branch-badge">🏦 Regional Operations Center</div>
+                <div style="font-size: 1.15rem; cursor: pointer; color:#64748b;" title="Notifications">🔔</div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div class="admin-avatar" style="width:34px; height:34px;">AK</div>
+                    <div style="display:flex; flex-direction:column; font-size:0.75rem; line-height:1.2;">
+                        <span style="font-weight:700; color:var(--text-dark);" id="admin-name">Anita K.</span>
+                        <span style="color:var(--text-gray); font-size:0.7rem;">Credit Ops Admin</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-scroll">
+
+            <!-- Unified Collections Dossier Hero Card -->
+            <div class="collections-hero-card">
+                <div class="hero-top-row">
+                    <div class="hero-title-group">
+                        <div class="hero-eyebrow">
+                            <span>📞 Collections Intelligence &amp; Live Telephony</span>
+                            <span style="color:#cbd5e1;">·</span>
+                            <span style="color:#059669; font-weight:700; background:#ecfdf5; padding:2px 8px; border-radius:10px; border:1px solid #a7f3d0;">
+                                Active Borrower: <b id="topstrip-borrower-name">Loading account...</b>
+                            </span>
+                        </div>
+                        <h2 class="hero-title">Collections Intelligence &amp; Telephony Hub</h2>
+                        <p class="hero-subtitle">AI-recommended recovery strategy for live registered borrowers · Powered by Random Forest + DQN Agent</p>
+                    </div>
+                    <div class="hero-actions-group">
+                        <a id="tel-dial-link" href="#" class="hero-btn tel" title="Click to dial on phone or VoIP">
+                            📞 <span>Direct Call Phone</span>
+                        </a>
+                        <button class="hero-btn secondary" onclick="collectionsML.randomizeState()" title="Switch to next database customer">
+                            🔄 <span>Switch Customer</span>
+                        </button>
+                        <button class="hero-btn primary" onclick="openCollAIDrawer()" title="Ask Collections AI Copilot">
+                            🤖 <span>Ask AI assistant</span>
+                        </button>
+                        <a href="legal-repossession.html" class="hero-btn legal-link" title="Open Judicial Enforcement & Asset Repossession Dashboard">
+                            ⚖️ <span>Legal &amp; Repossession Screen →</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Active Registered Borrower Selector & Metric Strip -->
+                <div class="dossier-quick-bar">
+                    <div class="dossier-selector-wrap">
+                        <span class="dossier-selector-label">👤 Live Borrower Account:</span>
+                        <select id="select-customer-account" class="hero-select" onchange="collectionsML.setCustomerById(this.value)">
+                            <option value="">Loading registered borrowers...</option>
+                        </select>
+                    </div>
+
+                    <!-- Clean, spacious, non-overlapping metric pills -->
+                    <div class="dossier-stats-strip">
+                        <div class="dossier-stat-pill">
+                            <span class="lbl">Registered Phone</span>
+                            <span class="val font-mono" id="topstrip-phone">---</span>
+                        </div>
+                        <div class="dossier-stat-pill">
+                            <span class="lbl">Loan ID</span>
+                            <span class="val font-mono" id="topstrip-loan-id">#---</span>
+                        </div>
+                        <div class="dossier-stat-pill danger">
+                            <span class="lbl">Total Overdue</span>
+                            <span class="val font-mono" id="topstrip-overdue">₹---</span>
+                        </div>
+                        <div class="dossier-stat-pill" style="padding:2px 4px; border:none; background:none; box-shadow:none;">
+                            <span class="statute-track-badge">⚠️ DPD 90 Critical</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 Column Grid -->
+            <div class="grid-3">
+                <!-- CARD 1: OVERDUE DETAILS -->
+                <div class="card">
+                    <div class="card-head">
+                        <h3>📋 Overdue Details</h3>
+                        <span class="chip chip-warning">DPD 90+</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="factor-row"><b>Borrower Name</b><span id="txt-borrower-name">Loading...</span></div>
+                        <div class="factor-row"><b>Registered Phone</b><span style="font-family:'DM Mono',monospace; color:var(--primary);" id="txt-borrower-phone">---</span></div>
+                        <div class="factor-row"><b>EMI amount</b><span id="txt-emi-amt">₹0</span></div>
+                        <div class="factor-row"><b>EMIs bounced</b><span id="txt-emis-bounced">0</span></div>
+                        <div class="factor-row"><b>Total overdue</b><span style="color:var(--red); font-size:1.05rem;" id="txt-total-overdue">₹0</span></div>
+                        <div class="factor-row"><b>DPD bucket</b><span style="color:var(--red);" id="txt-dpd-bucket">---</span></div>
+
+                        <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+                            <span class="chip chip-danger" id="coll-risk-badge">🔴 High risk (RF 78.6%)</span>
+                            <span class="chip chip-warning" id="coll-promises-chip">Broken Promises: 2</span>
+                        </div>
+
+                        <div style="margin-top:16px; padding-top:12px; border-top:1px dashed var(--border); display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:0.75rem; color:var(--text-gray);">RF Default Probability:</span>
+                            <b style="font-size:0.9rem; font-family:'DM Mono',monospace; color:var(--red);" id="coll-rf-prob">78.6%</b>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 2: RECOVERY RECOMMENDATION -->
+                <div class="card">
+                    <div class="card-head">
+                        <h3><span class="ai-chip">AI</span> Recovery Recommendation</h3>
+                        <button class="ai-engine-btn expanded" id="coll-toggle-insights-btn" onclick="toggleMLEngineInsights()">
+                            <span>🧠</span> Diagnostics <span class="chevron-icon">▾</span>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <p id="coll-rec-text" style="font-size:0.85rem; line-height:1.6; color:#374151; margin:0 0 14px 0;">
+                            Customer has broken 2 prior promises. AI recommends a structured settlement offer with partial upfront payment, contacted on registered number during the <b>5–7 PM</b> window (highest response rate).
+                        </p>
+
+                        <div class="bureau-grid">
+                            <div class="bureau-box"><span>Best call time</span><b id="coll-best-time">5–7 PM</b></div>
+                            <div class="bureau-box"><span>Recovery odds</span><b style="color:var(--orange);" id="coll-rec-odds">61.4%</b></div>
+                            <div class="bureau-box"><span>Sentiment</span><b style="color:var(--red);" id="coll-sentiment">Negative</b></div>
+                        </div>
+
+                        <!-- Action Hub Buttons -->
+                        <div class="coll-action-hub">
+                            <div class="action-hub-label">⚡ Live Recovery Interventions</div>
+                            <div class="coll-action-buttons" style="grid-template-columns: repeat(4, 1fr);">
+                                <button class="coll-action-btn primary" onclick="openLiveCallModal()">
+                                    <span class="btn-icon">📞</span>
+                                    <span class="btn-title">Simulate Call</span>
+                                    <span class="btn-subtitle">Call Registered No.</span>
+                                </button>
+                                <button class="coll-action-btn secondary" onclick="openSMSModal()">
+                                    <span class="btn-icon">💬</span>
+                                    <span class="btn-title">Payment Link</span>
+                                    <span class="btn-subtitle">SMS / WhatsApp</span>
+                                </button>
+                                <button class="coll-action-btn outline" onclick="openSettlementModal()">
+                                    <span class="btn-icon">📑</span>
+                                    <span class="btn-title">Settlement</span>
+                                    <span class="btn-subtitle">AI Token Offer</span>
+                                </button>
+                                <button class="coll-action-btn" onclick="window.location.href='legal-repossession.html'" style="border-color:rgba(239,68,68,0.4); background:rgba(239,68,68,0.06);">
+                                    <span class="btn-icon">⚖️</span>
+                                    <span class="btn-title" style="color:var(--red);">Legal &amp; Repo</span>
+                                    <span class="btn-subtitle">CMM Warrant / Seizure</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- AI Diagnostics Panel -->
+                        <div class="coll-insights-panel" id="coll-insights-panel">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                <span style="font-size:0.75rem; font-weight:700; color:var(--text-dark);">🔬 ML/RL Policy Diagnostics</span>
+                                <span style="font-size:0.68rem; color:var(--green); font-weight:700;">● Active Policy</span>
+                            </div>
+
+                            <div class="coll-stats-row">
+                                <div class="coll-stat-box"><span>Confidence</span><b style="color:var(--green);">87.4%</b></div>
+                                <div class="coll-stat-box"><span>Exploit (ε)</span><b>0.05</b></div>
+                                <div class="coll-stat-box"><span>Optimal Q</span><b style="color:var(--primary);">+0.812</b></div>
+                            </div>
+
+                            <div style="font-size:0.7rem; font-weight:700; color:var(--text-dark); margin-bottom:4px;">DQN Q(s, a) Action Distribution:</div>
+                            <div class="q-meter-wrap" id="q-distribution-meters"></div>
+
+                            <div style="font-size:0.7rem; font-weight:700; color:var(--text-dark); margin-top:10px; margin-bottom:4px;">Random Forest Feature Weights:</div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;" id="rf-feature-weights"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 3: FOLLOW-UP HISTORY -->
+                <div class="card">
+                    <div class="card-head">
+                        <h3>🕒 Follow-up History</h3>
+                        <span class="chip" style="background:#ecfdf5; color:#059669;">● Live Feed</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="coll-feed-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 1: LIVE VOIP CALL -->
+    <div class="coll-modal-backdrop" id="coll-call-modal">
+        <div class="coll-modal-box">
+            <div class="call-modal-header">
+                <div class="call-avatar-ring" id="call-avatar-ring">--</div>
+                <div style="font-size:1.15rem; font-weight:800;" id="modal-call-name">Customer Call</div>
+                <div style="font-size:0.8rem; color:#9ca3af; font-family:'DM Mono',monospace;" id="modal-call-phone">---</div>
+                <div class="call-status-pill" id="call-status-pill">
+                    <span style="width:6px; height:6px; border-radius:50%; background:#34d399;"></span>
+                    <span id="call-status-text">Connecting to SIP Gateway...</span>
+                </div>
+                <div style="margin-top:12px; display:flex; justify-content:center; gap:8px;">
+                    <a href="#" id="modal-live-dial-btn" style="background:#10b981; color:#fff; border:none; padding:6px 14px; border-radius:20px; font-weight:700; font-size:0.75rem; text-decoration:none; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 10px rgba(16,185,129,0.4);">
+                        📲 Dial Live on My Phone (<span id="modal-live-dial-text">Registered Number</span>)
+                    </a>
+                </div>
+            </div>
+            <div class="call-body" id="call-transcript-stream">
+                <div style="text-align:center; font-size:0.75rem; color:#6b7280; margin-bottom:12px;" id="call-callout-msg">
+                    🔒 VoIP encrypted line · Calling registered number
+                </div>
+            </div>
+            <!-- PTP Drawer -->
+            <div class="ptp-drawer" id="ptp-inline-drawer">
+                <div style="font-size:0.8rem; font-weight:700; color:#b45309;">📝 Record Promise to Pay (PTP)</div>
+                <div class="ptp-input-grid">
+                    <div>
+                        <label style="font-size:0.68rem; font-weight:700; color:#b45309;">PROMISED AMOUNT</label>
+                        <input type="text" class="ptp-input" id="ptp-amount-input" value="₹35,999">
+                    </div>
+                    <div>
+                        <label style="font-size:0.68rem; font-weight:700; color:#b45309;">PROMISE DATE</label>
+                        <input type="text" class="ptp-input" id="ptp-date-input" value="12-Dec-2025 (Friday)">
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+                    <button onclick="togglePTPDrawer(false)" style="padding:5px 10px; border-radius:6px; border:1px solid #f59e0b; background:#fff; font-size:0.72rem; cursor:pointer;">Cancel</button>
+                    <button onclick="confirmRecordPTP()" style="padding:5px 12px; border-radius:6px; border:none; background:#f59e0b; color:#fff; font-weight:700; font-size:0.72rem; cursor:pointer;">Save PTP Record</button>
+                </div>
+            </div>
+            <div class="call-controls-bar">
+                <button class="ctrl-btn" id="btn-call-mute" onclick="toggleCallMute()">
+                    <div class="ctrl-icon-circle">🎙️</div>
+                    <span id="mute-label">Mute</span>
+                </button>
+                <button class="ctrl-btn" onclick="togglePTPDrawer()">
+                    <div class="ctrl-icon-circle" style="color:#d97706;">📝</div>
+                    <span>Record PTP</span>
+                </button>
+                <button class="ctrl-btn danger" onclick="endLiveCall()">
+                    <div class="ctrl-icon-circle">📞</div>
+                    <span style="color:#ef4444;">End Call</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: LIVE SMS / WHATSAPP -->
+    <div class="coll-modal-backdrop" id="coll-sms-modal">
+        <div class="coll-modal-box">
+            <div style="padding:18px 22px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <b style="font-size:0.95rem; color:var(--text-dark);">📲 Dispatch Recovery Payment Link</b>
+                    <span style="display:block; font-size:0.75rem; color:var(--text-gray);" id="sms-modal-recipient">Recipient: Registered Phone</span>
+                </div>
+                <button onclick="closeSMSModal()" style="border:none; background:none; font-size:18px; cursor:pointer; color:var(--text-gray);">✕</button>
+            </div>
+            <div style="padding:20px;">
+                <div style="display:flex; gap:8px; margin-bottom:14px;">
+                    <button id="chan-sms" onclick="switchMsgChannel('sms')" style="flex:1; padding:9px; border-radius:8px; border:1.5px solid var(--border); background:#fff; color:var(--text-dark); font-size:0.8rem; font-weight:700; cursor:pointer;">💬 SMS Gateway</button>
+                    <button id="chan-wa" onclick="switchMsgChannel('whatsapp')" style="flex:1; padding:9px; border-radius:8px; border:1.5px solid var(--green); background:var(--green-light); color:var(--green); font-size:0.8rem; font-weight:700; cursor:pointer;">🟢 WhatsApp (Live Web/App)</button>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:0.72rem; font-weight:700; color:var(--text-gray); text-transform:uppercase; display:block; margin-bottom:6px;">AI Message Template (With Live Payment URL)</label>
+                    <select id="sms-template-select" onchange="onTemplateChange()" style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid var(--border); font-size:0.82rem; font-family:inherit; margin-bottom:8px;">
+                        <option value="settlement">★ Structured Settlement Token Link (Recommended by DQN)</option>
+                        <option value="reminder">Standard DPD 90 Overdue Reminder</option>
+                        <option value="urgent">Urgent SARFAESI Pre-Legal Escalation Notice</option>
+                    </select>
+                    <textarea id="sms-message-text" style="width:100%; height:100px; border-radius:8px; border:1px solid var(--border); padding:10px; font-family:inherit; font-size:0.8rem; line-height:1.45; resize:none;"></textarea>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+                    <button onclick="closeSMSModal()" style="padding:8px 16px; border-radius:8px; border:1px solid var(--border); background:#fff; font-size:0.82rem; font-weight:600; cursor:pointer;">Cancel</button>
+                    <button id="btn-dispatch-link" onclick="sendSMSLink()" style="padding:9px 22px; border-radius:8px; border:none; background:#10b981; color:#fff; font-size:0.82rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(16,185,129,0.3);">
+                        🟢 Open WhatsApp &amp; Send to Registered Phone
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: SETTLEMENT CONFIGURATOR -->
+    <div class="coll-modal-backdrop" id="coll-settlement-modal">
+        <div class="coll-modal-box">
+            <div style="padding:18px 22px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <b style="font-size:0.95rem;">📑 DQN Structured Settlement Agreement</b>
+                    <span style="display:block; font-size:0.75rem; color:var(--text-gray);" id="settlement-modal-sub">Account Settlement Proposal</span>
+                </div>
+                <button onclick="closeSettlementModal()" style="border:none; background:none; font-size:18px; cursor:pointer;">✕</button>
+            </div>
+            <div style="padding:20px;">
+                <div style="background:var(--bg-light); border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:14px;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:8px;"><span>Original Balance:</span><b id="settle-orig-bal">₹1,07,997</b></div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:8px;"><span>Upfront Commitment Token:</span><b style="color:var(--green);" id="settle-token-amt">₹35,999</b></div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:8px;"><span>Restructured Monthly EMI:</span><b>Restructured across 6 months</b></div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.82rem;"><span>Late Charges Waived:</span><b style="color:var(--primary);">₹15,000</b></div>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px;">
+                    <button onclick="closeSettlementModal()" style="padding:8px 16px; border-radius:8px; border:1px solid var(--border); background:#fff; font-size:0.82rem; cursor:pointer;">Cancel</button>
+                    <button onclick="confirmSettlementAgreement()" style="padding:8px 20px; border-radius:8px; border:none; background:var(--green); color:#fff; font-weight:700; font-size:0.82rem; cursor:pointer;">✍️ Issue Agreement</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: ASK AI ASSISTANT DRAWER -->
+    <div class="ai-drawer-backdrop" id="coll-ai-drawer" onclick="handleDrawerBackdropClick(event)">
+        <div class="ai-drawer-box">
+            <div class="ai-drawer-head">
+                <div>
+                    <div style="display:flex; align-items:center; gap:6px; font-weight:800; font-size:0.95rem;">
+                        <span>🤖</span> CrediSphere Collections AI Copilot
+                    </div>
+                    <span style="font-size:0.7rem; opacity:0.8;" id="ai-copilot-context">Context: Registered Account</span>
+                </div>
+                <button onclick="closeCollAIDrawer()" style="background:none; border:none; color:#fff; font-size:18px; cursor:pointer;">✕</button>
+            </div>
+            <div class="ai-drawer-body" id="ai-drawer-body">
+                <div style="font-size:0.7rem; font-weight:700; color:var(--text-gray); text-transform:uppercase; margin-bottom:8px;">💡 Suggested Inquiries</div>
+                <div class="ai-prompt-chips">
+                    <button class="ai-chip-prompt" onclick="askPresetQuestion('Why does RL recommend settlement over repossession?')">⚖️ Why does RL recommend settlement over repossession?</button>
+                    <button class="ai-chip-prompt" onclick="askPresetQuestion('Why is 5–7 PM the optimal contact window?')">⏰ Why is 5–7 PM the optimal contact window?</button>
+                    <button class="ai-chip-prompt" onclick="askPresetQuestion('What happens if borrower defaults on this PTP?')">🛡️ What happens if borrower defaults on this PTP?</button>
+                    <button class="ai-chip-prompt" onclick="askPresetQuestion('Explain Random Forest risk attribution')">🌲 Explain Random Forest risk attribution</button>
+                </div>
+                <div class="ai-chat-thread" id="ai-chat-thread">
+                    <div class="ai-msg bot">
+                        <div class="msg-bubble">Hello Anita! I am your <b>Collections AI Copilot</b>. I have evaluated this customer with our Random Forest predictor &amp; Deep Q-Network. Ask me any question!</div>
+                    </div>
+                </div>
+            </div>
+            <div class="ai-drawer-foot">
+                <input type="text" class="ai-drawer-input" id="ai-user-query" placeholder="Ask AI Copilot..." onkeydown="if(event.key==='Enter') sendCustomAIQuery()">
+                <button class="ai-drawer-send" onclick="sendCustomAIQuery()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="coll-toast-container"></div>
+
+    <script src="../js/api.js?v=2.5"></script>
+    <script src="../js/collections.js?v=2.5"></script>
+</body>
+</html>

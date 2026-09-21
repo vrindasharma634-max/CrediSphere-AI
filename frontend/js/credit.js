@@ -1,0 +1,1 @@
+// credit.js logic

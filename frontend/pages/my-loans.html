@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Loans - CrediSphere AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #f4f5f7;
+            --navy-header: #1e2540;
+            --border-light: #e5e7eb;
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --primary-blue: #2563eb;
+        }
+        body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg-light); color: var(--text-dark); }
+        .top-nav { background: #fff; padding: 0 40px; display: flex; align-items: center; height: 70px; border-bottom: 1px solid var(--border-light); justify-content: space-between; }
+        .nav-left { display: flex; align-items: center; gap: 30px; }
+        .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; }
+        .brand-icon { width: 32px; height: 32px; background: var(--primary-blue); color: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .nav-links { display: flex; gap: 25px; height: 70px; }
+        .nav-links a { text-decoration: none; color: var(--text-gray); font-weight: 500; font-size: 0.95rem; display: flex; align-items: center; border-bottom: 2px solid transparent; transition: 0.2s; }
+        .nav-links a:hover { color: var(--text-dark); }
+        .nav-links a.active { color: var(--text-dark); border-bottom-color: var(--primary-blue); font-weight: 600; }
+        
+        .header-banner { background-color: var(--navy-header); color: #fff; padding: 40px 60px; }
+        .header-banner h1 { margin: 0 0 5px 0; font-size: 2rem; font-weight: 700; }
+        .header-banner p { margin: 0; color: #9ca3af; }
+
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        
+        .loan-card { background: #fff; border-radius: 16px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-light); }
+        .loan-info h3 { margin: 0 0 5px 0; font-size: 1.2rem; color: var(--text-dark); }
+        .loan-info p { margin: 0; color: var(--text-gray); font-size: 0.9rem; }
+        
+        .loan-stats { display: flex; gap: 40px; text-align: right; }
+        .stat-block h4 { margin: 0 0 5px 0; font-size: 1.4rem; color: var(--text-dark); font-weight: 700; }
+        .stat-block p { margin: 0; color: var(--text-gray); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        
+        .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; display: inline-block; margin-bottom: 10px; }
+        .badge.approved { background: #dcfce7; color: #10b981; }
+        .badge.rejected { background: #fee2e2; color: #ef4444; }
+        .badge.pending { background: #fef3c7; color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-left">
+            <div class="brand">
+                <div class="brand-icon">CS</div>
+                CrediSphere
+            </div>
+            <div class="nav-links">
+                <a href="customer-dashboard.html">Dashboard</a>
+                <a href="loan-application.html">Apply for Loan</a>
+                <a href="my-loans.html" class="active">My Loans</a>
+                <a href="documents.html">Documents</a>
+                <a href="#" onclick="logoutUser()">Log out</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="header-banner">
+        <h1>My Loans</h1>
+        <p>View and manage all your past and active loan applications.</p>
+    </div>
+
+    <div class="container" id="loans-container">
+        <div style="text-align: center; color: var(--text-gray); padding: 40px;">Loading your loans...</div>
+    </div>
+
+    <script src="../js/api.js?v=2"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.logoutUser = () => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            }
+
+            async function fetchLoans() {
+                try {
+                    const loans = await apiCall('/loans/my-loans', 'GET');
+                    const container = document.getElementById('loans-container');
+                    
+                    if (!loans || loans.length === 0) {
+                        container.innerHTML = `<div style="text-align:center; padding: 60px; background:#fff; border-radius:16px;">
+                            <div style="font-size:40px; margin-bottom:15px;">🏦</div>
+                            <h2 style="margin:0 0 10px 0;">No loans found</h2>
+                            <p style="color:#6b7280;">You haven't applied for any loans yet.</p>
+                            <a href="loan-application.html" style="display:inline-block; margin-top:20px; background:#2563eb; color:#fff; padding:10px 20px; border-radius:8px; text-decoration:none; font-weight:600;">Apply Now</a>
+                        </div>`;
+                        return;
+                    }
+
+                    // Create new HTML instead of directly changing DOM to avoid flickering
+                    let newHTML = '';
+                    loans.forEach(loan => {
+                        const badgeClass = loan.status === 'APPROVED' ? 'approved' : (loan.status === 'REJECTED' ? 'rejected' : 'pending');
+                        const formatCurrency = (val) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
+                        
+                        const dateObj = new Date(loan.applied_at);
+                        const dateStr = dateObj.toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' });
+                        
+                        newHTML += `
+                            <div class="loan-card">
+                                <div class="loan-info">
+                                    <div class="badge ${badgeClass}">${loan.status}</div>
+                                    <h3>${loan.loan_type}</h3>
+                                    <p>Applied on: ${dateStr}</p>
+                                </div>
+                                <div class="loan-stats">
+                                    ${loan.status === 'APPROVED' ? `
+                                        <div class="stat-block">
+                                            <h4>${loan.interest_rate}%</h4>
+                                            <p>Interest</p>
+                                        </div>
+                                    ` : ''}
+                                    <div class="stat-block">
+                                        <h4>${formatCurrency(loan.amount)}</h4>
+                                        <p>${loan.status === 'APPROVED' ? 'Sanctioned' : 'Requested'}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    if(container.innerHTML !== newHTML) {
+                        container.innerHTML = newHTML;
+                    }
+                } catch (err) {
+                    document.getElementById('loans-container').innerHTML = `<div style="color:red; text-align:center;">Error loading loans. Please login again.</div>`;
+                }
+            }
+
+            // Initial fetch
+            fetchLoans();
+            
+            // Auto-refresh every 5 seconds to show admin updates in real-time
+            setInterval(fetchLoans, 5000);
+        });
+    </script>
+</body>
+</html>

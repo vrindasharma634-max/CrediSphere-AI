@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrediSphere AI - Admin Portal Login</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/auth.css?v=12">
+</head>
+<body>
+    <div id="app">
+        <!-- Frosted Admin Navigation -->
+        <nav>
+            <h1>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="3" width="18" height="18" rx="4" stroke="#0ea5e9" stroke-width="2.5"/>
+                    <path d="M9 12L11 14L15 10" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                CrediSphere AI
+                <span class="brand-badge admin-badge">ADMIN COMMAND CENTER</span>
+            </h1>
+            <div id="nav-links">
+                <a href="../index.html" class="nav-item">Home</a>
+                <a href="login.html" class="nav-item">Customer Login</a>
+                <a href="admin-login.html" class="nav-item active-link">Admin Portal</a>
+            </div>
+        </nav>
+
+        <main class="auth-page-wrapper">
+            <div class="auth-grid-overlay"></div>
+            <!-- Cyan / Teal ambient glow for Admin -->
+            <div class="orb orb-1" style="background: linear-gradient(135deg, rgba(14, 165, 233, 0.25), rgba(16, 185, 129, 0.2));"></div>
+            <div class="orb orb-2" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.18), rgba(14, 165, 233, 0.28));"></div>
+
+            <div class="auth-main-container">
+                <!-- Left Executive Showcase Panel -->
+                <div class="auth-showcase-panel">
+                    <div class="live-pill-badge" style="background: rgba(14, 165, 233, 0.12); border-color: rgba(14, 165, 233, 0.35); color: #7dd3fc;">
+                        <span class="live-pulse-dot" style="background: #0ea5e9; box-shadow: 0 0 10px #0ea5e9;"></span>
+                        Executive Security Tier 3 • Risk Officers & Administrators
+                    </div>
+
+                    <h1 class="showcase-heading">
+                        Command Center for <span class="gradient-highlight-admin">Autonomous Credit</span>
+                    </h1>
+
+                    <p class="showcase-subtext">
+                        Supervise real-time underwriting thresholds, oversee risk matrix parameters, monitor automated collections AI telephony, and audit portfolio health with zero latency.
+                    </p>
+
+                    <div class="telemetry-cards-stack">
+                        <!-- Card 1: Risk Engine Health -->
+                        <div class="telemetry-card" style="border-left: 3px solid #0ea5e9;">
+                            <div class="card-header-flex">
+                                <div class="card-title-group">
+                                    <div class="card-icon-bubble" style="background: rgba(14, 165, 233, 0.15); border-color: rgba(14, 165, 233, 0.3);">⚙️</div>
+                                    <div>
+                                        <div class="card-label" style="color: #7dd3fc;">Risk Decision Engine Core</div>
+                                        <div style="font-size: 0.8rem; color: #cbd5e1;">Real-Time Rule Execution & Sanctions</div>
+                                    </div>
+                                </div>
+                                <div class="status-badge-green" style="background: rgba(14, 165, 233, 0.15); color: #38bdf8; border-color: rgba(14, 165, 233, 0.3);">
+                                    Active 99.99%
+                                </div>
+                            </div>
+                            <div class="metric-row">
+                                <div class="metric-item">
+                                    <span class="metric-val" style="color: #38bdf8;">142 / min</span>
+                                    <span class="metric-name">Underwriting Calls</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-val" style="color: #34d399;">₹4.2 Cr</span>
+                                    <span class="metric-name">Daily Sanction Queue</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-val" style="color: #facc15;">0 Alerts</span>
+                                    <span class="metric-name">Critical Policy Breaches</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Security & Audit Logging -->
+                        <div class="telemetry-card" style="border-left: 3px solid #10b981;">
+                            <div class="card-header-flex">
+                                <div class="card-title-group">
+                                    <div class="card-icon-bubble" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3);">📋</div>
+                                    <div>
+                                        <div class="card-label" style="color: #6ee7b7;">Immutable Audit Trail</div>
+                                        <div style="font-size: 0.8rem; color: #cbd5e1;">Cryptographically Signed Operations</div>
+                                    </div>
+                                </div>
+                                <div class="status-badge-green">
+                                    SOC2 Verified
+                                </div>
+                            </div>
+                            <div class="metric-row">
+                                <div class="metric-item">
+                                    <span class="metric-val" style="color: #10b981;">Air-Tapped</span>
+                                    <span class="metric-name">Admin Session Logs</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-val" style="color: #60a5fa;">Granular</span>
+                                    <span class="metric-name">Role-Based Access (RBAC)</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-val" style="color: #c084fc;">Real-Time</span>
+                                    <span class="metric-name">Live Telephony Sync</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="showcase-stats-strip">
+                        <div class="stat-block">
+                            <b>₹120M+</b>
+                            <span>Supervised Portfolio</span>
+                        </div>
+                        <div class="stat-block">
+                            <b>&lt; 50ms</b>
+                            <span>Rule Execution Time</span>
+                        </div>
+                        <div class="stat-block">
+                            <b>24 / 7</b>
+                            <span>Autonomous Watchdog</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Admin Authentication Console Card -->
+                <div class="auth-console-card admin-card-glow">
+                    <div class="auth-header">
+                        <h2>Admin Portal Access</h2>
+                        <p>Authenticate with your enterprise credentials</p>
+                    </div>
+
+                    <!-- Role Switcher -->
+                    <div class="segmented-control">
+                        <div class="segment-btn active" style="background: linear-gradient(135deg, rgba(14, 165, 233, 0.3), rgba(16, 185, 129, 0.25)); border-color: rgba(14, 165, 233, 0.45); color: #ffffff;">
+                            Admin / Staff
+                        </div>
+                        <div class="segment-btn" onclick="window.location.href='login.html'">
+                            Customer Portal
+                        </div>
+                    </div>
+
+                    <!-- Enterprise Security Notice Banner -->
+                    <div class="admin-security-banner">
+                        <div class="admin-security-icon">🛡️</div>
+                        <div class="admin-security-content">
+                            <div class="admin-security-title">
+                                <span>Restricted Access</span>
+                                <span class="admin-clearance-pill">CLEARANCE LVL-3</span>
+                            </div>
+                            <div class="admin-security-desc">
+                                Authorized bank staff only. All sessions are cryptographically logged, monitored, and audited under RBI NBFC guidelines.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Login Form -->
+                    <form id="login-form">
+                        <div class="form-group-mock">
+                            <label for="email">
+                                <span>Admin Work Email</span>
+                                <span class="label-hint">Enterprise identity</span>
+                            </label>
+                            <div class="input-with-icon-wrapper">
+                                <span class="input-leading-icon">✉️</span>
+                                <input type="email" id="email" name="email" placeholder="admin@credisphere.ai" required autocomplete="username">
+                            </div>
+                        </div>
+
+                        <div class="form-group-mock" style="margin-bottom: 16px;">
+                            <label for="password">
+                                <span>Master Key / Password</span>
+                                <span class="label-hint">Security credential</span>
+                            </label>
+                            <div class="input-with-icon-wrapper">
+                                <span class="input-leading-icon">🔒</span>
+                                <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+                                <button type="button" class="password-toggle-btn" id="toggle-pw-btn" title="Toggle password visibility">👁️</button>
+                            </div>
+                        </div>
+
+                        <div class="admin-session-options">
+                            <label class="admin-checkbox-label">
+                                <input type="checkbox" id="remember-terminal" checked>
+                                <span>Keep session active on this terminal</span>
+                            </label>
+                        </div>
+
+                        <input type="hidden" id="role" name="role" value="ADMIN">
+
+                        <button type="submit" class="btn-mockup admin-btn" id="login-btn">
+                            <span>Access Command Center</span>
+                            <span>➔</span>
+                        </button>
+                    </form>
+
+                    <div id="login-error" class="error-message" style="display: none;"></div>
+
+                    <div class="auth-footer">
+                        Need to return to public portal? <a href="../index.html">&larr; Back to Home</a>
+                    </div>
+
+                    <div class="ml-indicator">
+                        <span class="pulse-dot" style="background: #0ea5e9; box-shadow: 0 0 10px #0ea5e9;"></span>
+                        Protected by Isolation Forest Threat Intelligence & SOC-2 Protocol
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="../js/api.js?v=2"></script>
+    <script src="../js/auth.js?v=12"></script>
+    <script src="../js/app.js?v=2"></script>
+</body>
+</html>

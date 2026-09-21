@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrediSphere AI - Credit Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #f4f6f8;
+            --sidebar-bg: #111827;
+            --sidebar-hover: #1f2937;
+            --text-dark: #111827;
+            --text-gray: #4b5563;
+            --text-light: #9ca3af;
+            --border: #e5e7eb;
+            --primary: #3b82f6;
+            --green: #10b981;
+            --green-light: #d1fae5;
+            --red: #ef4444;
+            --red-light: #fee2e2;
+            --orange: #f59e0b;
+            --orange-light: #fef3c7;
+            --purple: #6366f1;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar styles matching dashboard */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+        .sidebar-brand {
+            padding: 20px 25px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .brand-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+        }
+        .sidebar-menu {
+            padding: 20px 15px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .menu-category {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            margin: 20px 0 10px 10px;
+        }
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            color: #d1d5db;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+            transition: 0.2s;
+        }
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: var(--sidebar-hover);
+            color: #fff;
+        }
+        .sidebar-menu a.active { background-color: #2563eb; }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .admin-avatar { width: 36px; height: 36px; background: #4b5563; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.85rem; }
+        .admin-info h4 { margin: 0; font-size: 0.9rem; }
+        .admin-info p { margin: 0; font-size: 0.75rem; color: var(--text-light); }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Applicant Header */
+        .applicant-header {
+            background: #1e293b; /* Darker navy for header */
+            color: #fff;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .applicant-profile { display: flex; align-items: center; gap: 20px; }
+        .applicant-initials { width: 50px; height: 50px; border-radius: 50%; background: #3b82f6; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 700; }
+        .applicant-details h1 { margin: 0 0 5px 0; font-size: 1.4rem; font-weight: 700; }
+        .applicant-meta { display: flex; align-items: center; gap: 15px; font-size: 0.85rem; color: #cbd5e1; }
+        .applicant-meta span { display: flex; align-items: center; gap: 5px; }
+
+        .loan-tags { display: flex; gap: 10px; }
+        .tag { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; }
+
+        /* Dashboard Scroll Area */
+        .dashboard-scroll {
+            padding: 30px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .page-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+        }
+        .page-title-row h2 { margin: 0 0 5px 0; font-size: 1.5rem; }
+        .page-title-row p { margin: 0; color: var(--text-gray); font-size: 0.9rem; }
+        .btn-report { padding: 8px 16px; background: #fff; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+
+        /* Grid */
+        .intelligence-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1.3fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header { font-size: 1.05rem; font-weight: 700; margin-bottom: 25px; display: flex; align-items: center; gap: 8px; }
+        .ai-badge { background: #e0e7ff; color: #4338ca; font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 4px;}
+
+        /* Card 1: CrediScore */
+        .score-container { text-align: center; margin-bottom: 30px; position: relative; }
+        .circular-chart { display: block; margin: 0 auto; max-width: 80%; max-height: 250px; }
+        .circle-bg { fill: none; stroke: #f1f5f9; stroke-width: 2.5; }
+        .circle { fill: none; stroke-width: 2.5; stroke-linecap: round; }
+        .circle.green { stroke: var(--green); }
+        .circle.orange { stroke: var(--orange); }
+        .circle.red { stroke: var(--red); }
+        
+        .score-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+        .score-number { font-size: 2.5rem; font-weight: 800; color: var(--text-dark); margin: 0; line-height: 1; }
+        .score-max { font-size: 0.8rem; color: var(--text-light); margin-top: 5px; }
+
+        .risk-pill { display: inline-block; padding: 6px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; margin-top: -15px; z-index: 10; position: relative; }
+        .risk-pill.green { background: var(--green-light); color: var(--green); }
+        .risk-pill.orange { background: var(--orange-light); color: var(--orange); }
+        .risk-pill.red { background: var(--red-light); color: var(--red); }
+
+        .score-metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: auto; }
+        .metric-box { background: var(--bg-light); padding: 15px 10px; border-radius: 8px; text-align: center; border: 1px solid var(--border); }
+        .metric-label { font-size: 0.75rem; color: var(--text-gray); margin-bottom: 5px; }
+        .metric-val { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); }
+
+        /* Card 2: Risk Factors */
+        .risk-factors-list { display: flex; flex-direction: column; gap: 22px; }
+        .factor { }
+        .factor-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-dark); }
+        .factor-score { color: var(--text-gray); font-size: 0.75rem; font-weight: 500; }
+        
+        .factor-track { width: 100%; height: 8px; background: var(--bg-light); border-radius: 4px; overflow: hidden; }
+        .factor-fill { height: 100%; border-radius: 4px; }
+        .factor-fill.green { background: var(--green); }
+        .factor-fill.purple { background: var(--purple); }
+        .factor-fill.orange { background: var(--orange); }
+        .factor-fill.red { background: var(--red); }
+
+        /* Card 3: Decision */
+        .decision-card { border: 2px solid var(--green); background: #f0fdf4; }
+        .decision-card.reject { border: 2px solid var(--red); background: #fef2f2; }
+        .decision-card.refer { border: 2px solid var(--orange); background: #fffbeb; }
+        
+        .decision-header { font-size: 1.3rem; font-weight: 700; color: var(--green); display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+        .decision-header.reject { color: var(--red); }
+        .decision-header.refer { color: var(--orange); }
+        
+        .decision-meta { font-size: 0.75rem; color: var(--text-gray); margin-bottom: 20px; }
+        
+        .bullets { margin-bottom: 25px; }
+        .bullet { display: flex; gap: 10px; font-size: 0.85rem; margin-bottom: 12px; color: var(--text-dark); line-height: 1.4; }
+        .bullet-icon { color: var(--green); font-weight: bold; flex-shrink: 0; }
+        .bullet-icon.reject { color: var(--red); }
+        
+        .terms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+        .term-box { background: #fff; border: 1px solid var(--border); padding: 15px; border-radius: 8px; }
+        .term-label { font-size: 0.75rem; color: var(--text-gray); margin-bottom: 5px; }
+        .term-val { font-size: 1.1rem; font-weight: 700; }
+
+        .actions { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; margin-top: auto; }
+        .action-btn { padding: 12px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; text-align: center; transition: 0.2s; border: none; }
+        
+        .btn-approve { background: var(--green); color: #fff; }
+        .btn-approve:hover { background: #059669; }
+        
+        .btn-refer { background: #fff; border: 2px solid var(--orange); color: var(--orange); }
+        .btn-refer:hover { background: var(--orange-light); }
+        
+        .btn-reject { background: #fff; border: 2px solid var(--red); color: var(--red); }
+        .btn-reject:hover { background: var(--red-light); }
+
+        /* Loader */
+        .loader-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); z-index: 9999; display: flex; flex-direction:column; align-items:center; justify-content:center; }
+        .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+    <div id="loader" class="loader-overlay">
+        <div class="spinner"></div>
+        <p style="margin-top:20px; font-weight:600; color:var(--text-gray);">Fetching live intelligence report...</p>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">CS</div>
+            CrediSphere
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-category">Overview</div>
+            <a href="admin-dashboard.html">📊 Dashboard</a>
+            <a href="credit-intelligence.html" class="active">🧠 Credit Intelligence</a>
+            <a href="admin-loans.html">📝 Loan Applications</a>
+            <div class="menu-category">Recovery</div>
+            <a href="collections-ai.html">📞 Collections AI</a>
+            <a href="legal-repossession.html">⚖️ Legal & Repossession</a>
+            <div class="menu-category">Management</div>
+            <a href="reports.html">📈 Reports</a>
+            <a href="risk-policy.html">⚙️ Risk Policy Config</a>
+            <a href="screen-configuration.html">🖥️ Screen Configuration</a>
+        </div>
+        <div class="sidebar-footer">
+            <div class="admin-avatar">AK</div>
+            <div class="admin-info">
+                <h4 id="admin-name">Admin</h4>
+                <p>Credit Ops Admin</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Applicant Header -->
+        <div class="applicant-header">
+            <div class="applicant-profile">
+                <div class="applicant-initials" id="hdr-initials">--</div>
+                <div class="applicant-details">
+                    <h1 id="hdr-name">Loading...</h1>
+                    <div class="applicant-meta">
+                        <span>🆔 <span id="hdr-cif">CIF ---</span></span>
+                        <span>🏠 <span id="hdr-loan-type">---</span></span>
+                        <span>📍 <span id="hdr-city">---</span></span>
+                        <span>📅 Applied <span id="hdr-date">---</span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="loan-tags">
+                <div class="tag" id="tag-amount">Loan ₹--</div>
+                <div class="tag" id="tag-term">Tenure -- yrs</div>
+            </div>
+        </div>
+
+        <!-- Scrollable Dashboard -->
+        <div class="dashboard-scroll">
+            <div class="page-title-row">
+                <div>
+                    <h2>AI Credit Intelligence & Loan Decision</h2>
+                    <p>Automated underwriting analysis generated in 11.4 seconds</p>
+                </div>
+                <div>
+                    <button class="btn-report" onclick="downloadCreditReport()">📄 Full credit report</button>
+                </div>
+            </div>
+
+            <div class="intelligence-grid">
+                
+                <!-- Card 1: CrediScore -->
+                <div class="card">
+                    <div class="card-header"><span class="ai-badge">✦ AI</span> CrediScore</div>
+                    
+                    <div class="score-container">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg"
+                                d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                            <path class="circle" id="score-ring"
+                                stroke-dasharray="0, 100"
+                                d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                            />
+                        </svg>
+                        <div class="score-text">
+                            <div class="score-number" id="score-val">--</div>
+                            <div class="score-max">out of 900</div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <div class="risk-pill" id="score-pill">---</div>
+                    </div>
+
+                    <div class="score-metrics">
+                        <div class="metric-box">
+                            <div class="metric-label">CIBIL</div>
+                            <div class="metric-val" id="metric-cibil">--</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-label">Utilization</div>
+                            <div class="metric-val" id="metric-util">--</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-label">Active loans</div>
+                            <div class="metric-val" id="metric-active">--</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Risk Factors -->
+                <div class="card">
+                    <div class="card-header">⚖️ AI risk factor breakdown</div>
+                    <div class="risk-factors-list">
+                        
+                        <div class="factor">
+                            <div class="factor-header">
+                                <span>Repayment history</span>
+                                <span class="factor-score"><span id="rf-rep-val">--</span> / 100</span>
+                            </div>
+                            <div class="factor-track"><div class="factor-fill green" id="rf-rep-bar" style="width: 0%;"></div></div>
+                        </div>
+                        
+                        <div class="factor">
+                            <div class="factor-header">
+                                <span>Income stability</span>
+                                <span class="factor-score"><span id="rf-inc-val">--</span> / 100</span>
+                            </div>
+                            <div class="factor-track"><div class="factor-fill green" id="rf-inc-bar" style="width: 0%;"></div></div>
+                        </div>
+                        
+                        <div class="factor">
+                            <div class="factor-header">
+                                <span>Debt-to-income ratio</span>
+                                <span class="factor-score" id="rf-dti-val">--%</span>
+                            </div>
+                            <div class="factor-track"><div class="factor-fill purple" id="rf-dti-bar" style="width: 0%;"></div></div>
+                        </div>
+                        
+                        <div class="factor">
+                            <div class="factor-header">
+                                <span>Employment tenure</span>
+                                <span class="factor-score" id="rf-ten-val">-- yrs</span>
+                            </div>
+                            <div class="factor-track"><div class="factor-fill purple" id="rf-ten-bar" style="width: 0%;"></div></div>
+                        </div>
+                        
+                        <div class="factor">
+                            <div class="factor-header">
+                                <span>Banking behaviour</span>
+                                <span class="factor-score"><span id="rf-bnk-val">--</span> / 100</span>
+                            </div>
+                            <div class="factor-track"><div class="factor-fill purple" id="rf-bnk-bar" style="width: 0%;"></div></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Card 3: Decision -->
+                <div class="card decision-card" id="decision-card">
+                    <div class="decision-header" id="dec-header">
+                        ✅ AI Recommends: Approve
+                    </div>
+                    <div class="decision-meta">
+                        Model confidence: <strong id="dec-conf">--%</strong> · Model v4.2 · Explainable AI (SHAP) verified
+                    </div>
+                    
+                    <div class="bullets" id="dec-bullets">
+                        <!-- JS renders here -->
+                    </div>
+                    
+                    <div class="terms-grid">
+                        <div class="term-box">
+                            <div class="term-label">Suggested amount</div>
+                            <div class="term-val" id="term-amt">₹--</div>
+                        </div>
+                        <div class="term-box">
+                            <div class="term-label">Interest rate</div>
+                            <div class="term-val" id="term-rate">--%</div>
+                        </div>
+                        <div class="term-box">
+                            <div class="term-label">Tenure</div>
+                            <div class="term-val" id="term-yrs">-- years</div>
+                        </div>
+                        <div class="term-box">
+                            <div class="term-label">EMI</div>
+                            <div class="term-val" id="term-emi">₹--</div>
+                        </div>
+                    </div>
+                    
+                    <div class="actions">
+                        <button class="action-btn btn-approve" onclick="submitDecision('APPROVE')">Approve loan</button>
+                        <button class="action-btn btn-refer" onclick="submitDecision('REFER')">Refer</button>
+                        <button class="action-btn btn-reject" onclick="submitDecision('REJECT')">Reject</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/api.js?v=3"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        let loanId = urlParams.get('id');
+
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) document.getElementById('admin-name').textContent = user.name.split(' ')[0];
+
+        async function fetchIntelligence() {
+            if (!loanId) {
+                try {
+                    const dashRes = await apiCall('/admin/dashboard', 'GET');
+                    if (dashRes.recent_applications && dashRes.recent_applications.length > 0) {
+                        loanId = dashRes.recent_applications[0].loan_id;
+                        window.history.replaceState(null, null, `?id=${loanId}`);
+                    } else {
+                        alert('No loans available to review. Redirecting to Dashboard.');
+                        window.location.href = 'admin-dashboard.html';
+                        return;
+                    }
+                } catch(e) {
+                    alert('Error loading dashboard data.');
+                    window.location.href = 'admin-dashboard.html';
+                    return;
+                }
+            }
+
+            try {
+                const res = await apiCall(`/admin/loan/${loanId}`, 'GET');
+                
+                // Hide Loader
+                document.getElementById('loader').style.display = 'none';
+
+                // 1. Header
+                const app = res.applicant;
+                const initials = app.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0,2);
+                document.getElementById('hdr-initials').textContent = initials;
+                document.getElementById('hdr-name').textContent = app.name;
+                document.getElementById('hdr-cif').textContent = 'CIF ' + app.cif;
+                document.getElementById('hdr-loan-type').textContent = app.loan_type;
+                document.getElementById('hdr-city').textContent = app.city;
+                document.getElementById('hdr-date').textContent = app.applied_date;
+                
+                document.getElementById('tag-amount').textContent = 'Loan ₹' + new Intl.NumberFormat('en-IN').format(res.decision.amount);
+                document.getElementById('tag-term').textContent = `Tenure ${res.decision.term_years} yrs`;
+
+                // 2. Score Card
+                const m = res.metrics;
+                document.getElementById('score-val').textContent = m.score;
+                document.getElementById('metric-cibil').textContent = m.cibil;
+                document.getElementById('metric-util').textContent = m.utilization;
+                document.getElementById('metric-active').textContent = m.active_loans;
+                
+                const ring = document.getElementById('score-ring');
+                const pill = document.getElementById('score-pill');
+                const pct = (m.score / 900) * 100;
+                
+                // Animated draw
+                setTimeout(() => {
+                    ring.setAttribute('stroke-dasharray', `${pct}, 100`);
+                }, 100);
+
+                if (m.score >= 720) {
+                    ring.classList.add('green');
+                    pill.className = 'risk-pill green';
+                    pill.textContent = 'Excellent — Low Risk';
+                } else if (m.score >= 640) {
+                    ring.classList.add('orange');
+                    pill.className = 'risk-pill orange';
+                    pill.textContent = 'Fair — Medium Risk';
+                } else {
+                    ring.classList.add('red');
+                    pill.className = 'risk-pill red';
+                    pill.textContent = 'Subprime — High Risk';
+                }
+
+                // 3. Risk Factors
+                const rf = res.risk_factors;
+                document.getElementById('rf-rep-val').textContent = rf.repayment;
+                document.getElementById('rf-rep-bar').style.width = rf.repayment + '%';
+                
+                document.getElementById('rf-inc-val').textContent = rf.income;
+                document.getElementById('rf-inc-bar').style.width = rf.income + '%';
+                
+                document.getElementById('rf-dti-val').textContent = rf.dti + '%';
+                document.getElementById('rf-dti-bar').style.width = rf.dti + '%';
+                
+                document.getElementById('rf-ten-val').textContent = rf.tenure + ' yrs';
+                document.getElementById('rf-ten-bar').style.width = (rf.tenure * 10) + '%';
+                
+                document.getElementById('rf-bnk-val').textContent = rf.banking;
+                document.getElementById('rf-bnk-bar').style.width = rf.banking + '%';
+
+                // 4. Decision Card
+                const dec = res.decision;
+                const card = document.getElementById('decision-card');
+                const hdr = document.getElementById('dec-header');
+                const iconColor = m.score >= 720 ? 'green' : (m.score >= 640 ? 'orange' : 'red');
+                const iconChar = m.score >= 640 ? '✓' : '✕';
+                
+                if (m.score >= 720) {
+                    card.className = 'card decision-card';
+                    hdr.className = 'decision-header';
+                    hdr.innerHTML = '✅ AI Recommends: Approve';
+                } else if (m.score >= 640) {
+                    card.className = 'card decision-card refer';
+                    hdr.className = 'decision-header refer';
+                    hdr.innerHTML = '⚠️ AI Recommends: Refer to Underwriter';
+                } else {
+                    card.className = 'card decision-card reject';
+                    hdr.className = 'decision-header reject';
+                    hdr.innerHTML = '❌ AI Recommends: Reject';
+                }
+
+                document.getElementById('dec-conf').textContent = dec.confidence + '%';
+
+                const bulletsHTML = dec.bullets.map(b => `
+                    <div class="bullet">
+                        <span class="bullet-icon ${iconColor === 'red' ? 'reject' : ''}">${iconChar}</span>
+                        <span>${b}</span>
+                    </div>
+                `).join('');
+                document.getElementById('dec-bullets').innerHTML = bulletsHTML;
+
+                document.getElementById('term-amt').textContent = '₹' + new Intl.NumberFormat('en-IN').format(dec.amount);
+                document.getElementById('term-rate').textContent = dec.rate + '%';
+                document.getElementById('term-yrs').textContent = dec.term_years + ' years';
+                document.getElementById('term-emi').textContent = '₹' + new Intl.NumberFormat('en-IN').format(dec.emi);
+
+            } catch(e) {
+                console.error(e);
+                alert('Failed to load intelligence data. Check console.');
+            }
+        }
+
+        async function submitDecision(action) {
+            if(!confirm(`Are you sure you want to ${action} this loan?`)) return;
+            
+            try {
+                await apiCall(`/admin/loan/${loanId}/decision`, 'POST', { action: action });
+                alert(`Loan successfully marked as ${action}`);
+                window.location.href = 'admin-dashboard.html';
+            } catch(e) {
+                alert('Failed to update decision.');
+            }
+        }
+
+        async function downloadCreditReport() {
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch(`${API_BASE}/admin/loan/${loanId}/report`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error("Failed to export report");
+                
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `credit_report_loan_${loanId}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            } catch(e) {
+                alert('Failed to download report. Check console.');
+                console.error(e);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchIntelligence);
+    </script>
+</body>
+</html>
